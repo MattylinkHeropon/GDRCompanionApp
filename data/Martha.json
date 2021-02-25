@@ -1,0 +1,33 @@
+{
+  "image": "images/martha.jpg",
+  "name": "Martha",
+  "game": "AD\u0026D 2E",
+  "curr_hp": 35,
+  "max_hp": 35,
+  "ability_name": [
+    "Str",
+    "Dex",
+    "Con",
+    "Int",
+    "Wis",
+    "Cha"
+  ],
+  "ability_score": [
+    20,
+    14,
+    12,
+    10,
+    20,
+    12
+  ],
+  "ability_mod": [
+    5,
+    2,
+    1,
+    0,
+    5,
+    1
+  ],
+  "buffArrayList": [],
+  "debuffArrayList": []
+}

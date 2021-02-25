@@ -1,0 +1,33 @@
+{
+  "image": "images/rere.jpg",
+  "name": "rere",
+  "game": "D\u0026D",
+  "curr_hp": 1,
+  "max_hp": 1,
+  "ability_name": [
+    "Str",
+    "Dex",
+    "Con",
+    "Int",
+    "Wis",
+    "Cha"
+  ],
+  "ability_score": [
+    11,
+    11,
+    1,
+    1,
+    1,
+    1
+  ],
+  "ability_mod": [
+    0,
+    0,
+    -5,
+    -5,
+    -5,
+    -5
+  ],
+  "buffArrayList": [],
+  "debuffArrayList": []
+}

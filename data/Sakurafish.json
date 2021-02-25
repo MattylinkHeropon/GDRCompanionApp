@@ -1,0 +1,33 @@
+{
+  "image": "images/sakurafish.jpg",
+  "name": "Sakurafish",
+  "game": "AD\u0026D 2E",
+  "curr_hp": 20,
+  "max_hp": 20,
+  "ability_name": [
+    "Str",
+    "Dex",
+    "Con",
+    "Int",
+    "Wis",
+    "Cha"
+  ],
+  "ability_score": [
+    20,
+    20,
+    20,
+    20,
+    20,
+    20
+  ],
+  "ability_mod": [
+    5,
+    5,
+    5,
+    5,
+    5,
+    5
+  ],
+  "buffArrayList": [],
+  "debuffArrayList": []
+}
