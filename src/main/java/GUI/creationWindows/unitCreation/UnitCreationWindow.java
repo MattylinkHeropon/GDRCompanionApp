@@ -1,8 +1,8 @@
 package GUI.creationWindows.unitCreation;
 
+import GUI.MainGUI;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import hero.Unit;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -17,7 +17,6 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -195,10 +194,10 @@ public class UnitCreationWindow  {
 
     private static void createPG() throws IOException {
 
-        File file = new File("data/" + name + ".json");
+        File unitFile = new File("data/" + name + ".json");
 
-        if (!file.createNewFile()){
-            //TODO: error in caso di file esistente
+        if (!unitFile.createNewFile()){
+            //TODO: error in caso di unitFile esistente
             System.out.println("File già presente");
             return;
         }
@@ -215,13 +214,9 @@ public class UnitCreationWindow  {
 
         //Gson Creation
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        Type unitType = new TypeToken<Unit>() {}.getType();
 
         //Json creation
-        FileWriter fileWriter = new FileWriter(file);
-        fileWriter.write(gson.toJson(unit, unitType));
-        fileWriter.flush();
-        fileWriter.close();
+        MainGUI.saveCharacter(unit, unitFile);
     }
 
     /**

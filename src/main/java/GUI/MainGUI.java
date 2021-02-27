@@ -4,6 +4,8 @@ import GUI.creationWindows.buffHandler.BuffCreationWindow;
 import GUI.creationWindows.unitCreation.UnitCreationWindow;
 import GUI.mainWindow.StatPane;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import hero.Buff;
 import hero.Unit;
 import javafx.application.Application;
@@ -18,9 +20,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import main.DemoMain;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 
@@ -30,12 +31,20 @@ public class MainGUI  extends Application {
     private static GridPane buffGridPane; //Saved reference for easier access;
     private Stage stage;
     private Scene scene;
+
     //Constant Value
     private static final int   BUFF_COLINDEX = 0;
     private static final int DEBUFF_COLINDEX = 1;
     private static final int STD_WIDTH = 800;
     private static final int STD_HEIGHT = 600;
     private static final int CENTRALPANE_ADJISTTOFIT = 35;
+
+    //Used to serialize an Unit.
+    //TODO: valutare un serializzatore manuale in caso di buff o debuff, o comunque un qualcosa nel caso l'output sia troppo lungo
+    private static final Type UNIT_TYPE = new TypeToken<Unit>() {}.getType();
+
+
+
     @Override
     public void start(Stage stagelocal) {
         stage = stagelocal;
@@ -101,8 +110,6 @@ public class MainGUI  extends Application {
 
 
 
-
-
     ///////////
     //MENUBAR//
     ///////////
@@ -136,15 +143,23 @@ public class MainGUI  extends Application {
             MenuItem loadPG = new MenuItem("Load Character");
             loadPG.setOnAction(actionEvent -> loadCharacter_select());
 
+            //item 3: savePG
+            MenuItem savePG = new MenuItem("Update Character");
+            savePG.setOnAction(actionEvent -> {
+                try {
+                    saveCharacter(pg, new File("data/" + pg.getName() + ".json"));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
 
-        fileMenu.getItems().addAll(createPG, loadPG);
+        fileMenu.getItems().addAll(createPG, loadPG, savePG);
     /*
     ------------------------------------------------------------------------------------------------------------------------
      */
         ///////////
         //2: BUFF//
         ///////////
-        //Second Menu: Buff
         Menu buffMenu = new Menu("Buff");
 
             //Item 1: Add Buff
@@ -157,6 +172,7 @@ public class MainGUI  extends Application {
             });
 
             //Item 2: Random Buff *10
+            //ONLY USED FOR DEBUG REASON
             MenuItem randomBuff = new MenuItem("Random Buff * 10");
             randomBuff.setOnAction(actionEvent -> {
                 for (int i = 1; i < 11; i++) {
@@ -207,7 +223,6 @@ public class MainGUI  extends Application {
     //file selected: deserialization
     private void loadCharacter_load(File file){
         Gson gson = new Gson();
-        //TODO: QUI devo leggere il contenuto del file e deserializzarlo in un Unit
         FileReader fileReader = null;
         try {
             fileReader = new FileReader(file);
@@ -216,9 +231,25 @@ public class MainGUI  extends Application {
         }
 
         assert fileReader != null;
-        pg = gson.fromJson(fileReader, Unit.class);
+        pg = gson.fromJson(fileReader, UNIT_TYPE);
         loadGUI();
+        //Load all the other gui Element, like Buff
+        //TODO: Crare metodo per ricaricare tutti gli altri dati, primo su tutti i buff
     }
+
+
+    public static void saveCharacter(Unit unit, File file) throws IOException {
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+        FileWriter fileWriter = new FileWriter(file);
+
+        fileWriter.write(gson.toJson(unit, UNIT_TYPE));
+        fileWriter.flush();
+        fileWriter.close();
+    }
+
+
 
     ////////
     //BUFF//
