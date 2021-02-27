@@ -165,7 +165,6 @@ public class UnitCreationWindow  {
         //MAINPANE SECTION//
         ////////////////////
 
-
         //margin
         BorderPane.setMargin(buttonBox, BOTTOMBUTTON_MARGIN);
         BorderPane.setMargin(parentList.get(0), STANDARD_MARGIN);
@@ -184,29 +183,25 @@ public class UnitCreationWindow  {
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setResizable(false);
         stage.show();
-
     }
 
     private static void createPG() throws IOException {
 
-        //TODO: Implementare un qualche controllo sul nome già presente
+        File file = new File("data/" + name + ".json");
+
+        if (!file.createNewFile()){
+            //TODO: error in caso di file esistente
+            System.out.println("File già presente");
+            return;
+        }
 
         //Create a local copy of the profile image
-        System.out.println(imgUrl);
         Path original = Paths.get(imgUrl);
         Path destination = Paths.get("images/" + name + ".jpg");
         Files.copy(original, destination);
         File pgImage = new File(destination.toString());
 
-        //TODO: Stringa troppo lunga, deve troncarla prima
-
-
-        Unit unit = new Unit(pgImage.toURI().toString(), name, edition, abilityScoreArray, maximumHitPoint);
-
-        File file = new File("data/" + unit.getName() + ".json");
-
-
-        file.createNewFile();
+        Unit unit = new Unit(goodPath(pgImage), name, edition, abilityScoreArray, maximumHitPoint);
 
         //Gson Creation
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -219,5 +214,13 @@ public class UnitCreationWindow  {
         fileWriter.close();
     }
 
-
+    /**
+     * Created mostly for Windows user, replace the "\" in the path with "/", making that compatible with the java File handler
+     * @param file File with the interested path to be modified
+     * @return the corrected parsed path, in a String form
+     */
+    private static String goodPath (File file){
+        String oldPath = file.getPath();
+        return  oldPath.replace(File.separatorChar, '/');
+    }
 }
