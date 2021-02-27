@@ -14,7 +14,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import main.DemoMain;
@@ -124,11 +123,18 @@ public class MainGUI  extends Application {
 
             //item 1: CreatePG
             MenuItem createPG = new MenuItem("New Character");
-            createPG.setOnAction(actionEvent -> UnitCreationWindow.CreateWindow());
+            createPG.setOnAction(actionEvent ->{
+                UnitCreationWindow.CreateWindow();
+                if (UnitCreationWindow.isNewUnit()){
+                    UnitCreationWindow.setNewUnit(false);
+                    loadCharacter_load(new File("data/" + UnitCreationWindow.getName() + ".json"));
+                }
+
+            } );
 
             //item 2: LoadPG
             MenuItem loadPG = new MenuItem("Load Character");
-            loadPG.setOnAction(actionEvent -> loadCharacter());
+            loadPG.setOnAction(actionEvent -> loadCharacter_select());
 
 
         fileMenu.getItems().addAll(createPG, loadPG);
@@ -188,20 +194,23 @@ public class MainGUI  extends Application {
     ////////
     //FILE//
     ////////
-    private void loadCharacter() {
+    private void loadCharacter_select() {
         //First, create a fileChooser and let the user select a Unit
         FileChooser searchUnit = new FileChooser();
         searchUnit.setTitle("Select a character");
         searchUnit.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("json character", "*.json"));
         searchUnit.setInitialDirectory(new File("data"));
         File file = searchUnit.showOpenDialog(stage);
+        loadCharacter_load(file);
+    }
 
-        //file selected: deserialization
+    //file selected: deserialization
+    private void loadCharacter_load(File file){
         Gson gson = new Gson();
         //TODO: QUI devo leggere il contenuto del file e deserializzarlo in un Unit
         FileReader fileReader = null;
         try {
-             fileReader = new FileReader(file);
+            fileReader = new FileReader(file);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -209,9 +218,7 @@ public class MainGUI  extends Application {
         assert fileReader != null;
         pg = gson.fromJson(fileReader, Unit.class);
         loadGUI();
-
     }
-
 
     ////////
     //BUFF//

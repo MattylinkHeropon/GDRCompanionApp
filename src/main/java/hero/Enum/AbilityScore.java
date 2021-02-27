@@ -1,7 +1,7 @@
 package hero.Enum;
 
 /**
- * Enum with the name of Ability Score, each Ability has his index number in an array and the official abbrevation
+ * Enum with the name of Ability Score, each Ability has his index number in an array and the official abbreviation
  */
 public enum AbilityScore {
     STRENGTH (0, "Str"),

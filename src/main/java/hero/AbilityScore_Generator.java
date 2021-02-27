@@ -6,7 +6,7 @@ import java.util.Random;
 
 /**
  * Class with the method to generate generate a set of Ability Score.
- * Each method has a Name and a Description associeted with it
+ * Each method has a Name and a Description associated with it
  */
 public  class AbilityScore_Generator {
 

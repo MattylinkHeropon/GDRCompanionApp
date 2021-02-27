@@ -45,9 +45,13 @@ public class UnitCreationWindow  {
     private static int selectedMethod;
     private static int[] abilityScoreArray;
     private static int maximumHitPoint;
+    private static boolean newUnit = false;
 
 
 
+    public static String getName() {
+        return name;
+    }
 
     public static void setName(String name) {
         UnitCreationWindow.name = name;
@@ -74,6 +78,14 @@ public class UnitCreationWindow  {
     }
 
     public static void setMaximumHitPoint(int maximumHitPoint) {UnitCreationWindow.maximumHitPoint = maximumHitPoint; }
+
+    public static boolean isNewUnit() {
+        return newUnit;
+    }
+
+    public static void setNewUnit(boolean newUnit) {
+        UnitCreationWindow.newUnit = newUnit;
+    }
 
     public static void CreateWindow() {
 
@@ -120,10 +132,8 @@ public class UnitCreationWindow  {
         //Buttom Action
         closeButton.setOnAction(actionEvent -> {
                     //First Parent
-                    if (listIndex.get() == 0) {
-                        System.out.println("CHIUSURA FINESTRA PRIMA DI CHIUSURA DATI");
-                        stage.close();
-                    } else {
+                    if (listIndex.get() == 0) stage.close();
+                    else {
                         listIndex.getAndDecrement();
                         currParent.get().setVisible(false); //set current Parent invisible
                         currParent.set(parentList.get(listIndex.get())); //get the new current Parent
@@ -139,8 +149,6 @@ public class UnitCreationWindow  {
             windowList.get(listIndex.get()).nextButtonPressed();
             //Last Parent
             if (listIndex.get() == endArray) {
-                System.out.println("FINE RACCOLTA DATI");
-
                 try {
                     createPG();
                 } catch (IOException e) {
@@ -182,7 +190,7 @@ public class UnitCreationWindow  {
         stage.setTitle("Hero Creation");
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setResizable(false);
-        stage.show();
+        stage.showAndWait();
     }
 
     private static void createPG() throws IOException {
@@ -194,6 +202,8 @@ public class UnitCreationWindow  {
             System.out.println("File già presente");
             return;
         }
+        //Load new Unit on exit
+        newUnit = true;
 
         //Create a local copy of the profile image
         Path original = Paths.get(imgUrl);
