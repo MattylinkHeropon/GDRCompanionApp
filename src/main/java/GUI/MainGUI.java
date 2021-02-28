@@ -56,7 +56,8 @@ public class MainGUI  extends Application {
         stage.show();
 
     }
-        private void loadGUI(){
+
+    private void loadGUI(){
         //clear root
         root.getChildren().removeAll(root.getLeft(), root.getRight());
 
