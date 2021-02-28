@@ -13,8 +13,6 @@ public class Unit {
     private int max_hp;
 
     //AS
-    //TODO: Probabilmente dovrei appoggiarmi ad AbilityScore.enum per i nomi
-    private final String[] ability_name = new String[] {"Str", "Dex", "Con", "Int", "Wis", "Cha"};
     private final int[] ability_score = new int[6];
     private final int[] ability_mod = new int[6];
 
@@ -46,9 +44,6 @@ public class Unit {
         return name;
     }
 
-    public String[] getAbility_name() {
-        return ability_name;
-    }
 
     //HP getter and setter
     public int getCurr_hp() {

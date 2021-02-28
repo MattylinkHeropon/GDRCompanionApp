@@ -1,5 +1,6 @@
 package GUI.mainWindow;
 
+import hero.Enum.AbilityScore;
 import hero.Unit;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
@@ -104,7 +105,7 @@ public class StatPane {
         for (i = 0; i < pg.getAbility_score().length; i++) {
 
             //Create
-            Label nameLabel = new Label(pg.getAbility_name()[i] + ":");
+            Label nameLabel = new Label(AbilityScore.values()[i].getAbbreviation() + ":");
             TextField asField = new TextField((Integer.toString(pg.getAbility_score()[i])));
             TextField modField = new TextField((Integer.toString(pg.getAbility_mod()[i])));
 
@@ -122,7 +123,6 @@ public class StatPane {
             //trying setting an update method:
             int finalI = i;
             asField.textProperty().addListener((observableValue, oldValue, newValue) -> {
-                System.out.println("Value at index: " + finalI + " Old Value: " + oldValue + " New Value: " + newValue);
                 pg.setAbility_Score(finalI, Integer.parseInt(newValue));
                 modField.setText((Integer.toString(pg.getAbility_mod()[finalI])));
             });
@@ -137,6 +137,10 @@ public class StatPane {
             //Create
             TextField maxHPField = new TextField(Integer.toString(pg.getMax_hp()));
             TextField currHPField = new TextField(Integer.toString(pg.getCurr_hp()));
+
+            //listener to modify current and maximum HP values
+            currHPField.textProperty().addListener((observableValue, oldValue, newValue) -> pg.setCurr_hp(Integer.parseInt(newValue)));
+            maxHPField.textProperty().addListener((observableValue, oldValue, newValue) -> pg.setMax_hp(Integer.parseInt(newValue))); //TODO: creare metodo per sistemare i maxHP
 
             //Graphic setup
             currHPField.setAlignment(Pos.CENTER);
@@ -158,9 +162,8 @@ public class StatPane {
             statGrid.getChildren().addAll(maxHPLabel, maxHPField, HPLabel, currHPLabel, currHPField);
         }
 
-    return statGrid;
+        return statGrid;
     }
-
 }
 
 
