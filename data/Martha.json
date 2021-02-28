@@ -23,26 +23,75 @@
   "buffArrayList": [
     {
       "isBuff": true,
-      "caster": "Buff",
-      "duration": 7,
-      "effect": "10 turni iniziali",
-      "maskHash": 314851251
+      "caster": "Random",
+      "duration": 2,
+      "effect": "2",
+      "maskHash": 1995866133
     },
     {
       "isBuff": true,
-      "caster": "Buff2",
-      "duration": 9,
-      "effect": "Buff aggiunto in un secondo momento",
-      "maskHash": 344987913
+      "caster": "Random",
+      "duration": 4,
+      "effect": "4",
+      "maskHash": 1715415095
+    },
+    {
+      "isBuff": true,
+      "caster": "Random",
+      "duration": 6,
+      "effect": "6",
+      "maskHash": 264929452
+    },
+    {
+      "isBuff": true,
+      "caster": "Random",
+      "duration": 8,
+      "effect": "8",
+      "maskHash": 1975951751
+    },
+    {
+      "isBuff": true,
+      "caster": "Random",
+      "duration": 10,
+      "effect": "10",
+      "maskHash": 686699927
     }
   ],
   "debuffArrayList": [
     {
       "isBuff": false,
-      "caster": "Debuff",
-      "duration": 6,
-      "effect": "9 turni iniziali",
-      "maskHash": 433970792
+      "caster": "Random",
+      "duration": 1,
+      "effect": "1",
+      "maskHash": 1924925651
+    },
+    {
+      "isBuff": false,
+      "caster": "Random",
+      "duration": 3,
+      "effect": "3",
+      "maskHash": 1654270463
+    },
+    {
+      "isBuff": false,
+      "caster": "Random",
+      "duration": 5,
+      "effect": "5",
+      "maskHash": 1711171908
+    },
+    {
+      "isBuff": false,
+      "caster": "Random",
+      "duration": 7,
+      "effect": "7",
+      "maskHash": 913584178
+    },
+    {
+      "isBuff": false,
+      "caster": "Random",
+      "duration": 9,
+      "effect": "9",
+      "maskHash": 1996090037
     }
   ]
 }

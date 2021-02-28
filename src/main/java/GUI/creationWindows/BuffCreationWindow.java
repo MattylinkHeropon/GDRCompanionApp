@@ -1,4 +1,4 @@
-package GUI.creationWindows.buffHandler;
+package GUI.creationWindows;
 
 import hero.Buff;
 import javafx.geometry.HPos;

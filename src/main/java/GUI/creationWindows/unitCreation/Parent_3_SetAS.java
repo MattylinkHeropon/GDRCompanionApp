@@ -9,7 +9,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-public class SetASWindow implements UnitCreationWindow_Parent {
+public class Parent_3_SetAS implements Parent_0_Base {
 
     private final int[] finalAS = new int[6];
 

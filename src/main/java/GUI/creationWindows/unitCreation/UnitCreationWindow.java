@@ -89,16 +89,16 @@ public class UnitCreationWindow  {
         //CENTRAL ELEMENT SETUP//
         /////////////////////////
 
-        LinkedList<UnitCreationWindow_Parent> windowList = new LinkedList<>();
+        LinkedList<Parent_0_Base> windowList = new LinkedList<>();
         LinkedList<Parent> parentList = new LinkedList<>();
 
         //Populate windowList
-        windowList.add(new NameEditionImageWindow());
-        windowList.add(new SelectASGenerationMethodWindow());
-        windowList.add(new SetASWindow());
+        windowList.add(new Parent_1_NameEditionImage());
+        windowList.add(new Parent_2_ASGeneration());
+        windowList.add(new Parent_3_SetAS());
 
         //Create a Parent for each window, add it to the parentList and set it invisible
-        for (UnitCreationWindow_Parent windowParentParent: windowList
+        for (Parent_0_Base windowParentParent: windowList
              ) {
             Parent parent = windowParentParent.createParent();
             parentList.add(parent);

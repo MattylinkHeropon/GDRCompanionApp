@@ -2,7 +2,7 @@ package GUI.creationWindows.unitCreation;
 
 import javafx.scene.Parent;
 
-public interface UnitCreationWindow_Parent {
+public interface Parent_0_Base {
 
     void onLoad();
 

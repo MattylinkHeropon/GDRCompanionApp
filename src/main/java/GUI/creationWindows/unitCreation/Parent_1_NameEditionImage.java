@@ -1,6 +1,5 @@
 package GUI.creationWindows.unitCreation;
 
-
 import hero.Enum.Edition;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
@@ -15,7 +14,7 @@ import javafx.stage.Stage;
 import java.io.File;
 
 
-class NameEditionImageWindow implements UnitCreationWindow_Parent {
+class Parent_1_NameEditionImage implements Parent_0_Base {
 
     private String edition = null;
     private TextField nameTextField;
