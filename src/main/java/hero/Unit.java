@@ -13,7 +13,7 @@ public class Unit {
     private int max_hp;
 
     //AS
-    //In teoria da modificare, è meglio forse usare un Json per supportare varie traduzioni
+    //TODO: Probabilmente dovrei appoggiarmi ad AbilityScore.enum per i nomi
     private final String[] ability_name = new String[] {"Str", "Dex", "Con", "Int", "Wis", "Cha"};
     private final int[] ability_score = new int[6];
     private final int[] ability_mod = new int[6];
@@ -45,9 +45,7 @@ public class Unit {
     public String getName() {
         return name;
     }
-    public String getGame() {
-        return game;
-    }
+
     public String[] getAbility_name() {
         return ability_name;
     }
@@ -59,6 +57,8 @@ public class Unit {
     public int getMax_hp() {
         return max_hp;
     }
+
+    //TODO: implementare metodo che modifica le due variabili
     public void setCurr_hp(int curr_hp) {
         this.curr_hp = curr_hp;
     }
@@ -77,8 +77,6 @@ public class Unit {
     public int[] getAbility_mod() {
         return ability_mod;
     }
-
-
 
     //Buff and debuff getter and setter
     public ArrayList<Buff> getBuffArrayList() {

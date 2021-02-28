@@ -9,14 +9,11 @@ import javafx.scene.layout.VBox;
 
 class SelectASGenerationMethodWindow implements UnitCreationWindow_Parent {
 
-    private int selectedMethod;
     private static ToggleGroup radioGroup;
 
 
     @Override
-    public void onLoad() {
-
-    }
+    public void onLoad() {}
 
     /**
      * handle the selection of the method to generate 6 possible value for the Ability Score,

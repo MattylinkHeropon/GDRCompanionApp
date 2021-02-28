@@ -4,9 +4,9 @@ import javafx.scene.Parent;
 
 public interface UnitCreationWindow_Parent {
 
-    public void onLoad();
+    void onLoad();
 
-    public Parent createParent();
+    Parent createParent();
 
-    public void nextButtonPressed();
+    void nextButtonPressed();
 }

@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 import java.text.DecimalFormat;
 import java.text.ParsePosition;
 
-//TODO Refactor
+
 public class BuffCreationWindow  {
 
     //Variable to read from outside

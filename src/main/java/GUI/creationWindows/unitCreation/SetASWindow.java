@@ -14,10 +14,10 @@ public class SetASWindow implements UnitCreationWindow_Parent {
     private final int[] finalAS = new int[6];
 
     private static final Label generatedDescriptionLabel = new Label("Here the ability score generated with the desired method");
-    private static final Label assignableDescriptionLabel = new Label("Plese input here your Ability Scores");
-    private static final Label HPDescriptionLabel = new Label("Plese input here your maximum HP");
+    private static final Label assignableDescriptionLabel = new Label("Please input here your Ability Scores");
+    private static final Label HPDescriptionLabel = new Label("Please input here your maximum HP");
 
-    private static final int gridElement_MaxWidth = ((UnitCreationWindow.WINDOW_SQUARE_DIMENSION - 40)/3); //Not definitive. Formula: Windows dimension - margin (10+10 external, 10+10 between box), divided by 3 because three box per fow
+    private static final int gridElement_MaxWidth = ((UnitCreationWindow.WINDOW_SQUARE_DIMENSION - 40)/3); //Formula: Windows dimension - margin (10+10 external, 10+10 between box), divided by 3 because three box per fow
     private static final int gridElement_Hgap = 10;
     private static final int gridElement_Vgap = 10;
 

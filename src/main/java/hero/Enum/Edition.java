@@ -14,8 +14,8 @@ public enum Edition {
     PATHFINDER_1E("Pathfinder", "Path"),
     PATHFINDER_2E("Pathfinder 2nd Edition", "Path 2E");
 
-    private String fullName;
-    private String abbreviation;
+    private final String fullName;
+    private final String abbreviation;
 
 
     Edition(String fullName, String abbreviation) {

@@ -18,7 +18,6 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import main.DemoMain;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -33,27 +32,29 @@ public class MainGUI  extends Application {
     private Scene scene;
 
     //Constant Value
-    private static final int   BUFF_COLINDEX = 0;
-    private static final int DEBUFF_COLINDEX = 1;
+    private static final int BUFF_COL_INDEX = 0;
+    private static final int DEBUFF_COL_INDEX = 1;
     private static final int STD_WIDTH = 800;
     private static final int STD_HEIGHT = 600;
-    private static final int CENTRALPANE_ADJISTTOFIT = 35;
+    private static final int CENTRALPANE_ADJUST_TO_FIT = 35;
 
     //Used to serialize an Unit.
-    //TODO: valutare un serializzatore manuale in caso di buff o debuff, o comunque un qualcosa nel caso l'output sia troppo lungo
     private static final Type UNIT_TYPE = new TypeToken<Unit>() {}.getType();
 
 
 
     @Override
-    public void start(Stage stagelocal) {
-        stage = stagelocal;
-        pg = DemoMain.randomPG();
+    public void start(Stage stageLocal) {
+        stage = stageLocal;
+
         root = new BorderPane();
         MenuBar menuBar = buildMenuBar();
         root.setTop(menuBar);
         scene = new Scene(root, STD_WIDTH, STD_HEIGHT);
-        loadGUI();
+        stage.setScene(scene);
+        stage.setTitle("GDR Companion App");
+        stage.show();
+
     }
         private void loadGUI(){
         //clear root
@@ -185,8 +186,8 @@ public class MainGUI  extends Application {
 
 
             decreaseDuration.setOnAction(actionEvent -> {
-                decreaseBuffDuration(pg.getBuffArrayList(), BUFF_COLINDEX);
-                decreaseBuffDuration(pg.getDebuffArrayList(), DEBUFF_COLINDEX);
+                decreaseBuffDuration(pg.getBuffArrayList(), BUFF_COL_INDEX);
+                decreaseBuffDuration(pg.getDebuffArrayList(), DEBUFF_COL_INDEX);
             });
 
             //Item 4: Remove Buff
@@ -233,11 +234,19 @@ public class MainGUI  extends Application {
         assert fileReader != null;
         pg = gson.fromJson(fileReader, UNIT_TYPE);
         loadGUI();
-        //Load all the other gui Element, like Buff
-        //TODO: Crare metodo per ricaricare tutti gli altri dati, primo su tutti i buff
+        //Draw all the buff associated with the unit
+        redrawColumn(BUFF_COL_INDEX, pg.getBuffArrayList());
+        redrawColumn(DEBUFF_COL_INDEX, pg.getDebuffArrayList());
+
+
     }
 
-
+    /**
+     * Override the given File with the a set of data  of the unit in json format
+     * @param unit Unit that will be saved in the file
+     * @param file A file to be written
+     * @throws IOException error with the file
+     */
     public static void saveCharacter(Unit unit, File file) throws IOException {
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -332,14 +341,6 @@ public class MainGUI  extends Application {
     }
 
 
-
-
-
-
-
-
-
-
     ////////////////////
     //AUXILIARY METHOD//
     ////////////////////
@@ -378,12 +379,12 @@ public class MainGUI  extends Application {
         GridPane buffMask = buff.createBuffMask();
 
         if (buff.isBuff()) {
-            col = BUFF_COLINDEX;
+            col = BUFF_COL_INDEX;
             row = pg.getBuffArrayList().indexOf(buff);
             GridPane.setMargin(buffMask, buff_margin);
         }
         else {
-            col = DEBUFF_COLINDEX;
+            col = DEBUFF_COL_INDEX;
             row = pg.getDebuffArrayList().indexOf(buff);
             GridPane.setMargin(buffMask, debuff_margin);
         }
@@ -405,7 +406,7 @@ public class MainGUI  extends Application {
         buffGridPane = new GridPane();
         buffGridPane.setHgap(11);
         buffGridPane.setVgap(5);
-        buffGridPane.setMaxWidth(STD_WIDTH - StatPane.GRID_WIDTH - CENTRALPANE_ADJISTTOFIT);
+        buffGridPane.setMaxWidth(STD_WIDTH - StatPane.GRID_WIDTH - CENTRALPANE_ADJUST_TO_FIT);
 
         //GridPane constrain
         ColumnConstraints buffColumnConstrain = new ColumnConstraints();

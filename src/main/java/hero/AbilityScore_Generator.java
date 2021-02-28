@@ -90,13 +90,4 @@ public  class AbilityScore_Generator {
         return value;
     }
 
-    /**
-     * Simple method for testing reason
-     *
-     */
-    public static void test() {
-        System.out.println("True Random: \t" + Arrays.toString(completeRandom()));
-        System.out.println("3D6: \t\t\t" + Arrays.toString(classic()));
-        System.out.println("4D6: \t\t\t" + Arrays.toString(standard()));
-    }
 }

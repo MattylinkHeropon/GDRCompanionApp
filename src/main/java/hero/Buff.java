@@ -1,6 +1,5 @@
 package hero;
 
-import javafx.beans.property.IntegerPropertyBase;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Insets;
 import javafx.scene.control.TextArea;
@@ -29,14 +28,6 @@ public class Buff {
     //Getter, Setter and small modifier
     public boolean isBuff() {
         return isBuff;
-    }
-
-    public String getCaster() {
-        return caster;
-    }
-
-    public String getEffect() {
-        return effect;
     }
 
     public int getDuration() {

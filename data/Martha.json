@@ -28,6 +28,29 @@
     5,
     1
   ],
-  "buffArrayList": [],
-  "debuffArrayList": []
+  "buffArrayList": [
+    {
+      "isBuff": true,
+      "caster": "Buff",
+      "duration": 7,
+      "effect": "10 turni iniziali",
+      "maskHash": 825103541
+    },
+    {
+      "isBuff": true,
+      "caster": "Buff2",
+      "duration": 9,
+      "effect": "Buff aggiunto in un secondo momento",
+      "maskHash": 4093811
+    }
+  ],
+  "debuffArrayList": [
+    {
+      "isBuff": false,
+      "caster": "Debuff",
+      "duration": 6,
+      "effect": "9 turni iniziali",
+      "maskHash": 954178333
+    }
+  ]
 }

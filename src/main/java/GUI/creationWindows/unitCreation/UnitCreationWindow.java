@@ -1,8 +1,6 @@
 package GUI.creationWindows.unitCreation;
 
 import GUI.MainGUI;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import hero.Unit;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -15,7 +13,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -35,7 +32,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class UnitCreationWindow  {
     public static final int WINDOW_SQUARE_DIMENSION = 400;
     public static final Insets STANDARD_MARGIN = new Insets(15);
-    private static final Insets BOTTOMBUTTON_MARGIN = new Insets(0, 10, 10, 0);
+    private static final Insets BOTTOM_BUTTON_MARGIN = new Insets(0, 10, 10, 0);
 
     private static Stage stage;
     private static String imgUrl;
@@ -128,7 +125,7 @@ public class UnitCreationWindow  {
         buttonBox.getChildren().addAll(closeButton, nextButton);
         buttonBox.setAlignment(Pos.CENTER_RIGHT);
 
-        //Buttom Action
+        //Button Action
         closeButton.setOnAction(actionEvent -> {
                     //First Parent
                     if (listIndex.get() == 0) stage.close();
@@ -173,7 +170,7 @@ public class UnitCreationWindow  {
         ////////////////////
 
         //margin
-        BorderPane.setMargin(buttonBox, BOTTOMBUTTON_MARGIN);
+        BorderPane.setMargin(buttonBox, BOTTOM_BUTTON_MARGIN);
         BorderPane.setMargin(parentList.get(0), STANDARD_MARGIN);
         BorderPane.setMargin(parentList.get(1), STANDARD_MARGIN);
         BorderPane.setMargin(parentList.get(2), STANDARD_MARGIN);
@@ -210,13 +207,8 @@ public class UnitCreationWindow  {
         Files.copy(original, destination);
         File pgImage = new File(destination.toString());
 
-        Unit unit = new Unit(goodPath(pgImage), name, edition, abilityScoreArray, maximumHitPoint);
-
-        //Gson Creation
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
         //Json creation
-        MainGUI.saveCharacter(unit, unitFile);
+        MainGUI.saveCharacter(new Unit(goodPath(pgImage), name, edition, abilityScoreArray, maximumHitPoint), unitFile);
     }
 
     /**

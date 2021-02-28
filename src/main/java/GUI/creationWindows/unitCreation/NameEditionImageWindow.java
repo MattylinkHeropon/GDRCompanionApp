@@ -3,21 +3,16 @@ package GUI.creationWindows.unitCreation;
 
 import hero.Enum.Edition;
 import javafx.geometry.HPos;
-import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.net.MalformedURLException;
-import java.util.concurrent.atomic.AtomicReference;
 
 
 class NameEditionImageWindow implements UnitCreationWindow_Parent {
@@ -32,7 +27,7 @@ class NameEditionImageWindow implements UnitCreationWindow_Parent {
     }
 
     /**
-     * handle the input of a Name for the character, and let the user select from a menù with which ruleset they are playing
+     * FIrst creation window. Let the user input the character's name, it's game edition and a profile image
      * while creating a Parent to contain all the necessary element
      * @return Created panel
      */
