@@ -26,9 +26,14 @@ public class Parent_3_AS_Setup implements Parent_0_Base{
             finalBox.getChildren().removeAll(finalBox.getChildren());
 
         //Draw racialModGrid
-        finalBox.getChildren().addAll(racialModLabel, racialModGrid);
+        VBox racialModVbox = new VBox(10);
+        racialModVbox.getChildren().addAll(racialModLabel, racialModGrid);
+        VBox pbVbox = new VBox(10);
+        pbVbox.getChildren().addAll(pointBuyLabel, pbTextField);
+
+        finalBox.getChildren().add(racialModVbox);
         if (UnitCreationWindow.getSelectedMethod() == 3) //Point Buy Selected
-            finalBox.getChildren().addAll(pointBuyLabel, pbTextField);
+            finalBox.getChildren().add(pbVbox);
 
     }
 
