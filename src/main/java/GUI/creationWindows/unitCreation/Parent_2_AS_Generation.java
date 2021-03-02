@@ -7,7 +7,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
-class Parent_2_ASGeneration implements Parent_0_Base {
+class Parent_2_AS_Generation implements Parent_0_Base {
 
     private static ToggleGroup radioGroup;
 

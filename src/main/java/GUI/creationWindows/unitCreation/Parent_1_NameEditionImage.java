@@ -17,16 +17,16 @@ import java.io.File;
 class Parent_1_NameEditionImage implements Parent_0_Base {
 
     private String edition = null;
-    private TextField nameTextField;
-    private Image profileImage;
-    private String imgUrl;
+    private TextField nameTextField = null;
+    private Image profileImage = null;
+    private String imgUrl = null;
     @Override
     public void onLoad() {
 
     }
 
     /**
-     * FIrst creation window. Let the user input the character's name, it's game edition and a profile image
+     * First creation window. Let the user input the character's name, it's game edition and a profile image
      * while creating a Parent to contain all the necessary element
      * @return Created panel
      */
@@ -134,4 +134,6 @@ class Parent_1_NameEditionImage implements Parent_0_Base {
         UnitCreationWindow.setEdition(edition);
         UnitCreationWindow.setImgUrl(imgUrl);
     }
+
+
 }

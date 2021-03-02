@@ -39,14 +39,18 @@ public class UnitCreationWindow  {
     private static String name;
     private static String edition;
     private static int selectedMethod;
+    private static int[] racialModArray;
     private static int[] abilityScoreArray;
+    private static int pbValue;
     private static int maximumHitPoint;
     private static boolean newUnit = false;
 
+    //////////
+    //SETTER//
+    //////////
 
-
-    public static String getName() {
-        return name;
+    public static void setImgUrl(String imgUrl) {
+        UnitCreationWindow.imgUrl = imgUrl;
     }
 
     public static void setName(String name) {
@@ -57,31 +61,52 @@ public class UnitCreationWindow  {
         UnitCreationWindow.edition = edition;
     }
 
-    public static void setImgUrl(String imgUrl) {
-        UnitCreationWindow.imgUrl = imgUrl;
-    }
-
     public static void setSelectedMethod(int selectedMethod) {
         UnitCreationWindow.selectedMethod = selectedMethod;
     }
 
-    public static int getSelectedMethod() {
-        return selectedMethod;
+    public static void setRacialModArray(int[] racialModArray) {
+        UnitCreationWindow.racialModArray = racialModArray;
     }
 
     public static void setAbilityScoreArray(int[] abilityScoreArray) {
         UnitCreationWindow.abilityScoreArray = abilityScoreArray;
     }
 
-    public static void setMaximumHitPoint(int maximumHitPoint) {UnitCreationWindow.maximumHitPoint = maximumHitPoint; }
+    public static void setPbValue(int pbValue) {
+        UnitCreationWindow.pbValue = pbValue;
+    }
 
-    public static boolean isNewUnit() {
-        return newUnit;
+    public static void setMaximumHitPoint(int maximumHitPoint) {
+        UnitCreationWindow.maximumHitPoint = maximumHitPoint;
     }
 
     public static void setNewUnit(boolean newUnit) {
         UnitCreationWindow.newUnit = newUnit;
     }
+
+    //////////
+    //GETTER//
+    //////////
+
+    public static String getImgUrl() {return imgUrl; }
+
+    public static String getName() { return name; }
+
+    public static String getEdition() { return edition; }
+
+    public static int getSelectedMethod() { return selectedMethod; }
+
+    public static int[] getRacialModArray() { return racialModArray; }
+
+    public static int[] getAbilityScoreArray() { return abilityScoreArray; }
+
+    public static int getPbValue() { return pbValue; }
+
+    public static int getMaximumHitPoint() { return maximumHitPoint; }
+
+    public static boolean isNewUnit() { return newUnit;}
+
 
     public static void CreateWindow() {
 
@@ -93,9 +118,11 @@ public class UnitCreationWindow  {
         LinkedList<Parent> parentList = new LinkedList<>();
 
         //Populate windowList
+
         windowList.add(new Parent_1_NameEditionImage());
-        windowList.add(new Parent_2_ASGeneration());
-        windowList.add(new Parent_3_SetAS());
+        windowList.add(new Parent_2_AS_Generation());
+        windowList.add(new Parent_3_AS_Setup());
+        windowList.add(new Parent_4_AS_Set());
 
         //Create a Parent for each window, add it to the parentList and set it invisible
         for (Parent_0_Base windowParentParent: windowList
@@ -141,6 +168,7 @@ public class UnitCreationWindow  {
                     }
                 }
                 );
+
         nextButton.setOnAction(actionEvent -> {
             windowList.get(listIndex.get()).nextButtonPressed();
             //Last Parent
@@ -171,9 +199,8 @@ public class UnitCreationWindow  {
 
         //margin
         BorderPane.setMargin(buttonBox, BOTTOM_BUTTON_MARGIN);
-        BorderPane.setMargin(parentList.get(0), STANDARD_MARGIN);
-        BorderPane.setMargin(parentList.get(1), STANDARD_MARGIN);
-        BorderPane.setMargin(parentList.get(2), STANDARD_MARGIN);
+        parentList.forEach(parent -> BorderPane.setMargin(parent, STANDARD_MARGIN));
+
         //setting
         mainPane.setBottom(buttonBox);
         mainPane.setCenter(currParent.get());
