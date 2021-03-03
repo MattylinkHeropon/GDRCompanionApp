@@ -13,7 +13,7 @@ public class Parent_3_AS_Setup implements Parent_0_Base{
     private static final Label racialModLabel = new Label("Please input here your racial modifier. They will be automatically added to your base Ability Score");
     private static final Label pointBuyLabel = new Label("Input here the number of point buy that you will be using to generate your base Ability Score");
 
-    private final GridPane racialModGrid = Parent_4_AS_Set.createGrid();
+    private final GridPane racialModGrid = Parent_4_AS_Set.createGrid(TextField.class.getName());
     private final TextField pbTextField = new TextField();
     private VBox finalBox;
 
