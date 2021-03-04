@@ -1,5 +1,7 @@
 package hero;
 
+import hero.Enum.Edition;
+
 import java.util.ArrayList;
 
 public class Unit {
@@ -7,7 +9,7 @@ public class Unit {
     //String
     private final String image;
     private final String name;
-    private final String game;
+    private final Edition game;
     //HP
     private int curr_hp;
     private int max_hp;
@@ -20,15 +22,16 @@ public class Unit {
     private final ArrayList<Buff> buffArrayList = new ArrayList<>();
     private final ArrayList<Buff> debuffArrayList = new ArrayList<>();
 
-    public Unit (String image, String name, String game, int[] ability_score, int max_hp) {
+    public Unit (String image, String name, Edition game, int[] ability_score, int max_hp) {
         this.image = image;
         this.name = name;
         this.game = game;
         this.max_hp = max_hp;
         curr_hp = max_hp;
         for (int i = 0; i < 6; i ++) {
-            this.ability_score[i] = ability_score[i];
-            modCalculator(i);
+            int abilityScore = ability_score[i];
+            this.ability_score[i] = abilityScore;
+            this.ability_mod[i] = modCalculator(abilityScore);
         }
     }
 
@@ -67,7 +70,7 @@ public class Unit {
     }
     public void setAbility_Score(int index, int newScore){
         ability_score[index] = newScore;
-        modCalculator(index);
+        ability_mod[index] = modCalculator(newScore);
     }
     public int[] getAbility_mod() {
         return ability_mod;
@@ -92,15 +95,16 @@ public class Unit {
     ////////////////
 
     /**
-     * Called every time an Ability Score is modified to update the modifier.
-     * Modifier is calculated removing 10 from the AS and then halving the value.
-     * @param index Position in the array of the Ability Score
+     * Calculate the Modifier of the given abilityScore.
+     * Modifier is calculated by removing 10 from the AS and then halving the value.
+     * @param abilityScore base value //TODO sistemare
+     * @return the calculated modifier
      */
-    private void modCalculator (int index) {
-        int temp = ability_score[index];
-        if (temp%2 != 0) temp-- ; //remove possible rounding error
-        temp = temp - 10;
-        ability_mod[index] =  temp/2;
+    public static int modCalculator (int abilityScore) {
+        int modifier = abilityScore;
+        if (modifier%2 != 0) modifier-- ; //remove possible rounding error
+        modifier = modifier - 10;
+        return modifier/2;
     }
 
 

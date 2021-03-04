@@ -14,13 +14,13 @@ public class Parent_3_AS_Setup implements Parent_0_Base{
     private static final Label pointBuyLabel = new Label("Input here the number of point buy that you will be using to generate your base Ability Score");
 
     private final GridPane racialModGrid = Parent_4_AS_Set.createGrid(TextField.class.getName());
-    private final TextField pbTextField = new TextField();
+    private final TextField pointBuyTextField = new TextField();
     private VBox finalBox;
 
 
     @Override
     public void onLoad() {
-        pbTextField.setText("0");
+        pointBuyTextField.setText("0");
         //empty FinalBox
         if (!finalBox.getChildren().isEmpty())
             finalBox.getChildren().removeAll(finalBox.getChildren());
@@ -29,7 +29,7 @@ public class Parent_3_AS_Setup implements Parent_0_Base{
         VBox racialModVbox = new VBox(10);
         racialModVbox.getChildren().addAll(racialModLabel, racialModGrid);
         VBox pbVbox = new VBox(10);
-        pbVbox.getChildren().addAll(pointBuyLabel, pbTextField);
+        pbVbox.getChildren().addAll(pointBuyLabel, pointBuyTextField);
 
         finalBox.getChildren().add(racialModVbox);
         if (UnitCreationWindow.getSelectedMethod() == 3) //Point Buy Selected
@@ -63,7 +63,7 @@ public class Parent_3_AS_Setup implements Parent_0_Base{
         }
 
     UnitCreationWindow.setRacialModArray(racialModArray);
-    UnitCreationWindow.setPbValue(Integer.parseInt(pbTextField.getText()));
+    UnitCreationWindow.setPointBuyValue(Integer.parseInt(pointBuyTextField.getText()));
     }
 
 

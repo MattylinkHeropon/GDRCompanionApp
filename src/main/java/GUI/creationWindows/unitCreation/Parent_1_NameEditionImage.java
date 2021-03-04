@@ -16,7 +16,7 @@ import java.io.File;
 
 class Parent_1_NameEditionImage implements Parent_0_Base {
 
-    private String edition = null;
+    private Edition edition = null;
     private TextField nameTextField = null;
     private Image profileImage = null;
     private String imgUrl = null;
@@ -61,7 +61,7 @@ class Parent_1_NameEditionImage implements Parent_0_Base {
             MenuItem item = new MenuItem(editionEl.getFullName());
             editionMenu.getItems().add(item);
             item.setOnAction(actionEvent -> {
-                 edition = editionEl.getAbbreviation();
+                 edition = editionEl;
                 currEdSelected.setText(editionEl.getFullName());
             });
         }

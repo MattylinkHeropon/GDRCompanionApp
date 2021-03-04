@@ -1,18 +1,18 @@
 package hero.Enum;
 
 /**
- * Full list with each edition of D&D and Pathfinder (not every edition is supported right now)
+ * Full list with each edition of DnD and Pathfinder (not every edition is supported right now)
  */
 public enum Edition {
-    DND_1E("D&D", "D&D"),
-    DND_2E("Advanced D&D", "AD&D"),
-    DND_22E("Advanced D&D 2nd Edition", "AD&D 2E"),
-    DND_3E("D&D 3rd Edition", "D&D 3E"),
-    DND_35E("D&D v. 3.5", "D&D 3.5E"),
-    DND4E("D&D 4th Edition", "D&D 4E"),
-    DND5E("D&D 5th Edition", "D&D 5E"),
+    DND_1E("DnD", "DnD"),
+    DND_2E("Advanced DnD", "ADnD"),
+    DND_22E("Advanced DnD 2nd Edition", "ADnD 2e"),
+    DND_3E("DnD 3rd Edition", "DnD 3e"),
+    DND_35E("DnD v. 3.5", "DnD 3.5e"),
+    DND_4E("DnD 4th Edition", "DnD 4e"),
+    DND_5E("DnD 5th Edition", "DnD 5e"),
     PATHFINDER_1E("Pathfinder", "Path"),
-    PATHFINDER_2E("Pathfinder 2nd Edition", "Path 2E");
+    PATHFINDER_2E("Pathfinder 2nd Edition", "Path 2e");
 
     private final String fullName;
     private final String abbreviation;

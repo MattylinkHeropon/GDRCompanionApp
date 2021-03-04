@@ -2,6 +2,8 @@ package GUI.creationWindows.unitCreation;
 
 import hero.AbilityScore_Generator;
 import hero.Enum.AbilityScore;
+import hero.Enum.Edition;
+import hero.Unit;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
@@ -12,17 +14,18 @@ public class Parent_4_AS_Set implements Parent_0_Base {
 
     private final int[] finalAS = new int[6];
     private final TextField HPTextField = new TextField();
-    private final TextField pbTextField = new TextField();
+    private final TextField pointBuyTextField = new TextField();
     private static final Label generatedDescriptionLabel = new Label("Here the ability score generated with the desired method");
     private static final Label assignableDescriptionLabel = new Label("Please input here your base Ability Scores");
     private static final Label HPDescriptionLabel = new Label("Please input here your maximum HP");
-    private static final Label pbRemaningLabel = new Label("Here your remaining point");
+    private static final Label pointBuyRemainingLabel = new Label("Here your remaining point");
 
     private VBox finalBox;
+    private Edition edition;
 
     private final GridPane generatedGrid = createGrid(TextField.class.getName());
     private final GridPane assignableGrid = createGrid(TextField.class.getName());
-    private final GridPane pbGrid = createGrid(Spinner.class.getName());
+    private final GridPane pointBuyGrid = createGrid(Spinner.class.getName());
 
     ///////////////////
     //OVERRIDE METHOD//
@@ -39,17 +42,38 @@ public class Parent_4_AS_Set implements Parent_0_Base {
         //empty FinalBox
         if (!finalBox.getChildren().isEmpty())
             finalBox.getChildren().removeAll(finalBox.getChildren());
-
-
         int selectedMethod = UnitCreationWindow.getSelectedMethod();
-        if (selectedMethod == 3) //Point Buy Case
+        //Point Buy Case
+        if (selectedMethod == 3)
         {
-            System.out.println("TEST SPINNER");
-            pbHandler(0, 20, 10);
-            HBox pbBox = new HBox(10);
-            pbTextField.setText(Integer.toString(UnitCreationWindow.getPbValue()));
-            pbBox.getChildren().addAll(pbRemaningLabel, pbTextField);
-            finalBox.getChildren().addAll(assignableDescriptionLabel, pbGrid, pbBox);
+            edition = UnitCreationWindow.getEdition();
+            //Modify Spinner to the correct value
+            switch (edition){
+                case DND_1E:
+                case DND_2E:
+                case DND_22E:
+                case PATHFINDER_2E:
+                    System.out.println("You shouldn't be here");
+                    return;
+                case DND_3E:
+                case DND_35E:
+                    spinnerInitializer(8, 18, 8);
+                    break;
+                case DND_4E:
+                    spinnerInitializer(8, 18, 10);
+                    break;
+                case DND_5E:
+                    spinnerInitializer(8, 15, 8);
+                    break;
+                case PATHFINDER_1E:
+                    spinnerInitializer(7, 18, 10);
+                    break;
+            }
+            //Create graphic
+            HBox pointBuyBox = new HBox(10);
+            pointBuyTextField.setText(Integer.toString(UnitCreationWindow.getPointBuyValue()));
+            pointBuyBox.getChildren().addAll(pointBuyRemainingLabel, pointBuyTextField);
+            finalBox.getChildren().addAll(assignableDescriptionLabel, pointBuyGrid, pointBuyBox);
         } else {
             populate_generatedGrid(selectedMethod);
             VBox assignableBox = new VBox();
@@ -72,7 +96,6 @@ public class Parent_4_AS_Set implements Parent_0_Base {
 
     /**
      * Initialize the gridPane after the standard creation the Vbox which will contain them.
-     *
      * @return the main Vbox of the class (finalBox)
      */
     @Override
@@ -95,12 +118,11 @@ public class Parent_4_AS_Set implements Parent_0_Base {
 
     @Override
     public void nextButtonPressed() {
-        //int[] racialModArray = Parent_3_AS_Setup.getRacialModArray();
         for (int i = 0; i < 6; i++) {
             TextField textField;
             //case Point Buy
             if (UnitCreationWindow.getSelectedMethod() == 3)
-                textField = ((Spinner<?>) pbGrid.getChildren().get(i)).getEditor();
+                textField = ((Spinner<?>) pointBuyGrid.getChildren().get(i)).getEditor();
                 //Not point Buy
             else textField = (TextField) assignableGrid.getChildren().get(i);
 
@@ -118,7 +140,6 @@ public class Parent_4_AS_Set implements Parent_0_Base {
      * Use the selected method to generate a set of Ability Score: if "manual" (4) il selected, end the execution,
      * else generate an array of int and use it to populate the GridPane.
      * Then, create a Vbox with a Label and the populated Grid, and add them to finalBox
-     *
      * @param selectedMethod selected method for the Array Generation
      */
     private void populate_generatedGrid(int selectedMethod) {
@@ -156,7 +177,6 @@ public class Parent_4_AS_Set implements Parent_0_Base {
     /**
      * Create a 3*2 grid for the Ability Score, with set Hgap and Vgap
      * By default every element of the grid has a promp text with the abbreviation of the skill and is set as editable
-     *
      * @return a properly formatted grid
      */
     public static GridPane createGrid(String typeOfField) {
@@ -201,10 +221,86 @@ public class Parent_4_AS_Set implements Parent_0_Base {
         return grid;
     }
 
-    private void pbHandler(int minimum, int maximum, int start) {
-        //Initialize Spinner
-        pbGrid.getChildren().forEach(spinner -> ((Spinner<Integer>) spinner).setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(minimum, maximum, start)));
-
+    /**
+     * Initialize every Spinner in pointBuyGrid, and assign to their TextField a Listener
+     * @param minimum minimum value of a Spinner
+     * @param maximum maximum value of a Spinner
+     * @param start starting value of a Spinner
+     */
+    private void spinnerInitializer(int minimum, int maximum, int start) {
+        for (int i = 0; i < 6; i++) {
+            //Irrelevant Warning, for construction pointBuyGrid will always and only have Spinner as node
+            @SuppressWarnings("unchecked")
+            Spinner<Integer> spinner = (Spinner<Integer>) pointBuyGrid.getChildren().get(i);
+            spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(minimum, maximum, start));
+            spinner.getEditor().textProperty().addListener((observableValue, oldValue, newValue) -> pointBuyChange(start, Integer.parseInt(oldValue), Integer.parseInt(newValue)));
+        }
     }
+
+    /**
+     * Called when the value of a Spinner in pointBuyGrid is changed. Calculate the cost of the change, and add/subtract it from the pool of remaing point
+     * @param baseValue base value of the Spinner
+     * @param oldValue value before the change
+     * @param newValue value after the change
+     */
+    private void pointBuyChange (int baseValue, int oldValue, int newValue){
+        int deltaPoint = 0;
+        boolean increaseInValue = oldValue < newValue;
+        switch (edition) {
+            case DND_4E:
+                deltaPoint = deltaCalculus_VariableAndSignSelector(increaseInValue, newValue <= baseValue, oldValue, newValue);
+                if ((increaseInValue && newValue == 16)||(!increaseInValue && oldValue == 16))
+                    deltaPoint = 2 * Math.abs(deltaPoint)/deltaPoint ;
+                break;
+            case PATHFINDER_1E:
+            case DND_5E:
+                deltaPoint = deltaCalculus_VariableAndSignSelector(increaseInValue, newValue <= baseValue, oldValue, newValue);
+            break;
+            case DND_3E:
+            case DND_35E:
+                if (increaseInValue) deltaPoint = (-1) * deltaCalculus_Value(oldValue);
+                else deltaPoint = deltaCalculus_Value(newValue);
+        }
+        
+        int currValue = Integer.parseInt(pointBuyTextField.getText());
+        currValue = currValue + deltaPoint;
+        pointBuyTextField.setText(Integer.toString(currValue));
+    }
+
+    /**
+     * First method called to calculate the value of deltaPoint.
+     * Call deltaCalculus_Value passing the correct variable, and decide the sign of the return value
+     * @param increaseInValue decide the sign of the return value
+     * @param belowBase decide which value pass to the subMethod
+     * @param oldValue old value of the variable
+     * @param newValue new value of the variable
+     * @return the result of deltaCalculus_Value with the correct sing
+     */
+    private int deltaCalculus_VariableAndSignSelector(boolean increaseInValue, boolean belowBase, int oldValue, int newValue){
+        if (increaseInValue)
+            if (belowBase) return (-1) * deltaCalculus_Value(oldValue);
+            else return (-1) *  deltaCalculus_Value(newValue);
+        else
+            if(belowBase) return deltaCalculus_Value(newValue);
+            else return deltaCalculus_Value(oldValue);
+    }
+
+
+
+
+    /**
+     * Second method called to calculate the value od deltaPoint.
+     * Calculate the |modifier| of the given AbilityScore (with a floor of 1) to determinate how many points we need to subtract from the pool
+     * @param value Ability score whose modifier must be calculated
+     * @return The calculated modifier or one, whichever is higher
+     */
+    private int deltaCalculus_Value(int value){
+        int cost = Math.abs(Unit.modCalculator(value));
+        return Math.max(cost, 1);
+    }
+
+    //TODO: Controllare che succede se fai avanti e indietro tra le schermate col calcolo dei punti
+    //TODO: Controllare che il giocatore non proceda con meno di zero punti rimanenti col PB
+    //TODO: Controllare che nella quarta edizione non ci sia più di un valore sotto base, e notificarlo all'utente
 }
 

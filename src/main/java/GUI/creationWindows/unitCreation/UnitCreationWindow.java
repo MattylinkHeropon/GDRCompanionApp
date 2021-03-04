@@ -1,6 +1,7 @@
 package GUI.creationWindows.unitCreation;
 
 import GUI.MainGUI;
+import hero.Enum.Edition;
 import hero.Unit;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -37,11 +38,11 @@ public class UnitCreationWindow  {
     private static Stage stage;
     private static String imgUrl;
     private static String name;
-    private static String edition;
+    private static Edition edition;
     private static int selectedMethod;
     private static int[] racialModArray;
     private static int[] abilityScoreArray;
-    private static int pbValue;
+    private static int pointBuyValue;
     private static int maximumHitPoint;
     private static boolean newUnit = false;
 
@@ -57,7 +58,7 @@ public class UnitCreationWindow  {
         UnitCreationWindow.name = name;
     }
 
-    public static void setEdition(String edition) {
+    public static void setEdition(Edition edition) {
         UnitCreationWindow.edition = edition;
     }
 
@@ -73,8 +74,8 @@ public class UnitCreationWindow  {
         UnitCreationWindow.abilityScoreArray = abilityScoreArray;
     }
 
-    public static void setPbValue(int pbValue) {
-        UnitCreationWindow.pbValue = pbValue;
+    public static void setPointBuyValue(int pointBuyValue) {
+        UnitCreationWindow.pointBuyValue = pointBuyValue;
     }
 
     public static void setMaximumHitPoint(int maximumHitPoint) {
@@ -93,7 +94,7 @@ public class UnitCreationWindow  {
 
     public static String getName() { return name; }
 
-    public static String getEdition() { return edition; }
+    public static Edition getEdition() { return edition; }
 
     public static int getSelectedMethod() { return selectedMethod; }
 
@@ -101,7 +102,7 @@ public class UnitCreationWindow  {
 
     public static int[] getAbilityScoreArray() { return abilityScoreArray; }
 
-    public static int getPbValue() { return pbValue; }
+    public static int getPointBuyValue() { return pointBuyValue; }
 
     public static int getMaximumHitPoint() { return maximumHitPoint; }
 
