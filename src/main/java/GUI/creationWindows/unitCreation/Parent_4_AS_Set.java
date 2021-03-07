@@ -19,6 +19,7 @@ public class Parent_4_AS_Set implements Parent_0_Base {
     private static final Label assignableDescriptionLabel = new Label("Please input here your base Ability Scores");
     private static final Label HPDescriptionLabel = new Label("Please input here your maximum HP");
     private static final Label pointBuyRemainingLabel = new Label("Here your remaining point");
+    private static final Label dndForthLael = new Label("I reduced your point by two, and set all your base stat at 10. You can reduce one and only one of them down to 8, and gain up to 2 point.");
 
     private static int currStart;
     private static VBox finalBox;
@@ -63,8 +64,7 @@ public class Parent_4_AS_Set implements Parent_0_Base {
                     break;
                 case DND_4E:
                     currStart = 10;
-                    //TODO: ridurre di 2 il PB pool;
-                    //Dire all'utente "ti ho ridotto il pool, sappi che puoi fare XYZ
+                    UnitCreationWindow.setPointBuyValue(UnitCreationWindow.getPointBuyValue() - 2);
                     spinnerInitializer(8, 18);
                     break;
                 case DND_5E:
@@ -76,10 +76,16 @@ public class Parent_4_AS_Set implements Parent_0_Base {
                     break;
             }
             //Create graphic
-            HBox pointBuyBox = new HBox(10);
+            VBox pointBuyVBox = new VBox(10);
+            HBox pointBuyHBox = new HBox(10);
             pointBuyTextField.setText(Integer.toString(UnitCreationWindow.getPointBuyValue()));
-            pointBuyBox.getChildren().addAll(pointBuyRemainingLabel, pointBuyTextField);
-            finalBox.getChildren().addAll(assignableDescriptionLabel, pointBuyGrid, pointBuyBox);
+
+            if(edition.equals(Edition.DND_4E)) pointBuyVBox.getChildren().add(dndForthLael);
+
+            pointBuyHBox.getChildren().addAll(pointBuyRemainingLabel, pointBuyTextField);
+            pointBuyVBox.getChildren().add(pointBuyHBox);
+
+            finalBox.getChildren().addAll(assignableDescriptionLabel, pointBuyGrid, pointBuyVBox);
         } else {
             populate_generatedGrid(selectedMethod);
             VBox assignableBox = new VBox();
@@ -107,12 +113,11 @@ public class Parent_4_AS_Set implements Parent_0_Base {
     @Override
     public Parent createParent() {
 
+        dndForthLael.setWrapText(true);
+
         ///////////////////
         //GRAPHIC SECTION//
         ///////////////////
-        //create Spinner and Listener for the pointBuyGrid
-
-
 
         //Set generatedGrid as uneditable
         generatedGrid.getChildren().forEach(node -> ((TextField) node).setEditable(false));
