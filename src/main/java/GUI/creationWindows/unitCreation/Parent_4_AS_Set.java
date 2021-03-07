@@ -14,14 +14,15 @@ public class Parent_4_AS_Set implements Parent_0_Base {
 
     private final int[] finalAS = new int[6];
     private final TextField HPTextField = new TextField();
-    private final TextField pointBuyTextField = new TextField();
+    private static final TextField pointBuyTextField = new TextField();
     private static final Label generatedDescriptionLabel = new Label("Here the ability score generated with the desired method");
     private static final Label assignableDescriptionLabel = new Label("Please input here your base Ability Scores");
     private static final Label HPDescriptionLabel = new Label("Please input here your maximum HP");
     private static final Label pointBuyRemainingLabel = new Label("Here your remaining point");
 
-    private VBox finalBox;
-    private Edition edition;
+    private static int currStart;
+    private static VBox finalBox;
+    private static Edition edition;
 
     private final GridPane generatedGrid = createGrid(TextField.class.getName());
     private final GridPane assignableGrid = createGrid(TextField.class.getName());
@@ -57,16 +58,21 @@ public class Parent_4_AS_Set implements Parent_0_Base {
                     return;
                 case DND_3E:
                 case DND_35E:
-                    spinnerInitializer(8, 18, 8);
+                    currStart = 8;
+                    spinnerInitializer(8, 18);
                     break;
                 case DND_4E:
-                    spinnerInitializer(8, 18, 10);
+                    currStart = 10;
+                    //TODO: ridurre di 2 il PB pool;
+                    //Dire all'utente "ti ho ridotto il pool, sappi che puoi fare XYZ
+                    spinnerInitializer(8, 18);
                     break;
                 case DND_5E:
-                    spinnerInitializer(8, 15, 8);
+                    currStart = 8;
+                    spinnerInitializer(8, 15);
                     break;
                 case PATHFINDER_1E:
-                    spinnerInitializer(7, 18, 10);
+                    spinnerInitializer(7, 18);
                     break;
             }
             //Create graphic
@@ -104,6 +110,9 @@ public class Parent_4_AS_Set implements Parent_0_Base {
         ///////////////////
         //GRAPHIC SECTION//
         ///////////////////
+        //create Spinner and Listener for the pointBuyGrid
+
+
 
         //Set generatedGrid as uneditable
         generatedGrid.getChildren().forEach(node -> ((TextField) node).setEditable(false));
@@ -197,7 +206,8 @@ public class Parent_4_AS_Set implements Parent_0_Base {
                 //If an more cases are needed, value to convert all to a Switch case, and use an Enum to evaluate the case.
                 //See here for detail: https://stackoverflow.com/questions/3827393/java-switch-statement-constant-expression-required-but-it-is-constant
                 if (typeOfField.equals(Spinner.class.getName())) {
-                    temp = new Spinner<Integer>();
+                    temp = new Spinner<Integer>(0 , 20 , 10);
+                    ((Spinner<?>) temp).getEditor().textProperty().addListener((observableValue, oldValue, newValue) -> pointBuyChange(Integer.parseInt(oldValue), Integer.parseInt(newValue)));
                 } else {
                     temp = new TextField();
                     ((TextField) temp).setPromptText(AbilityScore.values()[i].getAbbreviation());
@@ -225,36 +235,36 @@ public class Parent_4_AS_Set implements Parent_0_Base {
      * Initialize every Spinner in pointBuyGrid, and assign to their TextField a Listener
      * @param minimum minimum value of a Spinner
      * @param maximum maximum value of a Spinner
-     * @param start starting value of a Spinner
      */
-    private void spinnerInitializer(int minimum, int maximum, int start) {
+    private void spinnerInitializer(int minimum, int maximum) {
         for (int i = 0; i < 6; i++) {
             //Irrelevant Warning, for construction pointBuyGrid will always and only have Spinner as node
             @SuppressWarnings("unchecked")
-            Spinner<Integer> spinner = (Spinner<Integer>) pointBuyGrid.getChildren().get(i);
-            spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(minimum, maximum, start));
-            spinner.getEditor().textProperty().addListener((observableValue, oldValue, newValue) -> pointBuyChange(start, Integer.parseInt(oldValue), Integer.parseInt(newValue)));
+            Spinner<Integer> spinner = ((Spinner<Integer>)pointBuyGrid.getChildren().get(i));
+            SpinnerValueFactory.IntegerSpinnerValueFactory valueFactory = (SpinnerValueFactory.IntegerSpinnerValueFactory) spinner.getValueFactory();
+            valueFactory.setMin(minimum);
+            valueFactory.setMax(maximum);
+            valueFactory.setValue(currStart);
         }
     }
 
     /**
      * Called when the value of a Spinner in pointBuyGrid is changed. Calculate the cost of the change, and add/subtract it from the pool of remaing point
-     * @param baseValue base value of the Spinner
      * @param oldValue value before the change
      * @param newValue value after the change
      */
-    private void pointBuyChange (int baseValue, int oldValue, int newValue){
+    private static void pointBuyChange ( int oldValue, int newValue){
         int deltaPoint = 0;
         boolean increaseInValue = oldValue < newValue;
         switch (edition) {
             case DND_4E:
-                deltaPoint = deltaCalculus_VariableAndSignSelector(increaseInValue, newValue <= baseValue, oldValue, newValue);
+                deltaPoint = deltaCalculus_VariableAndSignSelector(increaseInValue, newValue <= currStart, oldValue, newValue);
                 if ((increaseInValue && newValue == 16)||(!increaseInValue && oldValue == 16))
                     deltaPoint = 2 * Math.abs(deltaPoint)/deltaPoint ;
                 break;
             case PATHFINDER_1E:
             case DND_5E:
-                deltaPoint = deltaCalculus_VariableAndSignSelector(increaseInValue, newValue <= baseValue, oldValue, newValue);
+                deltaPoint = deltaCalculus_VariableAndSignSelector(increaseInValue, newValue <= currStart, oldValue, newValue);
             break;
             case DND_3E:
             case DND_35E:
@@ -276,7 +286,7 @@ public class Parent_4_AS_Set implements Parent_0_Base {
      * @param newValue new value of the variable
      * @return the result of deltaCalculus_Value with the correct sing
      */
-    private int deltaCalculus_VariableAndSignSelector(boolean increaseInValue, boolean belowBase, int oldValue, int newValue){
+    private static int deltaCalculus_VariableAndSignSelector(boolean increaseInValue, boolean belowBase, int oldValue, int newValue){
         if (increaseInValue)
             if (belowBase) return (-1) * deltaCalculus_Value(oldValue);
             else return (-1) *  deltaCalculus_Value(newValue);
@@ -294,12 +304,11 @@ public class Parent_4_AS_Set implements Parent_0_Base {
      * @param value Ability score whose modifier must be calculated
      * @return The calculated modifier or one, whichever is higher
      */
-    private int deltaCalculus_Value(int value){
+    private static int deltaCalculus_Value(int value){
         int cost = Math.abs(Unit.modCalculator(value));
         return Math.max(cost, 1);
     }
 
-    //TODO: Controllare che succede se fai avanti e indietro tra le schermate col calcolo dei punti
     //TODO: Controllare che il giocatore non proceda con meno di zero punti rimanenti col PB
     //TODO: Controllare che nella quarta edizione non ci sia più di un valore sotto base, e notificarlo all'utente
 }
