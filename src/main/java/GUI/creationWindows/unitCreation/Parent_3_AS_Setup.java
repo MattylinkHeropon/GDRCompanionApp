@@ -8,15 +8,17 @@ import javafx.scene.layout.VBox;
 
 public class Parent_3_AS_Setup implements Parent_0_Base{
 
+    //To Return
     private final int[] racialModArray = new int[6];
 
-    private static final Label racialModLabel = new Label("Please input here your racial modifier. They will be automatically added to your base Ability Score");
-    private static final Label pointBuyLabel = new Label("Input here the number of point buy that you will be using to generate your base Ability Score");
-
+    //Used by Method
     private final GridPane racialModGrid = Parent_4_AS_Set.createGrid(TextField.class.getName());
     private final TextField pointBuyTextField = new TextField();
     private VBox finalBox;
 
+    //Label
+    private static final Label racialModLabel = new Label("Please input here your racial modifier. They will be automatically added to your base Ability Score");
+    private static final Label pointBuyLabel = new Label("Input here the number of point buy that you will be using to generate your base Ability Score");
 
     @Override
     public void onLoad() {
@@ -34,7 +36,6 @@ public class Parent_3_AS_Setup implements Parent_0_Base{
         finalBox.getChildren().add(racialModVbox);
         if (UnitCreationWindow.getSelectedMethod() == 3) //Point Buy Selected
             finalBox.getChildren().add(pbVbox);
-
     }
 
     @Override
@@ -48,8 +49,6 @@ public class Parent_3_AS_Setup implements Parent_0_Base{
         VBox.setMargin(finalBox, UnitCreationWindow.STANDARD_MARGIN);
 
         return finalBox;
-
-
     }
 
     @Override

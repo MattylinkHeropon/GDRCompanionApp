@@ -12,41 +12,41 @@ import javafx.scene.layout.VBox;
 
 public class Parent_4_AS_Set implements Parent_0_Base {
 
+    //To return
     private final int[] finalAS = new int[6];
     private final TextField HPTextField = new TextField();
+
+    //Used by Method
+    private static int currStart;
+    private static VBox finalBox;
+    private static Edition edition;
+
+    //GridPane
+    private final GridPane generatedGrid = createGrid(TextField.class.getName());
+    private final GridPane assignableGrid = createGrid(TextField.class.getName());
+    private final GridPane pointBuyGrid = createGrid(Spinner.class.getName());
+
+    //Label
     private static final TextField pointBuyTextField = new TextField();
     private static final Label generatedDescriptionLabel = new Label("Here the ability score generated with the desired method");
     private static final Label assignableDescriptionLabel = new Label("Please input here your base Ability Scores");
     private static final Label HPDescriptionLabel = new Label("Please input here your maximum HP");
     private static final Label pointBuyRemainingLabel = new Label("Here your remaining point");
-    private static final Label dndForthLael = new Label("I reduced your point by two, and set all your base stat at 10. You can reduce one and only one of them down to 8, and gain up to 2 point.");
+    private static final Label dndForthLabel = new Label("I reduced your point by two, and set all your base stat at 10. You can reduce one and only one of them down to 8, and gain up to 2 point.");
 
-    private static int currStart;
-    private static VBox finalBox;
-    private static Edition edition;
-
-    private final GridPane generatedGrid = createGrid(TextField.class.getName());
-    private final GridPane assignableGrid = createGrid(TextField.class.getName());
-    private final GridPane pointBuyGrid = createGrid(Spinner.class.getName());
 
     ///////////////////
     //OVERRIDE METHOD//
     ///////////////////
 
-    /**
-     * First, if necessary, completely empty finalBox, removing all element
-     * Then, if necessary, generate a set of ability score, put them in the TextBoxes of generatedGrid,
-     * create a Vbox for generatedGrid with it's label, and add it to finalBox.
-     * Repeat the process for assignableGrid, and then add a final row to set the HP of the character
-     */
     @Override
     public void onLoad() {
         //empty FinalBox
         if (!finalBox.getChildren().isEmpty())
             finalBox.getChildren().removeAll(finalBox.getChildren());
         int selectedMethod = UnitCreationWindow.getSelectedMethod();
-        //Point Buy Case
-        if (selectedMethod == 3)
+
+        if (selectedMethod == 3) //Point Buy Case
         {
             edition = UnitCreationWindow.getEdition();
             //Modify Spinner to the correct value
@@ -80,48 +80,37 @@ public class Parent_4_AS_Set implements Parent_0_Base {
             HBox pointBuyHBox = new HBox(10);
             pointBuyTextField.setText(Integer.toString(UnitCreationWindow.getPointBuyValue()));
 
-            if(edition.equals(Edition.DND_4E)) pointBuyVBox.getChildren().add(dndForthLael);
+            if(edition.equals(Edition.DND_4E)) pointBuyVBox.getChildren().add(dndForthLabel);
 
             pointBuyHBox.getChildren().addAll(pointBuyRemainingLabel, pointBuyTextField);
             pointBuyVBox.getChildren().add(pointBuyHBox);
 
             finalBox.getChildren().addAll(assignableDescriptionLabel, pointBuyGrid, pointBuyVBox);
-        } else {
+        } else //Not Point Buy Case
+            {
             populate_generatedGrid(selectedMethod);
             VBox assignableBox = new VBox();
             assignableBox.getChildren().addAll(assignableDescriptionLabel, assignableGrid);
             finalBox.getChildren().add(assignableBox);
-        }
-
-
+            }
         //end if Else
-
 
         //create HP box
         HBox HPBox = new HBox(10);
         HPTextField.setPromptText("HP");
         HPBox.getChildren().addAll(HPDescriptionLabel, HPTextField);
 
-
         finalBox.getChildren().add(HPBox);
     }
 
-    /**
-     * Initialize the gridPane after the standard creation the Vbox which will contain them.
-     * @return the main Vbox of the class (finalBox)
-     */
     @Override
     public Parent createParent() {
 
-        dndForthLael.setWrapText(true);
-
-        ///////////////////
-        //GRAPHIC SECTION//
-        ///////////////////
+        //Set label wrappable
+        dndForthLabel.setWrapText(true);
 
         //Set generatedGrid as uneditable
         generatedGrid.getChildren().forEach(node -> ((TextField) node).setEditable(false));
-
 
         //Initialize the final Vbox to return.
         finalBox = new VBox(50);
@@ -177,7 +166,6 @@ public class Parent_4_AS_Set implements Parent_0_Base {
         for (int i = 0; i < 6; i++) {
             assert generatedAS != null;
             TextField temp = (TextField) generatedGrid.getChildren().get(i);
-
             temp.setText(Integer.toString(generatedAS[i]));
         }
         //Create the box
@@ -220,9 +208,7 @@ public class Parent_4_AS_Set implements Parent_0_Base {
                 }
 
                 //set bound
-
                 temp.setMaxWidth(gridElement_MaxWidth);
-
                 GridPane.setConstraints(temp, col, row);
                 grid.getChildren().add(temp);
             }
@@ -231,7 +217,6 @@ public class Parent_4_AS_Set implements Parent_0_Base {
         //Set gap:
         grid.setHgap(gridElement_Hgap);
         grid.setVgap(gridElement_Vgap);
-
 
         return grid;
     }
@@ -254,7 +239,7 @@ public class Parent_4_AS_Set implements Parent_0_Base {
     }
 
     /**
-     * Called when the value of a Spinner in pointBuyGrid is changed. Calculate the cost of the change, and add/subtract it from the pool of remaing point
+     * Called when the value of a Spinner in pointBuyGrid is changed. Calculate the cost of the change, and add/subtract it from the pool of remaining point
      * @param oldValue value before the change
      * @param newValue value after the change
      */
@@ -299,9 +284,6 @@ public class Parent_4_AS_Set implements Parent_0_Base {
             if(belowBase) return deltaCalculus_Value(newValue);
             else return deltaCalculus_Value(oldValue);
     }
-
-
-
 
     /**
      * Second method called to calculate the value od deltaPoint.

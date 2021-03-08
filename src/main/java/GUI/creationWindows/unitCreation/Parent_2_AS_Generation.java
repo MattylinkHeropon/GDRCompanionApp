@@ -9,17 +9,12 @@ import javafx.scene.layout.VBox;
 
 class Parent_2_AS_Generation implements Parent_0_Base {
 
+    //To return
     private static ToggleGroup radioGroup;
-
 
     @Override
     public void onLoad() {}
 
-    /**
-     * handle the selection of the method to generate 6 possible value for the Ability Score,
-     * while creating a Parent to contain all the necessary element
-     * @return Created panel
-     */
     @Override
     public Parent createParent() {
 
