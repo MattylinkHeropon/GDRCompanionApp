@@ -1,6 +1,10 @@
 package GUI.creationWindows.unitCreation;
 
 import hero.Enum.Edition;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.Parent;
@@ -20,7 +24,10 @@ class Parent_1_NameEditionImage implements Parent_0_Base {
     private Edition edition = null;
     private TextField nameTextField = null;
     private Image profileImage = null;
-    private String imgUrl = null;
+    private final StringProperty imgUrl = new SimpleStringProperty();
+
+    //Used by Method
+    private TextField currEdSelected;
 
     @Override
     public void onLoad() {}
@@ -28,15 +35,16 @@ class Parent_1_NameEditionImage implements Parent_0_Base {
     @Override
     public Parent createParent(){
 
+        imgUrl.set("");
+
         ////////////////
         //TEXT SECTION//
         ////////////////
-
         Label introductionLabel = new Label("Welcome to the character creation window.\nPlease, enter your character's name and select the game edition");
         Label editionLabel = new Label("Edition: ");
         nameTextField = new TextField();
         Label currEdSelectedLabel = new Label("Selected Edition: ");
-        TextField currEdSelected = new TextField();
+        currEdSelected = new TextField();
         Label imageLabel = new Label("Select your profile image: ");
 
 
@@ -77,7 +85,7 @@ class Parent_1_NameEditionImage implements Parent_0_Base {
             fileChooser.setTitle("Select a image");
             fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("image file", "*.png", "*.jpg"));
             File temp = fileChooser.showOpenDialog(new Stage());
-            imgUrl = temp.getAbsolutePath();
+            imgUrl.set(temp.getAbsolutePath());
             profileImage = new Image(temp.toURI().toString());
 
             imageNode.setImage(profileImage);
@@ -127,7 +135,16 @@ class Parent_1_NameEditionImage implements Parent_0_Base {
     public void nextButtonPressed(){
         UnitCreationWindow.setName(nameTextField.getText());
         UnitCreationWindow.setEdition(edition);
-        UnitCreationWindow.setImgUrl(imgUrl);
+        UnitCreationWindow.setImgUrl(imgUrl.get());
+    }
+
+    @Override
+    public BooleanBinding nextButtonDisableCondition() {
+
+        return Bindings.createBooleanBinding(() ->
+                nameTextField.getText().isEmpty() || currEdSelected.getText().isEmpty() || imgUrl.get().isEmpty(),
+                nameTextField.textProperty(), currEdSelected.textProperty(), imgUrl
+        );
     }
 
 

@@ -4,6 +4,8 @@ import hero.AbilityScore_Generator;
 import hero.Enum.AbilityScore;
 import hero.Enum.Edition;
 import hero.Unit;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
@@ -20,6 +22,7 @@ public class Parent_4_AS_Set implements Parent_0_Base {
     private static int currStart;
     private static VBox finalBox;
     private static Edition edition;
+    private static final TextField pointBuyTextField = new TextField("0");
 
     //GridPane
     private final GridPane generatedGrid = createGrid(TextField.class.getName());
@@ -27,7 +30,6 @@ public class Parent_4_AS_Set implements Parent_0_Base {
     private final GridPane pointBuyGrid = createGrid(Spinner.class.getName());
 
     //Label
-    private static final TextField pointBuyTextField = new TextField();
     private static final Label generatedDescriptionLabel = new Label("Here the ability score generated with the desired method");
     private static final Label assignableDescriptionLabel = new Label("Please input here your base Ability Scores");
     private static final Label HPDescriptionLabel = new Label("Please input here your maximum HP");
@@ -48,6 +50,7 @@ public class Parent_4_AS_Set implements Parent_0_Base {
 
         if (selectedMethod == 3) //Point Buy Case
         {
+
             edition = UnitCreationWindow.getEdition();
             //Modify Spinner to the correct value
             switch (edition){
@@ -72,13 +75,14 @@ public class Parent_4_AS_Set implements Parent_0_Base {
                     spinnerInitializer(8, 15);
                     break;
                 case PATHFINDER_1E:
+                    currStart = 10;
                     spinnerInitializer(7, 18);
                     break;
             }
+            pointBuyTextField.setText(Integer.toString(UnitCreationWindow.getPointBuyValue()));
             //Create graphic
             VBox pointBuyVBox = new VBox(10);
             HBox pointBuyHBox = new HBox(10);
-            pointBuyTextField.setText(Integer.toString(UnitCreationWindow.getPointBuyValue()));
 
             if(edition.equals(Edition.DND_4E)) pointBuyVBox.getChildren().add(dndForthLabel);
 
@@ -127,13 +131,34 @@ public class Parent_4_AS_Set implements Parent_0_Base {
             if (UnitCreationWindow.getSelectedMethod() == 3)
                 textField = ((Spinner<?>) pointBuyGrid.getChildren().get(i)).getEditor();
                 //Not point Buy
-            else textField = (TextField) assignableGrid.getChildren().get(i);
-
+            else {
+                textField = (TextField) assignableGrid.getChildren().get(i);
+            }
+            if (textField.getText().isEmpty()) textField.setText("10");
             finalAS[i] = Integer.parseInt((textField.getText())) + UnitCreationWindow.getRacialModArray()[i];
         }
         UnitCreationWindow.setAbilityScoreArray(finalAS);
+        if (HPTextField.getText().isEmpty()) HPTextField.setText("1");
         UnitCreationWindow.setMaximumHitPoint(Integer.parseInt(HPTextField.getText()));
     }
+
+    @Override
+    public BooleanBinding nextButtonDisableCondition() {
+        return Bindings.createBooleanBinding(()->
+                UnitCreationWindow.getSelectedMethod() == 3 && //We are in point buy
+                !pointBuyTextField.getText().equals("0") && //We DON'T have 0 point remaining
+                        ((UnitCreationWindow.getEdition().equals(Edition.DND_4E)) && checkArrayValidity()) //TODO controllare matematica perché blocca solo se ha valori sotto in caso di quarta edizione
+                , pointBuyTextField.textProperty());
+    }
+    //TODO: better name e javadoc
+    private boolean checkArrayValidity(){
+        int belowValue = 0;
+        for (int i = 0; i < 6; i++) {
+            if (((Spinner<Integer>) pointBuyGrid.getChildren().get(i)).getValue() < 10) belowValue++;
+        }
+        return belowValue > 1;
+    }
+
 
     ////////////////
     //OTHER METHOD//
@@ -296,7 +321,5 @@ public class Parent_4_AS_Set implements Parent_0_Base {
         return Math.max(cost, 1);
     }
 
-    //TODO: Controllare che il giocatore non proceda con meno di zero punti rimanenti col PB
-    //TODO: Controllare che nella quarta edizione non ci sia più di un valore sotto base, e notificarlo all'utente
 }
 

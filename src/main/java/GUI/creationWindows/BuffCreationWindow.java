@@ -1,6 +1,8 @@
 package GUI.creationWindows;
 
 import hero.Buff;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -65,9 +67,9 @@ public class BuffCreationWindow  {
         //Setup
         buffRadio.setToggleGroup(radioGroup);
         buffRadio.setUserData(true);
+        buffRadio.setSelected(true);
         debuffRadio.setToggleGroup(radioGroup);
         debuffRadio.setUserData(false);
-        buffRadio.setSelected(true);
 
 
         ////////////////
@@ -114,6 +116,14 @@ public class BuffCreationWindow  {
 
         Button closeButton = new Button("Close");
         Button confirmButton = new Button("Confirm");
+
+        //Confirm binding
+        BooleanBinding confirmBind = Bindings.createBooleanBinding(() -> //Disabled if one is empty
+             casterTextField.getText().isEmpty() || durationTextField.getText().isEmpty() || descriptionTextArea.getText().isEmpty(),
+            casterTextField.textProperty(), durationTextField.textProperty(), descriptionTextArea.textProperty()
+        );
+
+        confirmButton.disableProperty().bind(confirmBind);
 
         //SetOnAction setup
         closeButton.setOnAction(actionEvent -> {

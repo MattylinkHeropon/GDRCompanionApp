@@ -10,4 +10,6 @@ public interface Parent_0_Base {
     Parent createParent();
 
     void nextButtonPressed();
+    //It's always the condition tha BLOCK the button
+    BooleanBinding nextButtonDisableCondition();
 }

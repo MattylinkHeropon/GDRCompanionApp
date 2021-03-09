@@ -3,6 +3,7 @@ package GUI.creationWindows.unitCreation;
 import GUI.MainGUI;
 import hero.Enum.Edition;
 import hero.Unit;
+import javafx.beans.binding.BooleanBinding;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -149,6 +150,8 @@ public class UnitCreationWindow  {
         Button closeButton = new Button("Close");
         Button nextButton = new Button("Next >>");
 
+        nextButton.disableProperty().bind(windowList.get(0).nextButtonDisableCondition());
+
         //box setup
         buttonBox.getChildren().addAll(closeButton, nextButton);
         buttonBox.setAlignment(Pos.CENTER_RIGHT);
@@ -163,7 +166,7 @@ public class UnitCreationWindow  {
                         currParent.set(parentList.get(listIndex.get())); //get the new current Parent
                         currParent.get().setVisible(true); //set the new current Parent visible
                         mainPane.setCenter(currParent.get());
-
+                        addBindCondition(nextButton, windowList.get(listIndex.get()).nextButtonDisableCondition());
                         if (listIndex.get() == 0) closeButton.setText("Close");
                         nextButton.setText("Next >>");
                     }
@@ -188,6 +191,8 @@ public class UnitCreationWindow  {
                 currParent.set(parentList.get(listIndex.get())); //get the new current Parent
                 currParent.get().setVisible(true); //set the new current Parent visible
                 mainPane.setCenter(currParent.get());
+
+                addBindCondition(nextButton, windowList.get(listIndex.get()).nextButtonDisableCondition());
                 //Change text on the button (always in "closeButton", if necessary in "nextButton")
                 if (listIndex.get() == endArray) nextButton.setText("End");
                 closeButton.setText("<< Back");
@@ -215,6 +220,13 @@ public class UnitCreationWindow  {
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setResizable(false);
         stage.showAndWait();
+    }
+
+    //remove existing bind condition, and add a new one if seneccary
+    //TODO sistemare javaDoc
+    private static void addBindCondition(Button buttonToBind, BooleanBinding binding){
+        buttonToBind.disableProperty().unbind();
+        if (binding!=null) buttonToBind.disableProperty().bind(binding);
     }
 
     private static void createPG() throws IOException {

@@ -1,5 +1,6 @@
 package GUI.creationWindows.unitCreation;
 
+import javafx.beans.binding.BooleanBinding;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -65,9 +66,8 @@ public class Parent_3_AS_Setup implements Parent_0_Base{
     UnitCreationWindow.setPointBuyValue(Integer.parseInt(pointBuyTextField.getText()));
     }
 
-
-
-
-
-
+    @Override
+    public BooleanBinding nextButtonDisableCondition() {
+        return null;
+    }
 }

@@ -1,6 +1,11 @@
 package GUI.creationWindows.unitCreation;
 
 import hero.AbilityScore_Generator;
+import hero.Enum.Edition;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
@@ -11,6 +16,9 @@ class Parent_2_AS_Generation implements Parent_0_Base {
 
     //To return
     private static ToggleGroup radioGroup;
+    private final IntegerProperty currSelected = new SimpleIntegerProperty();
+
+
 
     @Override
     public void onLoad() {}
@@ -49,8 +57,12 @@ class Parent_2_AS_Generation implements Parent_0_Base {
             RadioButton temp = new RadioButton(AbilityScore_Generator.getMethodName()[i]);
 
             //set
-            temp.setUserData(i);
-            temp.setOnAction(actionEvent -> methodDescription.setText(AbilityScore_Generator.getMethodDescription()[(int) temp.getUserData()]));
+            int finalI = i;
+            temp.setOnAction(actionEvent -> {
+                methodDescription.setText(AbilityScore_Generator.getMethodDescription()[finalI]);
+                currSelected.set(finalI);
+            }
+            );
             temp.setToggleGroup(radioGroup);
 
             //add
@@ -59,7 +71,8 @@ class Parent_2_AS_Generation implements Parent_0_Base {
         //Set "Manual" as default
         Toggle manual = radioGroup.getToggles().get(i-1);
         manual.setSelected(true);
-        methodDescription.setText(AbilityScore_Generator.getMethodDescription()[(int) manual.getUserData()]);
+        methodDescription.setText(AbilityScore_Generator.getMethodDescription()[i-1]);
+
 
         ///////////////////
         //GRAPHIC SECTION//
@@ -78,6 +91,33 @@ class Parent_2_AS_Generation implements Parent_0_Base {
     }
     @Override
     public void nextButtonPressed(){
-        UnitCreationWindow.setSelectedMethod((int) radioGroup.getSelectedToggle().getUserData());
+        UnitCreationWindow.setSelectedMethod(currSelected.get());
+    }
+
+    @Override
+    public BooleanBinding nextButtonDisableCondition() {
+
+
+        return Bindings.createBooleanBinding(()->
+                currSelected.get() == 3 && invalidEdition(),
+                currSelected
+                );
+    }
+
+    private boolean invalidEdition(){
+        switch (UnitCreationWindow.getEdition()) {
+            case DND_1E:
+            case DND_2E:
+            case DND_22E:
+            case PATHFINDER_2E:
+                return true;
+            case DND_3E:
+            case DND_35E:
+            case DND_4E:
+            case DND_5E:
+            case PATHFINDER_1E:
+                return false;
+        }
+        return true;
     }
 }
