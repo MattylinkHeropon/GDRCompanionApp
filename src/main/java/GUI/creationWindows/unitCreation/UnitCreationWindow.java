@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -222,20 +223,25 @@ public class UnitCreationWindow  {
         stage.showAndWait();
     }
 
-    //remove existing bind condition, and add a new one if seneccary
-    //TODO sistemare javaDoc
+    /**
+     * Remove all binding from the given Button, and add to it the given BooleanBinding
+     * @param buttonToBind Button to modify
+     * @param binding BooleanBinding to attach to the button
+     */
     private static void addBindCondition(Button buttonToBind, BooleanBinding binding){
         buttonToBind.disableProperty().unbind();
         if (binding!=null) buttonToBind.disableProperty().bind(binding);
     }
 
+    /**
+     * Use the given data to create a new character
+     * @throws IOException error with the File
+     */
     private static void createPG() throws IOException {
 
         File unitFile = new File("data/" + name + ".json");
 
         if (!unitFile.createNewFile()){
-            //TODO: error in caso di unitFile esistente
-            System.out.println("File già presente");
             return;
         }
         //Load new Unit on exit
@@ -260,4 +266,5 @@ public class UnitCreationWindow  {
         String oldPath = file.getPath();
         return  oldPath.replace(File.separatorChar, '/');
     }
+
 }

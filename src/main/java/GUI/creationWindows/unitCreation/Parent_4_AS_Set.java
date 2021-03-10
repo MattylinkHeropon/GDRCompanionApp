@@ -12,6 +12,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+
 public class Parent_4_AS_Set implements Parent_0_Base {
 
     //To return
@@ -145,61 +146,14 @@ public class Parent_4_AS_Set implements Parent_0_Base {
     @Override
     public BooleanBinding nextButtonDisableCondition() {
         return Bindings.createBooleanBinding(()->
-                UnitCreationWindow.getSelectedMethod() == 3 && //We are in point buy
-                !pointBuyTextField.getText().equals("0") && //We DON'T have 0 point remaining
-                        ((UnitCreationWindow.getEdition().equals(Edition.DND_4E)) && checkArrayValidity()) //TODO controllare matematica perché blocca solo se ha valori sotto in caso di quarta edizione
+                UnitCreationWindow.getSelectedMethod() == 3 &&
+                        pointyBuyValidityCondition()
                 , pointBuyTextField.textProperty());
     }
-    //TODO: better name e javadoc
-    private boolean checkArrayValidity(){
-        int belowValue = 0;
-        for (int i = 0; i < 6; i++) {
-            if (((Spinner<Integer>) pointBuyGrid.getChildren().get(i)).getValue() < 10) belowValue++;
-        }
-        return belowValue > 1;
-    }
-
 
     ////////////////
     //OTHER METHOD//
     ////////////////
-
-    /**
-     * Use the selected method to generate a set of Ability Score: if "manual" (4) il selected, end the execution,
-     * else generate an array of int and use it to populate the GridPane.
-     * Then, create a Vbox with a Label and the populated Grid, and add them to finalBox
-     * @param selectedMethod selected method for the Array Generation
-     */
-    private void populate_generatedGrid(int selectedMethod) {
-        int[] generatedAS = null;
-
-        //Get the correct Array of Ability Score
-        switch (selectedMethod) {
-            case 0:
-                generatedAS = AbilityScore_Generator.completeRandom();
-                break;
-            case 1:
-                generatedAS = AbilityScore_Generator.classic();
-                break;
-            case 2:
-                generatedAS = AbilityScore_Generator.standard();
-                break;
-            case 4: //"Manual" Case
-                return;
-        }
-        //set value
-        for (int i = 0; i < 6; i++) {
-            assert generatedAS != null;
-            TextField temp = (TextField) generatedGrid.getChildren().get(i);
-            temp.setText(Integer.toString(generatedAS[i]));
-        }
-        //Create the box
-        VBox vBox = new VBox();
-        vBox.getChildren().addAll(generatedDescriptionLabel, generatedGrid);
-
-        //put it in the final box
-        finalBox.getChildren().add(vBox);
-    }
 
     /**
      * Create a 3*2 grid for the Ability Score, with set Hgap and Vgap
@@ -247,6 +201,43 @@ public class Parent_4_AS_Set implements Parent_0_Base {
     }
 
     /**
+     * Use the selected method to generate a set of Ability Score: if "manual" (4) il selected, end the execution,
+     * else generate an array of int and use it to populate the GridPane.
+     * Then, create a Vbox with a Label and the populated Grid, and add them to finalBox
+     * @param selectedMethod selected method for the Array Generation
+     */
+    private void populate_generatedGrid(int selectedMethod) {
+        int[] generatedAS = null;
+
+        //Get the correct Array of Ability Score
+        switch (selectedMethod) {
+            case 0:
+                generatedAS = AbilityScore_Generator.completeRandom();
+                break;
+            case 1:
+                generatedAS = AbilityScore_Generator.classic();
+                break;
+            case 2:
+                generatedAS = AbilityScore_Generator.standard();
+                break;
+            case 4: //"Manual" Case
+                return;
+        }
+        //set value
+        for (int i = 0; i < 6; i++) {
+            assert generatedAS != null;
+            TextField temp = (TextField) generatedGrid.getChildren().get(i);
+            temp.setText(Integer.toString(generatedAS[i]));
+        }
+        //Create the box
+        VBox vBox = new VBox();
+        vBox.getChildren().addAll(generatedDescriptionLabel, generatedGrid);
+
+        //put it in the final box
+        finalBox.getChildren().add(vBox);
+    }
+
+    /**
      * Initialize every Spinner in pointBuyGrid, and assign to their TextField a Listener
      * @param minimum minimum value of a Spinner
      * @param maximum maximum value of a Spinner
@@ -262,6 +253,33 @@ public class Parent_4_AS_Set implements Parent_0_Base {
             valueFactory.setValue(currStart);
         }
     }
+
+    /**
+     * Verify if the array of ability score selected by user via point buy is valid.
+     * The first check is to ensure if we have exactly 0 point remaining;
+     * then, if the user is using DnD 4th edition, check if there are less then 2 ability score below 10.
+     * @return True, if the array is NOT valid, false otherwise.
+     */
+    private boolean pointyBuyValidityCondition(){
+        boolean stillPointAvailable = !pointBuyTextField.getText().equals("0");
+        int belowValue = 0;
+        if (!UnitCreationWindow.getEdition().equals(Edition.DND_4E)) return stillPointAvailable;
+        else //needed Check for the forth edition of D&D
+        {
+            for (int i = 0; i < 6; i++) {
+                //Irrelevant Warning, for construction pointBuyGrid will always and only have Spinner as node
+                @SuppressWarnings("unchecked")
+                int currValue = ((Spinner<Integer>) pointBuyGrid.getChildren().get(i)).getValue();
+                if (currValue < 10) belowValue++;
+            }
+            if (belowValue > 1) return  true;
+            else return stillPointAvailable;
+        }
+    }
+
+    //////////////////////
+    //POINT BUY CALCULUS//
+    //////////////////////
 
     /**
      * Called when the value of a Spinner in pointBuyGrid is changed. Calculate the cost of the change, and add/subtract it from the pool of remaining point
@@ -286,7 +304,7 @@ public class Parent_4_AS_Set implements Parent_0_Base {
                 if (increaseInValue) deltaPoint = (-1) * deltaCalculus_Value(oldValue);
                 else deltaPoint = deltaCalculus_Value(newValue);
         }
-        
+
         int currValue = Integer.parseInt(pointBuyTextField.getText());
         currValue = currValue + deltaPoint;
         pointBuyTextField.setText(Integer.toString(currValue));
@@ -322,4 +340,3 @@ public class Parent_4_AS_Set implements Parent_0_Base {
     }
 
 }
-

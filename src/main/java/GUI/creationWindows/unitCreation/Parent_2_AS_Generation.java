@@ -1,7 +1,6 @@
 package GUI.creationWindows.unitCreation;
 
 import hero.AbilityScore_Generator;
-import hero.Enum.Edition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.IntegerProperty;
@@ -15,10 +14,7 @@ import javafx.scene.layout.VBox;
 class Parent_2_AS_Generation implements Parent_0_Base {
 
     //To return
-    private static ToggleGroup radioGroup;
     private final IntegerProperty currSelected = new SimpleIntegerProperty();
-
-
 
     @Override
     public void onLoad() {}
@@ -41,7 +37,8 @@ class Parent_2_AS_Generation implements Parent_0_Base {
         ///////////////////////
         //RADIOBUTTON SECTION//
         ///////////////////////
-        radioGroup = new ToggleGroup();
+        //To return
+        ToggleGroup radioGroup = new ToggleGroup();
         VBox buttonBox = new VBox(10);
 
         int i;
@@ -89,6 +86,7 @@ class Parent_2_AS_Generation implements Parent_0_Base {
         return mainBox;
 
     }
+
     @Override
     public void nextButtonPressed(){
         UnitCreationWindow.setSelectedMethod(currSelected.get());
