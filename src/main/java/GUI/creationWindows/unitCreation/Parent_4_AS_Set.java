@@ -12,6 +12,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+import java.text.DecimalFormat;
+import java.text.ParsePosition;
+
 
 public class Parent_4_AS_Set implements Parent_0_Base {
 
@@ -111,6 +114,27 @@ public class Parent_4_AS_Set implements Parent_0_Base {
     @Override
     public Parent createParent() {
 
+        //Limit only number in HPTextField
+        //https://stackoverflow.com/questions/31039449/java-8-u40-textformatter-javafx-to-restrict-user-input-only-for-decimal-number
+        DecimalFormat format = new DecimalFormat( "#" );
+        HPTextField.setTextFormatter(
+                new TextFormatter<>(c ->
+                {
+                    if (c.getControlNewText().isEmpty()) {
+                        return c;
+                    }
+
+                    ParsePosition parsePosition = new ParsePosition(0);
+                    Object object = format.parse(c.getControlNewText(), parsePosition);
+
+                    if (object == null || parsePosition.getIndex() < c.getControlNewText().length()) {
+                        return null;
+                    } else {
+                        return c;
+                    }
+                }));
+
+
         //Set label wrappable
         dndForthLabel.setWrapText(true);
 
@@ -162,6 +186,8 @@ public class Parent_4_AS_Set implements Parent_0_Base {
      */
     public static GridPane createGrid(String typeOfField) {
         GridPane grid = new GridPane();
+
+
         //Formula: Windows dimension - margin (10+10 external, 10+10 between box), divided by 3 because three box per fow
         int gridElement_MaxWidth = ((UnitCreationWindow.WINDOW_SQUARE_DIMENSION - 40) / 3);
         int gridElement_Hgap = 10;
@@ -176,14 +202,36 @@ public class Parent_4_AS_Set implements Parent_0_Base {
                 //Select and create correct type of Field
                 //This solution is a workaround because Switch case only accept constant Expression, which Class.class.getName() is not.
                 //If an more cases are needed, value to convert all to a Switch case, and use an Enum to evaluate the case.
+
                 //See here for detail: https://stackoverflow.com/questions/3827393/java-switch-statement-constant-expression-required-but-it-is-constant
                 if (typeOfField.equals(Spinner.class.getName())) {
                     temp = new Spinner<Integer>(0 , 20 , 10);
                     ((Spinner<?>) temp).getEditor().textProperty().addListener((observableValue, oldValue, newValue) -> pointBuyChange(Integer.parseInt(oldValue), Integer.parseInt(newValue)));
                 } else {
+
                     temp = new TextField();
                     ((TextField) temp).setPromptText(AbilityScore.values()[i].getAbbreviation());
                     i++;
+                    //Limit only number in TextField
+                    //https://stackoverflow.com/questions/31039449/java-8-u40-textformatter-javafx-to-restrict-user-input-only-for-decimal-number
+                    {
+                        DecimalFormat format = new DecimalFormat("#");
+                        ((TextField) temp).setTextFormatter(new TextFormatter<>(c ->
+                        {
+                            if (c.getControlNewText().isEmpty()) {
+                                return c;
+                            }
+
+                            ParsePosition parsePosition = new ParsePosition(0);
+                            Object object = format.parse(c.getControlNewText(), parsePosition);
+
+                            if (object == null || parsePosition.getIndex() < c.getControlNewText().length()) {
+                                return null;
+                            } else {
+                                return c;
+                            }
+                        }));
+                    }
                 }
 
                 //set bound

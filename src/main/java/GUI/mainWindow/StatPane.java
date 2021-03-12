@@ -6,13 +6,15 @@ import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import java.io.File;
-
+import java.text.DecimalFormat;
+import java.text.ParsePosition;
 
 
 /**
@@ -109,6 +111,29 @@ public class StatPane {
             TextField asField = new TextField((Integer.toString(pg.getAbility_score()[i])));
             TextField modField = new TextField((Integer.toString(pg.getAbility_mod()[i])));
 
+            //Limit only number in asField
+            //https://stackoverflow.com/questions/31039449/java-8-u40-textformatter-javafx-to-restrict-user-input-only-for-decimal-number
+            {
+                DecimalFormat format = new DecimalFormat("#");
+                asField.setTextFormatter(
+                        new TextFormatter<>(c ->
+                        {
+                            if (c.getControlNewText().isEmpty()) {
+                                return c;
+                            }
+
+                            ParsePosition parsePosition = new ParsePosition(0);
+                            Object object = format.parse(c.getControlNewText(), parsePosition);
+
+                            if (object == null || parsePosition.getIndex() < c.getControlNewText().length()) {
+                                return null;
+                            } else {
+                                return c;
+                            }
+                        }));
+            }
+
+
             //Graphic setup
             asField.setAlignment(Pos.CENTER);
             modField.setAlignment(Pos.CENTER);
@@ -120,7 +145,7 @@ public class StatPane {
             GridPane.setConstraints(asField, 1, i + 1);
             GridPane.setConstraints(modField, 2, i + 1);
 
-            //trying setting an update method:
+            //Update Method
             int finalI = i;
             asField.textProperty().addListener((observableValue, oldValue, newValue) -> {
                 pg.setAbility_Score(finalI, Integer.parseInt(newValue));
@@ -138,14 +163,52 @@ public class StatPane {
             TextField maxHPField = new TextField(Integer.toString(pg.getMax_hp()));
             TextField currHPField = new TextField(Integer.toString(pg.getCurr_hp()));
 
+            //Limit only number in HPField
+            //https://stackoverflow.com/questions/31039449/java-8-u40-textformatter-javafx-to-restrict-user-input-only-for-decimal-number
+            {
+                DecimalFormat format = new DecimalFormat("#");
+                maxHPField.setTextFormatter(
+                        new TextFormatter<>(c ->
+                        {
+                            if (c.getControlNewText().isEmpty()) {
+                                return c;
+                            }
+
+                            ParsePosition parsePosition = new ParsePosition(0);
+                            Object object = format.parse(c.getControlNewText(), parsePosition);
+
+                            if (object == null || parsePosition.getIndex() < c.getControlNewText().length()) {
+                                return null;
+                            } else {
+                                return c;
+                            }
+                        }));
+
+                currHPField.setTextFormatter(
+                        new TextFormatter<>(c ->
+                        {
+                            if (c.getControlNewText().isEmpty()) {
+                                return c;
+                            }
+
+                            ParsePosition parsePosition = new ParsePosition(0);
+                            Object object = format.parse(c.getControlNewText(), parsePosition);
+
+                            if (object == null || parsePosition.getIndex() < c.getControlNewText().length()) {
+                                return null;
+                            } else {
+                                return c;
+                            }
+                        }));
+            }
+
             //listener to modify current and maximum HP values
             currHPField.textProperty().addListener((observableValue, oldValue, newValue) -> pg.setCurr_hp(Integer.parseInt(newValue)));
-            maxHPField.textProperty().addListener((observableValue, oldValue, newValue) -> pg.setMax_hp(Integer.parseInt(newValue))); //TODO: creare metodo per sistemare i maxHP
+            maxHPField.textProperty().addListener((observableValue, oldValue, newValue) -> pg.setMax_hp(Integer.parseInt(newValue)));
 
             //Graphic setup
             currHPField.setAlignment(Pos.CENTER);
             maxHPField.setAlignment(Pos.CENTER);
-            maxHPField.setEditable(false);
 
             //Constraint setup, top Label
             GridPane.setConstraints(currHPLabel, 1, i);

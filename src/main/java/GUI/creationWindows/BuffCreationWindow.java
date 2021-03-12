@@ -91,7 +91,7 @@ public class BuffCreationWindow  {
          //Limit only number in durationTextField
          //https://stackoverflow.com/questions/31039449/java-8-u40-textformatter-javafx-to-restrict-user-input-only-for-decimal-number
         DecimalFormat format = new DecimalFormat( "#" );
-        {
+
             durationTextField.setTextFormatter(
                     new TextFormatter<>(c ->
                     {
@@ -108,7 +108,7 @@ public class BuffCreationWindow  {
                             return c;
                         }
                     }));
-        }
+
 
         //////////////////
         //BUTTON SECTION//

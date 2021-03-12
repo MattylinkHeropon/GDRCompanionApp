@@ -52,6 +52,9 @@ public class BuffPane {
      */
     public void deleteBuff(){
         if (buffPane.getChildren().isEmpty()) return;
+
+        MainGUI.lock();
+
         ArrayList<Button> closeButtonList = new ArrayList<>();
 
         //Set variable used to create the buttons
@@ -86,6 +89,7 @@ public class BuffPane {
 
                 //Remove all button from the GridPane to "close" the function
                 buffPane.getChildren().removeAll(closeButtonList);
+                MainGUI.unlock();
             });
 
         }
@@ -95,13 +99,6 @@ public class BuffPane {
         ) {
             buffPane.getChildren().add(button);
         }
-
-        /*
-         * TODO: QUI UN'IDEA SU COME IMPEDIRE LA CHIAMATA DI ALTRI METODI DURANTE L'ESEGUZIONE DI QUESTO, APPLICABILE ANCHE AD ALTRI NEL CASO.
-         * Creare un lock globale, idealmente un bool, e fare in modo che quando una funzione è in eseguzione blocchi la chiamata delle altre (es con un if)
-         * L'idea di base è quella di un semaforo, solo senza andare a toccare il multithreading, anche perché sarebbe complicato visto che nemmeno i metodi nativi
-         * funzionano come vorrei
-         */
     }
 
     /**

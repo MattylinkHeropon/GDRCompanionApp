@@ -150,10 +150,9 @@ class Parent_1_NameEditionImage implements Parent_0_Base {
     /**
      * Check if nameTextField is empty OR the name inside already exist in the "data" folder
      * @return True, if the field is empty or the name exist, false otherwise
-     * TODO: valutare un modo per segnalare all'utente il nome già presente. Aura rossa? Tooltip
+     * TODO: A way to sign the user that the name is already taken. Mabye a red outline?
      */
     private boolean checkInvalidName(){
-        System.out.println("Checking Name");
         if (nameTextField.getText().isEmpty()) return true;
         File dataFolder = new File("data");
         if (dataFolder.listFiles() == null) return false;

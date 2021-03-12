@@ -4,8 +4,12 @@ import javafx.beans.binding.BooleanBinding;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+
+import java.text.DecimalFormat;
+import java.text.ParsePosition;
 
 public class Parent_3_AS_Setup implements Parent_0_Base{
 
@@ -44,6 +48,26 @@ public class Parent_3_AS_Setup implements Parent_0_Base{
         //Set wrapText for the label
         racialModLabel.setWrapText(true);
         pointBuyLabel.setWrapText(true);
+
+        //Limit only number in pointBuyTextField
+        //https://stackoverflow.com/questions/31039449/java-8-u40-textformatter-javafx-to-restrict-user-input-only-for-decimal-number
+        DecimalFormat format = new DecimalFormat( "#" );
+        pointBuyTextField.setTextFormatter(
+                new TextFormatter<>(c ->
+                {
+                    if (c.getControlNewText().isEmpty()) {
+                        return c;
+                    }
+
+                    ParsePosition parsePosition = new ParsePosition(0);
+                    Object object = format.parse(c.getControlNewText(), parsePosition);
+
+                    if (object == null || parsePosition.getIndex() < c.getControlNewText().length()) {
+                        return null;
+                    } else {
+                        return c;
+                    }
+                }));
 
         //Initialize the final Vbox to return.
         finalBox = new VBox(50);

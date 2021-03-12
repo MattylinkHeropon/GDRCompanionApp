@@ -7,7 +7,6 @@ import GUI.mainWindow.StatPane;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import hero.Buff;
 import hero.Unit;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -23,13 +22,20 @@ import javafx.stage.Stage;
 import java.io.*;
 import java.lang.reflect.Type;
 
-
 public class MainGUI  extends Application {
     private Unit pg;
     private BorderPane root;
     private static BuffPane buffPane;
     private Stage stage;
     private Scene scene;
+
+    /*
+    isLocked is checked every time a MenuItem is called.
+    If true, prevent the execution of every other method in the MenuItem.setOnAction.
+    Implemented because deleteBuff() doesn't create a new windows (no showAndWait() method), nor resolve istantly, but need an action from the user to resolve
+     */
+
+    private static boolean isLocked = false;
 
     //Constant Value
     public static final int BUFF_COL_INDEX = 0;
@@ -41,10 +47,19 @@ public class MainGUI  extends Application {
     //Used to serialize an Unit.
     private static final Type UNIT_TYPE = new TypeToken<Unit>() {}.getType();
 
+
+    public static void lock(){
+        isLocked = true;
+    }
+
+    public static void unlock(){
+        isLocked = false;
+    }
+
+
     @Override
     public void start(Stage stageLocal) {
         stage = stageLocal;
-
         root = new BorderPane();
         MenuBar menuBar = buildMenuBar();
         root.setTop(menuBar);
@@ -52,7 +67,6 @@ public class MainGUI  extends Application {
         stage.setScene(scene);
         stage.setTitle("GDR Companion App");
         stage.show();
-
     }
 
     private void loadGUI(){
@@ -131,6 +145,7 @@ public class MainGUI  extends Application {
             //item 1: CreatePG
             MenuItem createPG = new MenuItem("New Character");
             createPG.setOnAction(actionEvent ->{
+                if(isLocked) return;
                 UnitCreationWindow.CreateWindow();
                 if (UnitCreationWindow.isNewUnit()){
                     UnitCreationWindow.setNewUnit(false);
@@ -141,11 +156,15 @@ public class MainGUI  extends Application {
 
             //item 2: LoadPG
             MenuItem loadPG = new MenuItem("Load Character");
-            loadPG.setOnAction(actionEvent -> loadCharacter_select());
+            loadPG.setOnAction(actionEvent -> {
+                if (isLocked) return;
+                loadCharacter_select();
+            });
 
             //item 3: savePG
             MenuItem savePG = new MenuItem("Update Character");
             savePG.setOnAction(actionEvent -> {
+                if (isLocked) return;
                 try {
                     saveCharacter(pg, new File("data/" + pg.getName() + ".json"));
                 } catch (IOException e) {
@@ -165,33 +184,29 @@ public class MainGUI  extends Application {
             //Item 1: Add Buff
             MenuItem addBuff = new MenuItem("Add Buff");
             addBuff.setOnAction(actionEvent -> {
+                if(isLocked) return;
                 BuffCreationWindow.createWindow();
                 if (BuffCreationWindow.isConfirmPressed()){
-                   buffPane.addBuff(BuffCreationWindow.getBuff());
-                }
+                    buffPane.addBuff(BuffCreationWindow.getBuff());
+            }
             });
 
-            //Item 2: Random Buff *10
-            //ONLY USED FOR DEBUG REASON
-            MenuItem randomBuff = new MenuItem("Random Buff * 10");
-            randomBuff.setOnAction(actionEvent -> {
-                for (int i = 1; i < 11; i++) {
-                    buffPane.addBuff(new Buff(i%2 == 0, "Random", i, Integer.toString(i)));
-                }
-            });
-
-            //Item 3: Decrease Duration
-            MenuItem decreaseDuration = new MenuItem("Decrease Duration");
+        //Item 2: Decrease Duration
+        MenuItem decreaseDuration = new MenuItem("Decrease Duration");
 
             decreaseDuration.setOnAction(actionEvent -> {
+                if (isLocked) return;
                 buffPane.decreaseBuffDuration(pg.getBuffArrayList(), BUFF_COL_INDEX);
                 buffPane.decreaseBuffDuration(pg.getDebuffArrayList(), DEBUFF_COL_INDEX);
             });
 
-            //Item 4: Remove Buff
+            //Item 3: Remove Buff
             MenuItem removeBuff = new MenuItem("Remove Buff");
-            removeBuff.setOnAction(actionEvent -> buffPane.deleteBuff());
-        buffMenu.getItems().addAll(addBuff, randomBuff, decreaseDuration, removeBuff);
+            removeBuff.setOnAction(actionEvent -> {
+                if (isLocked) return;
+                buffPane.deleteBuff();
+            });
+        buffMenu.getItems().addAll(addBuff, decreaseDuration, removeBuff);
     /*
     ------------------------------------------------------------------------------------------------------------------------
      */

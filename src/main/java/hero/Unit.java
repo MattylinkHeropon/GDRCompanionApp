@@ -56,7 +56,7 @@ public class Unit {
         return max_hp;
     }
 
-    //TODO: implementare metodo che modifica le due variabili
+
     public void setCurr_hp(int curr_hp) {
         this.curr_hp = curr_hp;
     }
@@ -97,7 +97,7 @@ public class Unit {
     /**
      * Calculate the Modifier of the given abilityScore.
      * Modifier is calculated by removing 10 from the AS and then halving the value.
-     * @param abilityScore base value //TODO sistemare
+     * @param abilityScore base value to evaluate
      * @return the calculated modifier
      */
     public static int modCalculator (int abilityScore) {
