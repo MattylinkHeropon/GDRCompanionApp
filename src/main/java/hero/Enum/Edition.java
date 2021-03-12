@@ -23,13 +23,9 @@ public enum Edition {
         this.abbreviation = abbreviation;
     }
 
-    public String getFullName() {
-        return fullName;
-    }
+    public String getFullName() {return fullName;}
 
-    public String getAbbreviation() {
-        return abbreviation;
-    }
+    public String getAbbreviation() {return abbreviation; }
 }
 
 

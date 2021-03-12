@@ -150,7 +150,7 @@ class Parent_1_NameEditionImage implements Parent_0_Base {
     /**
      * Check if nameTextField is empty OR the name inside already exist in the "data" folder
      * @return True, if the field is empty or the name exist, false otherwise
-     * TODO: A way to sign the user that the name is already taken. Mabye a red outline?
+     * TODO: A way to sign the user that the name is already taken. Maybe a red outline?
      */
     private boolean checkInvalidName(){
         if (nameTextField.getText().isEmpty()) return true;

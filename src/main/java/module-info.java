@@ -8,4 +8,5 @@ open module GDRCompanionApp {
     exports GUI;
     exports hero;
 
+
 }

@@ -32,7 +32,7 @@ public class MainGUI  extends Application {
     /*
     isLocked is checked every time a MenuItem is called.
     If true, prevent the execution of every other method in the MenuItem.setOnAction.
-    Implemented because deleteBuff() doesn't create a new windows (no showAndWait() method), nor resolve istantly, but need an action from the user to resolve
+    Implemented because deleteBuff() doesn't create a new windows (no showAndWait() method), nor resolve instantly, but need an action from the user to resolve
      */
 
     private static boolean isLocked = false;
