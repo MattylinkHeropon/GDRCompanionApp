@@ -1,0 +1,41 @@
+{
+  "image": "images/Charles.jpg",
+  "name": "Charles",
+  "game": "DND_5E",
+  "curr_hp": 17,
+  "max_hp": 17,
+  "ability_score": [
+    16,
+    14,
+    16,
+    9,
+    10,
+    12
+  ],
+  "ability_mod": [
+    3,
+    2,
+    3,
+    -1,
+    0,
+    1
+  ],
+  "buffArrayList": [
+    {
+      "isBuff": true,
+      "caster": "Charles",
+      "duration": 2,
+      "effect": "Test Buff",
+      "maskHash": 1254492754
+    }
+  ],
+  "debuffArrayList": [
+    {
+      "isBuff": false,
+      "caster": "Enemy",
+      "duration": 1,
+      "effect": "Test Debuff",
+      "maskHash": 822507481
+    }
+  ]
+}
