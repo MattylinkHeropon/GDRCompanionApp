@@ -160,7 +160,8 @@ public class Parent_4_AS_Set implements Parent_0_Base {
                 textField = (TextField) assignableGrid.getChildren().get(i);
             }
             if (textField.getText().isEmpty()) textField.setText("10");
-            finalAS[i] = Integer.parseInt((textField.getText())) + UnitCreationWindow.getRacialModArray()[i];
+            //Ability Score < 1 are not allowed, 1 is floor
+            finalAS[i] = Math.max(1, Integer.parseInt((textField.getText())) + UnitCreationWindow.getRacialModArray()[i]);
         }
         UnitCreationWindow.setAbilityScoreArray(finalAS);
         if (HPTextField.getText().isEmpty()) HPTextField.setText("1");
@@ -212,13 +213,14 @@ public class Parent_4_AS_Set implements Parent_0_Base {
                     temp = new TextField();
                     ((TextField) temp).setPromptText(AbilityScore.values()[i].getAbbreviation());
                     i++;
-                    //Limit only number in TextField
+                    //Limit only number in TextField; Modified to accept the "-" char as the first element of the box
                     //https://stackoverflow.com/questions/31039449/java-8-u40-textformatter-javafx-to-restrict-user-input-only-for-decimal-number
                     {
                         DecimalFormat format = new DecimalFormat("#");
+
                         ((TextField) temp).setTextFormatter(new TextFormatter<>(c ->
                         {
-                            if (c.getControlNewText().isEmpty()) {
+                            if (c.getControlNewText().isEmpty() || c.getControlNewText().equals("-")) {
                                 return c;
                             }
 
