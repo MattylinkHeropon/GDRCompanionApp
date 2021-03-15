@@ -2,8 +2,8 @@ package GUI;
 
 import GUI.creationWindows.BuffCreationWindow;
 import GUI.creationWindows.unitCreation.UnitCreationWindow;
-import GUI.mainWindow.BuffPane;
-import GUI.mainWindow.StatPane;
+import GUI.mainWindowComponent.BuffPane;
+import GUI.mainWindowComponent.StatPane;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -22,7 +22,7 @@ import javafx.stage.Stage;
 import java.io.*;
 import java.lang.reflect.Type;
 
-public class MainGUI  extends Application {
+public class MainWindowGUI extends Application {
     private Unit pg;
     private BorderPane root;
     private static BuffPane buffPane;

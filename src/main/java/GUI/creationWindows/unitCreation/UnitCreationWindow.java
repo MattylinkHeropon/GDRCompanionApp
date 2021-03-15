@@ -1,6 +1,6 @@
 package GUI.creationWindows.unitCreation;
 
-import GUI.MainGUI;
+import GUI.MainWindowGUI;
 import hero.Enum.Edition;
 import hero.Unit;
 import javafx.beans.binding.BooleanBinding;
@@ -253,7 +253,7 @@ public class UnitCreationWindow  {
         File pgImage = new File(destination.toString());
 
         //Json creation
-        MainGUI.saveCharacter(new Unit(goodPath(pgImage), name, edition, abilityScoreArray, maximumHitPoint), unitFile);
+        MainWindowGUI.saveCharacter(new Unit(goodPath(pgImage), name, edition, abilityScoreArray, maximumHitPoint), unitFile);
     }
 
     /**

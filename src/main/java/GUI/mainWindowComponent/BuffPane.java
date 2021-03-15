@@ -1,6 +1,6 @@
-package GUI.mainWindow;
+package GUI.mainWindowComponent;
 
-import GUI.MainGUI;
+import GUI.MainWindowGUI;
 import hero.Buff;
 import hero.Unit;
 import javafx.geometry.Insets;
@@ -53,7 +53,7 @@ public class BuffPane {
     public void deleteBuff(){
         if (buffPane.getChildren().isEmpty()) return;
 
-        MainGUI.lock();
+        MainWindowGUI.lock();
 
         ArrayList<Button> closeButtonList = new ArrayList<>();
 
@@ -89,7 +89,7 @@ public class BuffPane {
 
                 //Remove all button from the GridPane to "close" the function
                 buffPane.getChildren().removeAll(closeButtonList);
-                MainGUI.unlock();
+                MainWindowGUI.unlock();
             });
 
         }
@@ -146,12 +146,12 @@ public class BuffPane {
         GridPane buffMask = buff.createBuffMask();
 
         if (buff.isBuff()) {
-            col = MainGUI.BUFF_COL_INDEX;
+            col = MainWindowGUI.BUFF_COL_INDEX;
             row = pg.getBuffArrayList().indexOf(buff);
             GridPane.setMargin(buffMask, buff_margin);
         }
         else {
-            col = MainGUI.DEBUFF_COL_INDEX;
+            col = MainWindowGUI.DEBUFF_COL_INDEX;
             row = pg.getDebuffArrayList().indexOf(buff);
             GridPane.setMargin(buffMask, debuff_margin);
         }

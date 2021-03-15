@@ -1,4 +1,4 @@
-package GUI.mainWindow;
+package GUI.mainWindowComponent;
 
 import hero.Enum.AbilityScore;
 import hero.Unit;
