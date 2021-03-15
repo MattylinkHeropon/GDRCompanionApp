@@ -10,9 +10,9 @@ Features:
 * Attach buff and debuff to it, and keep track of their duration.
 
 Planned features:
-* Support to magic, with a spellbook to save every spell you know.
-* Interface to keep track of the prepared spell (for Prepared Caster) or Spell Slot (for Spontaneous Caster)
-* Support to DnD 4 "power" system
+* Support to magic, with a spellbook to save every spell you know;
+* Interface to keep track of the prepared spell (for Prepared Caster) or Spell Slot (for Spontaneous Caster);
+* Support to DnD 4 "power" system;
 * A logo?
 
 # Credits and Licensing
