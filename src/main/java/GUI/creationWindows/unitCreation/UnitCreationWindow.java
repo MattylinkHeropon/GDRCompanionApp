@@ -212,10 +212,10 @@ public class UnitCreationWindow  {
         mainPane.setCenter(currParent.get());
 
 
-        Scene mainScene = new Scene(mainPane, WINDOW_SQUARE_DIMENSION, WINDOW_SQUARE_DIMENSION);
-
+        Scene scene = new Scene(mainPane, WINDOW_SQUARE_DIMENSION, WINDOW_SQUARE_DIMENSION);
+        scene.getStylesheets().add("dark_theme.css");
         stage = new Stage();
-        stage.setScene(mainScene);
+        stage.setScene(scene);
         stage.setTitle("Hero Creation");
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setResizable(false);
@@ -248,7 +248,7 @@ public class UnitCreationWindow  {
 
         //Create a local copy of the profile image
         Path original = Paths.get(imgUrl);
-        Path destination = Paths.get("images/" + name + ".jpg");
+        Path destination = Paths.get("images/" + name + ".png");
         Files.copy(original, destination);
         File pgImage = new File(destination.toString());
 

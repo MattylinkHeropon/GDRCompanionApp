@@ -26,7 +26,7 @@ class Parent_2_AS_Generation implements Parent_0_Base {
         //TEXT SECTION//
         ////////////////
 
-        Label descriptionLabel = new Label("Please, select with which method you want to generate your Ability Score\n");
+        Label descriptionLabel = new Label("Please, select with which method you want to generate your Ability Score");
         TextArea methodDescription = new TextArea();
 
         //setup
@@ -68,6 +68,7 @@ class Parent_2_AS_Generation implements Parent_0_Base {
         //Set "Manual" as default
         Toggle manual = radioGroup.getToggles().get(i-1);
         manual.setSelected(true);
+        currSelected.set(4); //set correct default value for autoselected
         methodDescription.setText(AbilityScore_Generator.getMethodDescription()[i-1]);
 
 

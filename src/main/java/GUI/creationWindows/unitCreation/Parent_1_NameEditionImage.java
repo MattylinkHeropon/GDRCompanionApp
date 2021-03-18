@@ -6,12 +6,14 @@ import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.HPos;
+import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -40,17 +42,25 @@ class Parent_1_NameEditionImage implements Parent_0_Base {
         ////////////////
         //TEXT SECTION//
         ////////////////
-        Label introductionLabel = new Label("Welcome to the character creation window.\nPlease, enter your character's name and select the game edition");
-        Label editionLabel = new Label("Edition: ");
+        Label introductionLabel = new Label("Welcome to the character creation window. Please, enter your character's name and select the game edition");
+        Label editionLabel = new Label("Edition:");
         nameTextField = new TextField();
-        Label currEdSelectedLabel = new Label("Selected Edition: ");
+        Label currEdSelectedLabel = new Label("Selected Edition:");
         currEdSelected = new TextField();
-        Label imageLabel = new Label("Select your profile image: ");
+        Label imageLabel = new Label("Select your profile image:");
 
 
         //setup
-        nameTextField.setPromptText("Enter your character's name here");
+        nameTextField.setPromptText("Enter your character's name here:");
         currEdSelected.setEditable(false);
+
+        imageLabel.setTextAlignment(TextAlignment.RIGHT);
+
+        //Set every Label wrappable
+        introductionLabel.setWrapText(true);
+        editionLabel.setWrapText(true);
+        currEdSelectedLabel.setWrapText(true);
+        imageLabel.setWrapText(true);
 
         ////////////////
         //MENU SECTION//
@@ -78,12 +88,13 @@ class Parent_1_NameEditionImage implements Parent_0_Base {
         ImageView imageNode = new ImageView();
         imageNode.setPreserveRatio(true);
         imageNode.setFitHeight(200);
+        imageNode.setFitWidth(200);
 
         //Search setup
         imageSearchButton.setOnAction(actionEvent -> {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Select a image");
-            fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("image file", "*.png", "*.jpg"));
+            fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("image file", "*.png", "*.jpg", "*.jpeg"));
             File temp = fileChooser.showOpenDialog(new Stage());
             imgUrl.set(temp.getAbsolutePath());
             profileImage = new Image(temp.toURI().toString());
@@ -96,9 +107,8 @@ class Parent_1_NameEditionImage implements Parent_0_Base {
         ///////////////////
 
         GridPane grid = new GridPane();
-        grid.setHgap(1);
+        grid.setHgap(10);
         grid.setVgap(10);
-
 
         //introductionLabel
         GridPane.setHalignment(introductionLabel, HPos.CENTER);

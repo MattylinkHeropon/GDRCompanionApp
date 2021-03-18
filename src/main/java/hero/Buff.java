@@ -48,7 +48,7 @@ public class Buff {
     public GridPane createBuffMask(){
 
         BackgroundFill stdFill;
-
+        //TODO: collegarla al CSS
         if (isBuff) stdFill = new BackgroundFill(Color.DARKGREEN, new CornerRadii(10), null);
         else  stdFill = new BackgroundFill(Color.DARKRED, new CornerRadii(10), null);
 

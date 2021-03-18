@@ -29,11 +29,11 @@ public class BuffCreationWindow  {
     private static final int SQUARE_DIMENSION = 300;
 
 
-    //Variable readed from multiple funcion
-    private static ToggleGroup radioGroup = new ToggleGroup();
-    private static TextField casterTextField = new TextField();
-    private static TextField durationTextField = new TextField();
-    private static TextArea descriptionTextArea = new TextArea();
+    //Variable readed from multiple function
+    private static final ToggleGroup radioGroup = new ToggleGroup();
+    private static final TextField casterTextField = new TextField();
+    private static final TextField durationTextField = new TextField();
+    private static final TextArea descriptionTextArea = new TextArea();
 
 
 
@@ -47,12 +47,11 @@ public class BuffCreationWindow  {
      */
 
     public static Buff getBuff(){
-        Buff buff = new Buff(
+        return new Buff(
                 (boolean) radioGroup.getSelectedToggle().getUserData(),
                 casterTextField.getText(),
                 Integer.parseInt(durationTextField.getText()),
                 descriptionTextArea.getText());
-        return buff;
     }
 
     public static void createWindow() {
@@ -205,6 +204,7 @@ public class BuffCreationWindow  {
 
             Scene scene = new Scene(root, SQUARE_DIMENSION, SQUARE_DIMENSION);
             stage = new Stage();
+            scene.getStylesheets().add("dark_theme.css");
             stage.setTitle("Buff Creation");
             stage.setScene(scene);
             stage.initModality(Modality.APPLICATION_MODAL);

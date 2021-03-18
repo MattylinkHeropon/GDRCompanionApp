@@ -84,20 +84,26 @@ public class Parent_4_AS_Set implements Parent_0_Base {
                     break;
             }
             pointBuyTextField.setText(Integer.toString(UnitCreationWindow.getPointBuyValue()));
+
             //Create graphic
             VBox pointBuyVBox = new VBox(10);
+            VBox pointBuyGridVBox = new VBox(10);
             HBox pointBuyHBox = new HBox(10);
 
+            //DnD 4th Label
             if(edition.equals(Edition.DND_4E)) pointBuyVBox.getChildren().add(dndForthLabel);
 
+
+            pointBuyGridVBox.getChildren().addAll(assignableDescriptionLabel, pointBuyGrid);
             pointBuyHBox.getChildren().addAll(pointBuyRemainingLabel, pointBuyTextField);
             pointBuyVBox.getChildren().add(pointBuyHBox);
 
-            finalBox.getChildren().addAll(assignableDescriptionLabel, pointBuyGrid, pointBuyVBox);
+            finalBox.getChildren().addAll(pointBuyGridVBox, pointBuyVBox);
         } else //Not Point Buy Case
+
             {
             populate_generatedGrid(selectedMethod);
-            VBox assignableBox = new VBox();
+            VBox assignableBox = new VBox(10);
             assignableBox.getChildren().addAll(assignableDescriptionLabel, assignableGrid);
             finalBox.getChildren().add(assignableBox);
             }
@@ -135,7 +141,11 @@ public class Parent_4_AS_Set implements Parent_0_Base {
                 }));
 
 
-        //Set label wrappable
+        //Set every label wrappable
+        generatedDescriptionLabel.setWrapText(true);
+        assignableDescriptionLabel.setWrapText(true);
+        HPDescriptionLabel.setWrapText(true);
+        pointBuyRemainingLabel.setWrapText(true);
         dndForthLabel.setWrapText(true);
 
         //Set generatedGrid as uneditable
@@ -280,7 +290,7 @@ public class Parent_4_AS_Set implements Parent_0_Base {
             temp.setText(Integer.toString(generatedAS[i]));
         }
         //Create the box
-        VBox vBox = new VBox();
+        VBox vBox = new VBox(10);
         vBox.getChildren().addAll(generatedDescriptionLabel, generatedGrid);
 
         //put it in the final box

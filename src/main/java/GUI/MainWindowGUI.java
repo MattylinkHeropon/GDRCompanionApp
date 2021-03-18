@@ -61,9 +61,16 @@ public class MainWindowGUI extends Application {
     public void start(Stage stageLocal) {
         stage = stageLocal;
         root = new BorderPane();
+
         MenuBar menuBar = buildMenuBar();
         root.setTop(menuBar);
         scene = new Scene(root, STD_WIDTH, STD_HEIGHT);
+        scene.getStylesheets().add("dark_theme.css");
+
+
+
+
+
         stage.setScene(scene);
         stage.setTitle("GDR Companion App");
         stage.show();
@@ -115,7 +122,6 @@ public class MainWindowGUI extends Application {
         /////////////////
         //SCENE SECTION//
         /////////////////
-
         stage.setScene(scene);
 
         stage.setTitle(pg.getName());
