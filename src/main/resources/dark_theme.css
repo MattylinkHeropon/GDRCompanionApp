@@ -40,9 +40,27 @@
 }
 
 .buff-window{
+    background: darkgreen;
+    -fx-background-color: derive(background, -25%);
+    -fx-background-radius: 10;
 }
 
 .debuff-window{
+    background: darkred;
+    -fx-background-color: derive(background, -25%);
+    -fx-background-radius: 10;
+}
+
+.buff-window-cb{
+    background: #0C7BDC;
+    -fx-background-color: derive(background, -25%);
+    -fx-background-radius: 10;
+}
+
+.debuff-window-cb{
+    background: #FFC20A;
+    -fx-background-color: derive(background, -25%);
+    -fx-background-radius: 10;
 }
 
 /* Fix derived prompt color for text fields */

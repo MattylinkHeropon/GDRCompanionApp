@@ -1,5 +1,6 @@
 package GUI.creationWindows;
 
+import GUI.MainWindowGUI;
 import hero.Buff;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -204,7 +205,7 @@ public class BuffCreationWindow  {
 
             Scene scene = new Scene(root, SQUARE_DIMENSION, SQUARE_DIMENSION);
             stage = new Stage();
-            scene.getStylesheets().add("dark_theme.css");
+            scene.getStylesheets().add(MainWindowGUI.getCurrentTheme());
             stage.setTitle("Buff Creation");
             stage.setScene(scene);
             stage.initModality(Modality.APPLICATION_MODAL);

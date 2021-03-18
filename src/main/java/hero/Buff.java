@@ -1,11 +1,12 @@
 package hero;
 
+import GUI.MainWindowGUI;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Insets;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
 
 
 /**
@@ -46,11 +47,6 @@ public class Buff {
     //Mask Creation
 
     public GridPane createBuffMask(){
-
-        BackgroundFill stdFill;
-        //TODO: collegarla al CSS
-        if (isBuff) stdFill = new BackgroundFill(Color.DARKGREEN, new CornerRadii(10), null);
-        else  stdFill = new BackgroundFill(Color.DARKRED, new CornerRadii(10), null);
 
         //Create textField and TextArea
         TextField casterField = new TextField(caster);
@@ -93,7 +89,18 @@ public class Buff {
         GridPane.setMargin(effectArea, new Insets(0,10,10,10));
 
         //Set Background
-        gridPane.setBackground(new Background(stdFill));
+        String colorSelector;
+        String finalColor;
+        if (isBuff) colorSelector = "buff-window";
+        else colorSelector = "debuff-window";
+
+        if (MainWindowGUI.isColorBlind()) finalColor = colorSelector + "-cb";
+        else finalColor = colorSelector;
+
+
+
+        gridPane.getStyleClass().add(finalColor);
+
 
         //Final setting and return
         gridPane.getChildren().addAll(casterField, durationField, effectArea);

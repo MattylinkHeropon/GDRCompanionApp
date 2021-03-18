@@ -213,7 +213,7 @@ public class UnitCreationWindow  {
 
 
         Scene scene = new Scene(mainPane, WINDOW_SQUARE_DIMENSION, WINDOW_SQUARE_DIMENSION);
-        scene.getStylesheets().add("dark_theme.css");
+        scene.getStylesheets().add(MainWindowGUI.getCurrentTheme());
         stage = new Stage();
         stage.setScene(scene);
         stage.setTitle("Hero Creation");

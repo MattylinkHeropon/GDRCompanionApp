@@ -35,17 +35,26 @@ public class MainWindowGUI extends Application {
     Implemented because deleteBuff() doesn't create a new windows (no showAndWait() method), nor resolve instantly, but need an action from the user to resolve
      */
 
-    private static boolean isLocked = false;
+
 
     //Constant Value
     public static final int BUFF_COL_INDEX = 0;
     public static final int DEBUFF_COL_INDEX = 1;
+    private static final String LIGHT_THEME = "light_theme.css";
+    private static final String DARK_THEME = "dark_theme.css";
     private static final int STD_WIDTH = 800;
     private static final int STD_HEIGHT = 600;
     private static final int CENTRALPANE_ADJUST_TO_FIT = 35;
 
+
+
     //Used to serialize an Unit.
     private static final Type UNIT_TYPE = new TypeToken<Unit>() {}.getType();
+
+    //Variable called by Other
+    public static boolean colorBlind = false;
+    private static boolean isLocked = false;
+    private static boolean isdarkTheme = false;
 
 
     public static void lock(){
@@ -56,6 +65,14 @@ public class MainWindowGUI extends Application {
         isLocked = false;
     }
 
+    public static boolean isColorBlind() {
+        return colorBlind;
+    }
+
+    public static String getCurrentTheme() {
+        if (isdarkTheme) return DARK_THEME;
+        else return LIGHT_THEME;
+    }
 
     @Override
     public void start(Stage stageLocal) {
@@ -65,15 +82,13 @@ public class MainWindowGUI extends Application {
         MenuBar menuBar = buildMenuBar();
         root.setTop(menuBar);
         scene = new Scene(root, STD_WIDTH, STD_HEIGHT);
-        scene.getStylesheets().add("dark_theme.css");
-
-
-
-
-
+        scene.getStylesheets().add("light_theme.css");
         stage.setScene(scene);
         stage.setTitle("GDR Companion App");
         stage.show();
+
+        loadCharacter_load(new File("data/Charles.json"));
+
     }
 
     private void loadGUI(){
@@ -213,12 +228,44 @@ public class MainWindowGUI extends Application {
                 buffPane.deleteBuff();
             });
         buffMenu.getItems().addAll(addBuff, decreaseDuration, removeBuff);
+
+
+         /*
+    ------------------------------------------------------------------------------------------------------------------------
+     */
+        ////////////
+        //3: COLOR//
+        ////////////
+        Menu colorMenu = new Menu("Color");
+
+            //Item 1: Theme Selector
+            MenuItem themeSelector = new MenuItem("theme");
+            themeSelector.setOnAction( actionEvent -> {
+                if(isLocked) return;
+                scene.getStylesheets().remove(getCurrentTheme());
+                isdarkTheme = !isdarkTheme;
+                scene.getStylesheets().add(getCurrentTheme());
+
+            });
+
+            //Item 2: ColorBlindness selector
+            MenuItem colorBlindness = new MenuItem("Colorblindess");
+            colorBlindness.setOnAction(actionEvent -> {
+                if (isLocked) return;
+                colorBlind = !colorBlind;
+                redrawBuff();
+
+            });
+
+            colorMenu.getItems().addAll(themeSelector, colorBlindness);
+
+
     /*
     ------------------------------------------------------------------------------------------------------------------------
      */
 
         //END
-        return new MenuBar(fileMenu, buffMenu);
+        return new MenuBar(fileMenu, buffMenu, colorMenu);
     }
 
     //////////////////
@@ -252,9 +299,12 @@ public class MainWindowGUI extends Application {
         pg = gson.fromJson(fileReader, UNIT_TYPE);
         loadGUI();
         //Draw all the buff associated with the unit
+        redrawBuff();
+    }
+
+    private void redrawBuff(){
         buffPane.redrawColumn(BUFF_COL_INDEX, pg.getBuffArrayList());
         buffPane.redrawColumn(DEBUFF_COL_INDEX, pg.getDebuffArrayList());
-
     }
 
     /**
