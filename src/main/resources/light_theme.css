@@ -32,3 +32,9 @@
     -fx-background-color: derive(background, -10%);
     -fx-background-radius: 10;
 }
+
+.remove-buff {
+    -fx-background-color: #808080;
+    -fx-background-radius: 10;
+    -fx-opacity: 0.75;
+}

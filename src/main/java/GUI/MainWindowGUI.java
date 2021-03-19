@@ -54,7 +54,7 @@ public class MainWindowGUI extends Application {
     //Variable called by Other
     public static boolean colorBlind = false;
     private static boolean isLocked = false;
-    private static boolean isdarkTheme = false;
+    private static boolean isDarkTheme = true;
 
 
     public static void lock(){
@@ -70,7 +70,7 @@ public class MainWindowGUI extends Application {
     }
 
     public static String getCurrentTheme() {
-        if (isdarkTheme) return DARK_THEME;
+        if (isDarkTheme) return DARK_THEME;
         else return LIGHT_THEME;
     }
 
@@ -82,12 +82,12 @@ public class MainWindowGUI extends Application {
         MenuBar menuBar = buildMenuBar();
         root.setTop(menuBar);
         scene = new Scene(root, STD_WIDTH, STD_HEIGHT);
-        scene.getStylesheets().add("light_theme.css");
+        scene.getStylesheets().add(getCurrentTheme());
         stage.setScene(scene);
         stage.setTitle("GDR Companion App");
+        stage.setResizable(false);
         stage.show();
 
-        loadCharacter_load(new File("data/Charles.json"));
 
     }
 
@@ -123,7 +123,6 @@ public class MainWindowGUI extends Application {
             //////////
 
             TabPane centralPane = centralPaneCreation();
-            centralPane.setMaxSize(STD_WIDTH - StatPane.GRID_WIDTH, STD_HEIGHT);
             root.setCenter(centralPane);
 
             ////////
@@ -185,7 +184,7 @@ public class MainWindowGUI extends Application {
             //item 3: savePG
             MenuItem savePG = new MenuItem("Update Character");
             savePG.setOnAction(actionEvent -> {
-                if (isLocked) return;
+                if (isLocked || pg == null) return;
                 try {
                     saveCharacter(pg, new File("data/" + pg.getName() + ".json"));
                 } catch (IOException e) {
@@ -205,7 +204,7 @@ public class MainWindowGUI extends Application {
             //Item 1: Add Buff
             MenuItem addBuff = new MenuItem("Add Buff");
             addBuff.setOnAction(actionEvent -> {
-                if(isLocked) return;
+                if (isLocked || pg == null) return;
                 BuffCreationWindow.createWindow();
                 if (BuffCreationWindow.isConfirmPressed()){
                     buffPane.addBuff(BuffCreationWindow.getBuff());
@@ -216,7 +215,7 @@ public class MainWindowGUI extends Application {
         MenuItem decreaseDuration = new MenuItem("Decrease Duration");
 
             decreaseDuration.setOnAction(actionEvent -> {
-                if (isLocked) return;
+                if (isLocked || pg == null) return;
                 buffPane.decreaseBuffDuration(pg.getBuffArrayList(), BUFF_COL_INDEX);
                 buffPane.decreaseBuffDuration(pg.getDebuffArrayList(), DEBUFF_COL_INDEX);
             });
@@ -224,7 +223,7 @@ public class MainWindowGUI extends Application {
             //Item 3: Remove Buff
             MenuItem removeBuff = new MenuItem("Remove Buff");
             removeBuff.setOnAction(actionEvent -> {
-                if (isLocked) return;
+                if (isLocked || pg == null) return;
                 buffPane.deleteBuff();
             });
         buffMenu.getItems().addAll(addBuff, decreaseDuration, removeBuff);
@@ -243,7 +242,7 @@ public class MainWindowGUI extends Application {
             themeSelector.setOnAction( actionEvent -> {
                 if(isLocked) return;
                 scene.getStylesheets().remove(getCurrentTheme());
-                isdarkTheme = !isdarkTheme;
+                isDarkTheme = !isDarkTheme;
                 scene.getStylesheets().add(getCurrentTheme());
 
             });
@@ -275,6 +274,10 @@ public class MainWindowGUI extends Application {
     ////////
     //FILE//
     ////////
+
+    /**
+     * Let the user select a Unit to load
+     */
     private void loadCharacter_select() {
         //First, create a fileChooser and let the user select a Unit
         FileChooser searchUnit = new FileChooser();
@@ -282,10 +285,14 @@ public class MainWindowGUI extends Application {
         searchUnit.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("json character", "*.json"));
         searchUnit.setInitialDirectory(new File("data"));
         File file = searchUnit.showOpenDialog(stage);
+        if (file == null) return;
         loadCharacter_load(file);
     }
 
-    //file selected: deserialization
+    /**
+     * Deserialize the given File into a Unit-type object
+     * @param file File to be deserialized
+     */
     private void loadCharacter_load(File file){
         Gson gson = new Gson();
         FileReader fileReader = null;
@@ -302,6 +309,9 @@ public class MainWindowGUI extends Application {
         redrawBuff();
     }
 
+    /**
+     * Redraw buff and debuff Column after a change
+     */
     private void redrawBuff(){
         buffPane.redrawColumn(BUFF_COL_INDEX, pg.getBuffArrayList());
         buffPane.redrawColumn(DEBUFF_COL_INDEX, pg.getDebuffArrayList());
@@ -336,11 +346,9 @@ public class MainWindowGUI extends Application {
     private TabPane centralPaneCreation() {
         //Buff Tab;
         Tab buffTab = new Tab("(De)Buff");
-
+        //TODO: Right now created based on the un-resizable property of the Scene
         buffPane = new BuffPane(STD_WIDTH - StatPane.GRID_WIDTH - CENTRALPANE_ADJUST_TO_FIT, pg);
         GridPane buffGridPane = buffPane.getBuffPane();
-
-
 
         //scrollPane setup
         ScrollPane buffScroll = new ScrollPane();

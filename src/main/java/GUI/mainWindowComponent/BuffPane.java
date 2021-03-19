@@ -57,10 +57,6 @@ public class BuffPane {
 
         ArrayList<Button> closeButtonList = new ArrayList<>();
 
-        //Set variable used to create the buttons
-        Color closeButtonFill = Color.web("#808080", 0.5); //At the moment the color is Gray, 50% opacity
-        BackgroundFill closeButtonBackground = new BackgroundFill(closeButtonFill, new CornerRadii(10), null);
-
         for (Node node: buffPane.getChildren()
         ) {
             //Create the button
@@ -70,7 +66,7 @@ public class BuffPane {
 
             //set dimension and Background
             button.setMinSize(node.getLayoutBounds().getWidth(), node.getLayoutBounds().getHeight());
-            button.setBackground(new Background(closeButtonBackground));
+            button.getStyleClass().add("remove-buff");
 
             //set constrain to add it to the grid:
             int col = GridPane.getColumnIndex(node);
