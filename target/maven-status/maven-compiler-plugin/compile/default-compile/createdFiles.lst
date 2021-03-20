@@ -1,7 +1,0 @@
-hero\Enum\AbilityScore.class
-hero\Unit.class
-hero\AbilityScore_Generator.class
-module-info.class
-hero\Enum\Edition.class
-GUI\creationWindows\unitCreation\UnitCreationWindow.class
-hero\Buff.class
