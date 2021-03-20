@@ -238,7 +238,7 @@ public class MainWindowGUI extends Application {
         Menu colorMenu = new Menu("Color");
 
             //Item 1: Theme Selector
-            MenuItem themeSelector = new MenuItem("theme");
+            MenuItem themeSelector = new MenuItem("Switch theme");
             themeSelector.setOnAction( actionEvent -> {
                 if(isLocked) return;
                 scene.getStylesheets().remove(getCurrentTheme());
@@ -248,7 +248,7 @@ public class MainWindowGUI extends Application {
             });
 
             //Item 2: ColorBlindness selector
-            MenuItem colorBlindness = new MenuItem("Colorblindess");
+            MenuItem colorBlindness = new MenuItem("Switch colorblind mode");
             colorBlindness.setOnAction(actionEvent -> {
                 if (isLocked) return;
                 colorBlind = !colorBlind;

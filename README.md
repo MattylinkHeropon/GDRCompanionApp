@@ -4,6 +4,15 @@ This tool is designed for DnD and Pathfinder game, but it will probably work fin
 
 # Version and Features
 
+**V2.0**
+Features:
+* Now the program run on Linux (and hopefully on MacOS, but I can't test that);
+* Standardized text for each OS;
+* Implemented CSS:
+    * Included a dark theme (set a default theme);
+    * Added a colorblind mode for buff/debuff section.
+
+
 **v1.0**
 Features:
 * Create a character, using your preferred method to generate their ability score;
@@ -11,14 +20,18 @@ Features:
 
 Planned features:
 * Support to magic, with a spellbook to save every spell you know;
-* Interface to keep track of the prepared spell (for Prepared Caster) or Spell Slot (for Spontaneous Caster);
+* Interface to keep track of the prepared spell (for prepared caster) or spell slot (for spontaneous caster);
 * Support to DnD 4 "power" system;
 * A logo?
 
 # Credits and Licensing
 This program uses [JavaFX](https://github.com/openjdk/jfx) and [Gson](https://github.com/google/gson).
 
-This program operate under the Open Game License.
+[Dark mode](https://github.com/joffrey-bion/javafx-themes)  by joffrey-bion.
+
+For individual license, see other_license folder.
+
+
 
 Paizo Community Use Policy
 ```
