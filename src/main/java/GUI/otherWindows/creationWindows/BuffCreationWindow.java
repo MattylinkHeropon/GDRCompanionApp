@@ -1,6 +1,6 @@
-package GUI.creationWindows;
+package GUI.otherWindows.creationWindows;
 
-import GUI.MainWindowGUI;
+import GUI.mainWindow.MainWindowGUI;
 import hero.Buff;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -30,7 +30,7 @@ public class BuffCreationWindow  {
     private static final int SQUARE_DIMENSION = 300;
 
 
-    //Variable readed from multiple function
+    //Variable read from multiple function
     private static final ToggleGroup radioGroup = new ToggleGroup();
     private static final TextField casterTextField = new TextField();
     private static final TextField durationTextField = new TextField();
@@ -81,7 +81,7 @@ public class BuffCreationWindow  {
         durationTextField.clear();
         descriptionTextArea.clear();
 
-        //Set promt text
+        //Set prompt text
         casterTextField.setPromptText("Caster Name");
         durationTextField.setPromptText("Duration in turn");
         descriptionTextArea.setPromptText("Describe your (de)buff");
@@ -168,7 +168,6 @@ public class BuffCreationWindow  {
             centralGrid.getChildren().addAll(buffLabel, radioBox);
 
             //text setup
-            HBox textFieldBox = new HBox(RADIO_SPACING);
             GridPane.setConstraints(casterTextField, 0, 1);
             GridPane.setConstraints(durationTextField, 1, 1);
             centralGrid.getChildren().addAll(casterTextField, durationTextField);

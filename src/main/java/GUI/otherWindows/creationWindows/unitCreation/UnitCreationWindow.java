@@ -1,6 +1,6 @@
-package GUI.creationWindows.unitCreation;
+package GUI.otherWindows.creationWindows.unitCreation;
 
-import GUI.MainWindowGUI;
+import GUI.mainWindow.MainWindowGUI;
 import hero.Enum.Edition;
 import hero.Unit;
 import javafx.beans.binding.BooleanBinding;

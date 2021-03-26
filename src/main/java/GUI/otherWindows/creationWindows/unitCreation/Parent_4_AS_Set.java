@@ -1,4 +1,4 @@
-package GUI.creationWindows.unitCreation;
+package GUI.otherWindows.creationWindows.unitCreation;
 
 import hero.AbilityScore_Generator;
 import hero.Enum.AbilityScore;

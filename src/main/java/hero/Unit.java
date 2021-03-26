@@ -1,6 +1,7 @@
 package hero;
 
 import hero.Enum.Edition;
+import hero.magic.Spell_Base;
 
 import java.util.ArrayList;
 
@@ -21,6 +22,12 @@ public class Unit {
     //Buff Array
     private final ArrayList<Buff> buffArrayList = new ArrayList<>();
     private final ArrayList<Buff> debuffArrayList = new ArrayList<>();
+
+    //Spell
+    private boolean isSpontaneous  = false;
+    private boolean isPrepared = false;
+    private ArrayList<Spell_Base> spellList = null;
+
 
     public Unit (String image, String name, Edition game, int[] ability_score, int max_hp) {
         this.image = image;
@@ -56,7 +63,6 @@ public class Unit {
         return max_hp;
     }
 
-
     public void setCurr_hp(int curr_hp) {
         this.curr_hp = curr_hp;
     }
@@ -90,6 +96,27 @@ public class Unit {
         else debuffArrayList.add(buff);
     }
 
+    //Spell getter and setter
+    public boolean isPrepared() {
+        return isPrepared;
+    }
+    public boolean isSpontaneous() {
+        return isSpontaneous;
+    }
+
+    public void setPrepared(boolean value) {
+        isPrepared = value;
+        createSpellList();
+    }
+    public void setSpontaneous(boolean value) {
+        isSpontaneous = value;
+        createSpellList();
+    }
+
+    private void createSpellList(){
+        if (spellList != null)  spellList = new ArrayList<>();
+
+    }
     ////////////////
     //OTHER METHOD//
     ////////////////

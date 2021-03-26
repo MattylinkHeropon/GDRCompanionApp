@@ -1,9 +1,10 @@
-package GUI;
+package GUI.mainWindow;
 
-import GUI.creationWindows.BuffCreationWindow;
-import GUI.creationWindows.unitCreation.UnitCreationWindow;
-import GUI.mainWindowComponent.BuffPane;
-import GUI.mainWindowComponent.StatPane;
+import GUI.mainWindow.mainWindowComponent.OptionPane;
+import GUI.otherWindows.creationWindows.BuffCreationWindow;
+import GUI.otherWindows.creationWindows.unitCreation.UnitCreationWindow;
+import GUI.mainWindow.mainWindowComponent.BuffPane;
+import GUI.mainWindow.mainWindowComponent.StatPane;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -21,13 +22,14 @@ import javafx.stage.Stage;
 
 import java.io.*;
 import java.lang.reflect.Type;
+import java.nio.file.OpenOption;
 
 public class MainWindowGUI extends Application {
-    private Unit pg;
+    private static Unit unit;
     private BorderPane root;
     private static BuffPane buffPane;
     private Stage stage;
-    private Scene scene;
+    private static Scene scene;
 
     /*
     isLocked is checked every time a MenuItem is called.
@@ -52,9 +54,9 @@ public class MainWindowGUI extends Application {
     private static final Type UNIT_TYPE = new TypeToken<Unit>() {}.getType();
 
     //Variable called by Other
-    public static boolean colorBlind = false;
+    private static boolean colorBlind = false;
     private static boolean isLocked = false;
-    private static boolean isDarkTheme = true;
+    private static boolean darkThemeSelected = true;
 
 
     public static void lock(){
@@ -65,12 +67,16 @@ public class MainWindowGUI extends Application {
         isLocked = false;
     }
 
+    public static boolean isDarkThemeSelected() {
+        return darkThemeSelected;
+    }
+
     public static boolean isColorBlind() {
         return colorBlind;
     }
 
     public static String getCurrentTheme() {
-        if (isDarkTheme) return DARK_THEME;
+        if (darkThemeSelected) return DARK_THEME;
         else return LIGHT_THEME;
     }
 
@@ -88,6 +94,9 @@ public class MainWindowGUI extends Application {
         stage.setResizable(false);
         stage.show();
 
+
+        //TODO:Debug line
+        loadCharacter_load(new File("data/Charles.json"));
 
     }
 
@@ -111,7 +120,7 @@ public class MainWindowGUI extends Application {
             /////////
             //RIGHT//
             /////////
-            StatPane statPane = new StatPane(pg);
+            StatPane statPane = new StatPane(unit);
             VBox statNode = statPane.getCompleteBox();
             //setup
             root.setLeft(statNode);
@@ -122,7 +131,7 @@ public class MainWindowGUI extends Application {
             //CENTER//
             //////////
 
-            TabPane centralPane = centralPaneCreation();
+            TabPane centralPane = buildCentralPane();
             root.setCenter(centralPane);
 
             ////////
@@ -138,11 +147,63 @@ public class MainWindowGUI extends Application {
         /////////////////
         stage.setScene(scene);
 
-        stage.setTitle(pg.getName());
+        stage.setTitle(unit.getName());
         stage.show();
     }
 
+    ///////////
+    //TABPANE//
+    ///////////
 
+    /**
+     * This function create the central Pane (a tab Pane), and add to it the first Tab, "buff".
+     * This first tab will contain a ScrollPane, that contain a GridPane with the buff and debuff
+     * @return the created TabPane
+     */
+    private TabPane buildCentralPane() {
+
+        ///////////
+        //1: BUFF//
+        ///////////
+
+        Tab buffTab = new Tab("(De)Buff");
+        //TODO: Right now created based on the un-resizable property of the Scene
+        buffPane = new BuffPane(STD_WIDTH - StatPane.GRID_WIDTH - CENTRALPANE_ADJUST_TO_FIT, unit);
+        GridPane buffGridPane = buffPane.getBuffPane();
+
+        //scrollPane setup
+        ScrollPane buffScroll = new ScrollPane();
+        buffScroll.setContent(buffGridPane);
+
+        //buffTab setup
+        buffTab.setContent(buffScroll);
+        buffTab.setClosable(false);
+
+        //
+        //2: Other Counter//
+        //
+
+        /*
+        Sarà da sistemare, comunque qui permetto all'utente di salvare counter vari ed eventuali, come ad esempio buff attivi/disattivati
+        Contatori di turni per creature ed evocazioni, e simili.
+        Li devo fare statici legati al pg?
+         */
+
+        /////////////
+        //X: OPTION//
+        /////////////
+        //TODO: keep it alwais at last position
+        Tab optionTab = new Tab("Option");
+        GridPane optionPane = OptionPane.buildOptionPane();
+        optionTab.setContent(optionPane);
+        optionTab.setClosable(false);
+
+        ///////
+        //END//
+        ///////
+
+        return new TabPane(buffTab, optionTab);
+    }
 
     ///////////
     //MENUBAR//
@@ -184,9 +245,9 @@ public class MainWindowGUI extends Application {
             //item 3: savePG
             MenuItem savePG = new MenuItem("Update Character");
             savePG.setOnAction(actionEvent -> {
-                if (isLocked || pg == null) return;
+                if (isLocked || unit == null) return;
                 try {
-                    saveCharacter(pg, new File("data/" + pg.getName() + ".json"));
+                    saveCharacter(unit, new File("data/" + unit.getName() + ".json"));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -204,67 +265,61 @@ public class MainWindowGUI extends Application {
             //Item 1: Add Buff
             MenuItem addBuff = new MenuItem("Add Buff");
             addBuff.setOnAction(actionEvent -> {
-                if (isLocked || pg == null) return;
+                if (isLocked || unit == null) return;
                 BuffCreationWindow.createWindow();
                 if (BuffCreationWindow.isConfirmPressed()){
                     buffPane.addBuff(BuffCreationWindow.getBuff());
             }
             });
 
-        //Item 2: Decrease Duration
-        MenuItem decreaseDuration = new MenuItem("Decrease Duration");
+            //Item 2: Decrease Duration
+            MenuItem decreaseDuration = new MenuItem("Decrease Duration");
 
-            decreaseDuration.setOnAction(actionEvent -> {
-                if (isLocked || pg == null) return;
-                buffPane.decreaseBuffDuration(pg.getBuffArrayList(), BUFF_COL_INDEX);
-                buffPane.decreaseBuffDuration(pg.getDebuffArrayList(), DEBUFF_COL_INDEX);
-            });
+                decreaseDuration.setOnAction(actionEvent -> {
+                    if (isLocked || unit == null) return;
+                    buffPane.decreaseBuffDuration(unit.getBuffArrayList(), BUFF_COL_INDEX);
+                    buffPane.decreaseBuffDuration(unit.getDebuffArrayList(), DEBUFF_COL_INDEX);
+                });
 
             //Item 3: Remove Buff
             MenuItem removeBuff = new MenuItem("Remove Buff");
             removeBuff.setOnAction(actionEvent -> {
-                if (isLocked || pg == null) return;
+                if (isLocked || unit == null) return;
                 buffPane.deleteBuff();
             });
         buffMenu.getItems().addAll(addBuff, decreaseDuration, removeBuff);
 
-
-         /*
+ /*
     ------------------------------------------------------------------------------------------------------------------------
      */
-        ////////////
-        //3: COLOR//
-        ////////////
-        Menu colorMenu = new Menu("Color");
+        ///////////////////
+        //3: SPELLCASTING//
+        ///////////////////
 
-            //Item 1: Theme Selector
-            MenuItem themeSelector = new MenuItem("Switch theme");
-            themeSelector.setOnAction( actionEvent -> {
-                if(isLocked) return;
-                scene.getStylesheets().remove(getCurrentTheme());
-                isDarkTheme = !isDarkTheme;
-                scene.getStylesheets().add(getCurrentTheme());
+        Menu spellMenu = new Menu("Spell");
 
-            });
-
-            //Item 2: ColorBlindness selector
-            MenuItem colorBlindness = new MenuItem("Switch colorblind mode");
-            colorBlindness.setOnAction(actionEvent -> {
+            //item 1: Set prepared Spellcasting
+            MenuItem setPrepared = new MenuItem("Set Prepared Spellcasting");
+            setPrepared.setOnAction(actionEvent -> {
                 if (isLocked) return;
-                colorBlind = !colorBlind;
-                redrawBuff();
-
+                unit.setSpontaneous(true);
+                //TODO: Redraw/aggiungere tab preparata e Handler Spell se assente
             });
 
-            colorMenu.getItems().addAll(themeSelector, colorBlindness);
-
+            //item 2: Set spontaneous Spellcasting
+            MenuItem setSpontaneous = new MenuItem("Set Prepared Spellcasting");
+            setSpontaneous.setOnAction(actionEvent -> {
+                if (isLocked) return;
+                unit.setPrepared(true);
+                //TODO: Redraw/aggiungere tab Spontenea e Handler Spell se assente
+            });
 
     /*
     ------------------------------------------------------------------------------------------------------------------------
      */
 
         //END
-        return new MenuBar(fileMenu, buffMenu, colorMenu);
+        return new MenuBar(fileMenu, buffMenu);
     }
 
     //////////////////
@@ -303,7 +358,7 @@ public class MainWindowGUI extends Application {
         }
 
         assert fileReader != null;
-        pg = gson.fromJson(fileReader, UNIT_TYPE);
+        unit = gson.fromJson(fileReader, UNIT_TYPE);
         loadGUI();
         //Draw all the buff associated with the unit
         redrawBuff();
@@ -312,9 +367,9 @@ public class MainWindowGUI extends Application {
     /**
      * Redraw buff and debuff Column after a change
      */
-    private void redrawBuff(){
-        buffPane.redrawColumn(BUFF_COL_INDEX, pg.getBuffArrayList());
-        buffPane.redrawColumn(DEBUFF_COL_INDEX, pg.getDebuffArrayList());
+    private static void redrawBuff(){
+        buffPane.redrawColumn(BUFF_COL_INDEX, unit.getBuffArrayList());
+        buffPane.redrawColumn(DEBUFF_COL_INDEX, unit.getDebuffArrayList());
     }
 
     /**
@@ -334,35 +389,33 @@ public class MainWindowGUI extends Application {
         fileWriter.close();
     }
 
-    ////////////////////
-    //AUXILIARY METHOD//
-    ////////////////////
+    ////////////////
+    //OTHER METHOD//
+    ////////////////
 
     /**
-     * This function create the central Pane (a tab Pane), and add to it the first Tab, "buff".
-     * This first tab will contain a ScrollPane, that contain a GridPane with the buff and debuff
-     * @return the created TabPane
+     * Check if the selected theme is already set. If not, change the theme to the selected one.
+     * Only binary for now, could be refactored to support multiple theme.
+     * @param setDarkTheme the selected theme
      */
-    private TabPane centralPaneCreation() {
-        //Buff Tab;
-        Tab buffTab = new Tab("(De)Buff");
-        //TODO: Right now created based on the un-resizable property of the Scene
-        buffPane = new BuffPane(STD_WIDTH - StatPane.GRID_WIDTH - CENTRALPANE_ADJUST_TO_FIT, pg);
-        GridPane buffGridPane = buffPane.getBuffPane();
+    public static void changeTheme (boolean setDarkTheme){
+        if (darkThemeSelected == setDarkTheme) return;
+        scene.getStylesheets().remove(getCurrentTheme());
+        darkThemeSelected = !darkThemeSelected;
+        scene.getStylesheets().add(getCurrentTheme());
 
-        //scrollPane setup
-        ScrollPane buffScroll = new ScrollPane();
-        buffScroll.setContent(buffGridPane);
-
-        //buffTab setup
-        buffTab.setContent(buffScroll);
-        buffTab.setClosable(false);
-
-        //END
-        return new TabPane(buffTab);
     }
 
-
+    /**
+     * Check if the selected colorblind option is already set. If not, change the colorblind mode to the selected one.
+     * * Only binary for now, could be refactored to support multiple colorblind mode.
+     * @param setColorBlind the selected colorblind mode
+     */
+    public static void changeColorBlind (boolean setColorBlind){
+        if (colorBlind == setColorBlind) return;
+        colorBlind = !colorBlind;
+        redrawBuff();
+    }
     public static void main(String[] args) {
         launch();
     }

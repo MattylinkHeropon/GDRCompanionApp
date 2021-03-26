@@ -1,6 +1,6 @@
-package GUI.mainWindowComponent;
+package GUI.mainWindow.mainWindowComponent;
 
-import GUI.MainWindowGUI;
+import GUI.mainWindow.MainWindowGUI;
 import hero.Buff;
 import hero.Unit;
 import javafx.geometry.Insets;

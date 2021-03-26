@@ -1,6 +1,6 @@
 package hero;
 
-import GUI.MainWindowGUI;
+import GUI.mainWindow.MainWindowGUI;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Insets;
 import javafx.scene.control.TextArea;

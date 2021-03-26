@@ -1,4 +1,4 @@
-package GUI.creationWindows.unitCreation;
+package GUI.otherWindows.creationWindows.unitCreation;
 
 import hero.Enum.Edition;
 import javafx.beans.binding.Bindings;
@@ -6,7 +6,6 @@ import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.HPos;
-import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
