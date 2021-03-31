@@ -1,4 +1,4 @@
-package GUI.otherWindows.creationWindows;
+package GUI.smallWindows.creationWindows;
 
 import GUI.mainWindow.MainWindowGUI;
 import hero.Buff;

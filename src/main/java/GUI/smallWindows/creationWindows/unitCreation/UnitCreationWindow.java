@@ -1,4 +1,4 @@
-package GUI.otherWindows.creationWindows.unitCreation;
+package GUI.smallWindows.creationWindows.unitCreation;
 
 import GUI.mainWindow.MainWindowGUI;
 import hero.Enum.Edition;

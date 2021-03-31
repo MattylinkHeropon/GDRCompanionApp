@@ -1,4 +1,4 @@
-package GUI.otherWindows.creationWindows.unitCreation;
+package GUI.smallWindows.creationWindows.unitCreation;
 
 import javafx.beans.binding.BooleanBinding;
 import javafx.scene.Parent;

@@ -1,8 +1,10 @@
 package GUI.mainWindow;
 
 import GUI.mainWindow.mainWindowComponent.OptionPane;
-import GUI.otherWindows.creationWindows.BuffCreationWindow;
-import GUI.otherWindows.creationWindows.unitCreation.UnitCreationWindow;
+import GUI.mainWindow.mainWindowComponent.OtherTrackerPane;
+import GUI.smallWindows.creationWindows.BuffCreationWindow;
+import GUI.smallWindows.creationWindows.otherCounter.OtherTrackerCreationWindow;
+import GUI.smallWindows.creationWindows.unitCreation.UnitCreationWindow;
 import GUI.mainWindow.mainWindowComponent.BuffPane;
 import GUI.mainWindow.mainWindowComponent.StatPane;
 import com.google.gson.Gson;
@@ -22,7 +24,6 @@ import javafx.stage.Stage;
 
 import java.io.*;
 import java.lang.reflect.Type;
-import java.nio.file.OpenOption;
 
 public class MainWindowGUI extends Application {
     private static Unit unit;
@@ -183,15 +184,45 @@ public class MainWindowGUI extends Application {
         //2: Other Counter//
         //
 
+        Tab otherTab = new Tab("Other");
+        GridPane otherPane = OtherTrackerPane.getGridPane();
+        Button testButton = new Button("test");
+        testButton.setOnAction(actionEvent -> {
+            OtherTrackerCreationWindow.createWindow();
+            System.out.println(OtherTrackerCreationWindow.isConfirmPressed());
+        });
+        otherTab.setClosable(false);
+        otherTab.setDisable(false);
+        testButton.setAlignment(Pos.BASELINE_RIGHT);
+        VBox testBox = new VBox(10);
+        testBox.getChildren().addAll(otherPane, testButton);
+
+        otherTab.setContent(testBox);
         /*
         Sarà da sistemare, comunque qui permetto all'utente di salvare counter vari ed eventuali, come ad esempio buff attivi/disattivati
         Contatori di turni per creature ed evocazioni, e simili.
         Li devo fare statici legati al pg?
          */
 
+        ////////////
+        //3: MAGIC//
+        ////////////
+
+        Tab magicTab = new Tab("Magic");
+        magicTab.setClosable(false);
+        magicTab.setDisable(true);
+
+        ////////////////
+        //4: SPELLLIST//
+        ////////////////
+
+        Tab spellListTab = new Tab("Spell List");
+        spellListTab.setClosable(false);
+        spellListTab.setDisable(true);
         /////////////
         //X: OPTION//
         /////////////
+
         //TODO: keep it alwais at last position
         Tab optionTab = new Tab("Option");
         GridPane optionPane = OptionPane.buildOptionPane();
@@ -202,7 +233,7 @@ public class MainWindowGUI extends Application {
         //END//
         ///////
 
-        return new TabPane(buffTab, optionTab);
+        return new TabPane(buffTab, otherTab, magicTab, spellListTab, optionTab);
     }
 
     ///////////

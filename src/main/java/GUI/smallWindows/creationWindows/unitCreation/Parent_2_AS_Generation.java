@@ -1,4 +1,4 @@
-package GUI.otherWindows.creationWindows.unitCreation;
+package GUI.smallWindows.creationWindows.unitCreation;
 
 import hero.AbilityScore_Generator;
 import javafx.beans.binding.Bindings;
