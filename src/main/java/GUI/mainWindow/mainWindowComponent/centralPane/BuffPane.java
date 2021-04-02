@@ -1,4 +1,4 @@
-package GUI.mainWindow.mainWindowComponent;
+package GUI.mainWindow.mainWindowComponent.centralPane;
 
 import GUI.mainWindow.MainWindowGUI;
 import hero.Buff;

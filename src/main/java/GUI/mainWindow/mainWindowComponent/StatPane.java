@@ -12,9 +12,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+
 import java.io.File;
 import java.text.DecimalFormat;
 import java.text.ParsePosition;
+import java.util.ArrayList;
 
 
 /**
@@ -23,45 +25,37 @@ import java.text.ParsePosition;
 public class StatPane {
 
     public static final int GRID_WIDTH = 150;
-
-    private VBox completeBox;
-    private final Unit pg;
-
-    public StatPane(Unit pg) {
-        this.pg = pg;
-        buildNode();
-    }
-
-    public VBox getCompleteBox() {
-        return completeBox;
-    }
+    private static final int STAT_ROW_INDEX_START = 1;
+    private static final int HP_ROW_INDEX = 9;
 
 
-    private void buildNode() {
 
-        /////////
-        //IMAGE//
-        /////////
-        File imageFile = new File(pg.getImage());
-        Image profileImage = new Image(imageFile.toURI().toString(), GRID_WIDTH, 0, true, true, true);
-        ImageView profileView = new ImageView(profileImage);
+    private static final ImageView profileView = new ImageView();
+    private static final GridPane statGrid = new GridPane();
 
-        ////////
-        //VBOX//
-        ////////
-        VBox box = new VBox(25);
-        box.getChildren().addAll(profileView, buildGrid());
-        completeBox = box;
-    }
+    private static final ArrayList<TextField> asTextFieldList = new ArrayList<>();
+    private static final ArrayList<TextField> asModTextFieldList = new ArrayList<>();
 
-    private GridPane buildGrid() {
+    private static final TextField maxHPField = new TextField();
+    private static final TextField currHPField = new TextField();
+
+
+    public static VBox buildBox(){
+
+        VBox mainBox = new VBox(25);
+        mainBox.getChildren().addAll(profileView, statGrid);
+
+        //////////////
+        //TOP: IMAGE//
+        //////////////
+
+        //global variable
 
         ////////////////////
-        //GRIDPANE SECTION//
+        //CENTER: GRIDPANE//
         ////////////////////
 
-        GridPane statGrid = new GridPane();
-        statGrid.setMaxWidth(GRID_WIDTH);
+        //statGrid.setMaxWidth(GRID_WIDTH);
 
         //gap setting
         statGrid.setHgap(10);
@@ -69,16 +63,15 @@ public class StatPane {
 
         //Column Constrain Setting
         ColumnConstraints column0 = new ColumnConstraints();
+            column0.setPercentWidth(20);
         ColumnConstraints column1 = new ColumnConstraints();
+            column1.setPercentWidth(40);
         ColumnConstraints column2 = new ColumnConstraints();
-        column0.setPercentWidth(20);
-        column1.setPercentWidth(40);
-        column2.setPercentWidth(40);
+            column2.setPercentWidth(40);
 
-        /////////////////
-        //LABEL SECTION//
-        /////////////////
+        statGrid.getColumnConstraints().addAll(column0, column1, column2);
 
+        //Label
         Label asLabel = new Label("Ability\nScore");
         Label modLabel = new Label("Mod");
 
@@ -86,81 +79,66 @@ public class StatPane {
         Label currHPLabel = new Label("Current");
         Label HPLabel = new Label("HP:");
 
-        //Label Constrain and Alignment
-        GridPane.setConstraints(asLabel, 1, 0);
-        GridPane.setHalignment(asLabel, HPos.CENTER);
-        GridPane.setConstraints(modLabel, 2, 0);
-        GridPane.setHalignment(modLabel, HPos.CENTER);
+        //Populate
+            //Row 0: AS Label
+            GridPane.setConstraints(asLabel, 1, 0);
+            GridPane.setHalignment(asLabel, HPos.CENTER);
+            GridPane.setConstraints(modLabel, 2, 0);
+            GridPane.setHalignment(modLabel, HPos.CENTER);
+            statGrid.getChildren().addAll(asLabel, modLabel);
 
+            //Row 1 to 6: AS
+            for (int i = STAT_ROW_INDEX_START; i < AbilityScore.values().length + 1; i++) {
+                Label nameLabel = new Label(AbilityScore.values()[i-1].getAbbreviation() + ":");
+                TextField asField = new TextField();
+                asTextFieldList.add(asField);
+                //Limit only number in asField
+                //https://stackoverflow.com/questions/31039449/java-8-u40-textformatter-javafx-to-restrict-user-input-only-for-decimal-number
+                {
+                    DecimalFormat format = new DecimalFormat("#");
+                    asField.setTextFormatter(
+                            new TextFormatter<>(c ->
+                            {
+                                if (c.getControlNewText().isEmpty()) {
+                                    return c;
+                                }
+                                ParsePosition parsePosition = new ParsePosition(0);
+                                Object object = format.parse(c.getControlNewText(), parsePosition);
 
-        //////////////////
-        //GRIDPANE SETUP//
-        //////////////////
+                                if (object == null || parsePosition.getIndex() < c.getControlNewText().length()) {
+                                    return null;
+                                } else {
+                                    return c;
+                                }
+                            }));
+                }
 
-        //Set first row
-        statGrid.getColumnConstraints().addAll(column0, column1, column2);
-        statGrid.getChildren().addAll(asLabel, modLabel);
+                TextField modField = new TextField();
+                asModTextFieldList.add(modField);
+                modField.setEditable(false);
 
-        int i;
+                //Graphic setup
+                asField.setAlignment(Pos.CENTER);
+                modField.setAlignment(Pos.CENTER);
+                modField.setEditable(false);
 
-        //Generating Ability Score rows
-        for (i = 0; i < pg.getAbility_score().length; i++) {
+                //Constraint
+                GridPane.setConstraints(nameLabel, 0, i);
+                GridPane.setHalignment(nameLabel, HPos.RIGHT);
+                GridPane.setConstraints(asField, 1, i);
+                GridPane.setConstraints(modField, 2, i);
 
-            //Create
-            Label nameLabel = new Label(AbilityScore.values()[i].getAbbreviation() + ":");
-            TextField asField = new TextField((Integer.toString(pg.getAbility_score()[i])));
-            TextField modField = new TextField((Integer.toString(pg.getAbility_mod()[i])));
-
-            //Limit only number in asField
-            //https://stackoverflow.com/questions/31039449/java-8-u40-textformatter-javafx-to-restrict-user-input-only-for-decimal-number
-            {
-                DecimalFormat format = new DecimalFormat("#");
-                asField.setTextFormatter(
-                        new TextFormatter<>(c ->
-                        {
-                            if (c.getControlNewText().isEmpty()) {
-                                return c;
-                            }
-                            ParsePosition parsePosition = new ParsePosition(0);
-                            Object object = format.parse(c.getControlNewText(), parsePosition);
-
-                            if (object == null || parsePosition.getIndex() < c.getControlNewText().length()) {
-                                return null;
-                            } else {
-                                return c;
-                            }
-                        }));
+                statGrid.getChildren().addAll(nameLabel, asField, modField);
             }
 
+            //Row 8: HP Label
+            GridPane.setConstraints(currHPLabel, 1, HP_ROW_INDEX - 1);
+            GridPane.setConstraints(maxHPLabel, 2, HP_ROW_INDEX - 1);
+            GridPane.setHalignment(maxHPLabel, HPos.CENTER);
+            GridPane.setHalignment(currHPLabel, HPos.CENTER);
+            statGrid.getChildren().addAll(currHPLabel, maxHPLabel);
 
-            //Graphic setup
-            asField.setAlignment(Pos.CENTER);
-            modField.setAlignment(Pos.CENTER);
-            modField.setEditable(false);
-
-            //Constraint
-            GridPane.setConstraints(nameLabel, 0, i + 1);
-            GridPane.setHalignment(nameLabel, HPos.RIGHT);
-            GridPane.setConstraints(asField, 1, i + 1);
-            GridPane.setConstraints(modField, 2, i + 1);
-
-            //Update Method
-            int finalI = i;
-            asField.textProperty().addListener((observableValue, oldValue, newValue) -> {
-                pg.setAbility_Score(finalI, Integer.parseInt(newValue));
-                modField.setText((Integer.toString(pg.getAbility_mod()[finalI])));
-            });
-
-            statGrid.getChildren().addAll(nameLabel, asField, modField);
-        }
-
-        i = i + 2; //leave an empty space
-
-        //HP section
-        {
-            //Create
-            TextField maxHPField = new TextField(Integer.toString(pg.getMax_hp()));
-            TextField currHPField = new TextField(Integer.toString(pg.getCurr_hp()));
+            //Row 9: HP Box
 
             //Limit only number in HPField
             //https://stackoverflow.com/questions/31039449/java-8-u40-textformatter-javafx-to-restrict-user-input-only-for-decimal-number
@@ -200,31 +178,49 @@ public class StatPane {
                             }
                         }));
             }
-
-            //listener to modify current and maximum HP values
-            currHPField.textProperty().addListener((observableValue, oldValue, newValue) -> pg.setCurr_hp(Integer.parseInt(newValue)));
-            maxHPField.textProperty().addListener((observableValue, oldValue, newValue) -> pg.setMax_hp(Integer.parseInt(newValue)));
-
             //Graphic setup
             currHPField.setAlignment(Pos.CENTER);
             maxHPField.setAlignment(Pos.CENTER);
 
-            //Constraint setup, top Label
-            GridPane.setConstraints(currHPLabel, 1, i);
-            GridPane.setConstraints(maxHPLabel, 2, i);
-            GridPane.setHalignment(maxHPLabel, HPos.CENTER);
-            GridPane.setHalignment(currHPLabel, HPos.CENTER);
-
-            //Constraint setup, HP row
-            GridPane.setConstraints(HPLabel, 0, i + 1);
+            //Constraint setup
+            GridPane.setConstraints(HPLabel, 0, HP_ROW_INDEX);
             GridPane.setHalignment(HPLabel, HPos.RIGHT);
-            GridPane.setConstraints(currHPField, 1, i + 1);
-            GridPane.setConstraints(maxHPField, 2, i + 1);
+            GridPane.setConstraints(currHPField, 1, HP_ROW_INDEX);
+            GridPane.setConstraints(maxHPField, 2, HP_ROW_INDEX);
+            statGrid.getChildren().addAll(HPLabel, currHPField, maxHPField);
 
-            statGrid.getChildren().addAll(maxHPLabel, maxHPField, HPLabel, currHPLabel, currHPField);
+            return mainBox;
+    }
+
+
+    public static void populateBox(Unit unit){
+
+        //Set image
+        File imageFile = new File(unit.getImage());
+        Image profileImage = new Image(imageFile.toURI().toString(), GRID_WIDTH, 0, true, true, true);
+        profileView.setImage(profileImage);
+
+        //Set AS
+        for (int i = 0; i < asModTextFieldList.size(); i++) {
+            int finalI = i;
+            TextField abilityScore = asModTextFieldList.get(i);
+            TextField modField = asTextFieldList.get(i);
+
+            abilityScore.setText(Integer.toString(unit.getAbility_score()[i]));
+            modField.setText(Integer.toString(unit.getAbility_mod()[i]));
+
+            abilityScore.textProperty().addListener((observableValue, oldValue, newValue) -> {
+                unit.setAbility_Score(finalI, Integer.parseInt(newValue));
+                modField.setText((Integer.toString(unit.getAbility_mod()[finalI])));
+            });
         }
 
-        return statGrid;
+        //Set HP
+        currHPField.setText(Integer.toString(unit.getCurr_hp()));
+        maxHPField.setText(Integer.toString(unit.getMax_hp()));
+        currHPField.textProperty().addListener((observableValue, oldValue, newValue) -> unit.setCurr_hp(Integer.parseInt(newValue)));
+        maxHPField.textProperty().addListener((observableValue, oldValue, newValue) -> unit.setMax_hp(Integer.parseInt(newValue)));
+
     }
 }
 
