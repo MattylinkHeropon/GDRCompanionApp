@@ -2,6 +2,7 @@ package GUI.smallWindows.creationWindows.otherCounter;
 
 
 import GUI.mainWindow.MainWindowGUI;
+import javafx.beans.binding.Bindings;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -18,13 +19,15 @@ import javafx.stage.Stage;
 
 public class OtherTrackerCreationWindow {
 
+    //Read from outside
     private static boolean confirmPressed;
-
+    private static OtherTrackerOption currOption = null;
     private static final OtherTrackerOption[] options = OtherTrackerOption.values();
+    private static String description;
 
+    //Window Size value
     private static final int WIDTH = 400;
     private static double height = 0;
-    private static Node currExampleNode = null;
 
     //The following constants are set after analyzing a screen of the Grid with GridLines Visible. The measurement unit are Pixel (px)
     private static final double ROW_INTRO_HEIGHT = 34;
@@ -37,9 +40,17 @@ public class OtherTrackerCreationWindow {
         return confirmPressed;
     }
 
+    public static OtherTrackerOption getCurrOption() {
+        return currOption;
+    }
+
+    public static String getDescription() {
+        return description;
+    }
+
     public static void createWindow(){
         //Value reset
-        currExampleNode = null;
+        currOption = null;
         height = 0;
 
         //Margin
@@ -62,12 +73,12 @@ public class OtherTrackerCreationWindow {
         root.add(introLabel, 0, 0, 2, 1);
         height = height + ROW_INTRO_HEIGHT + GRID_VGAP;
 
-        //left column: descriptor
-        TextField descriptorField = new TextField();
-        descriptorField.setPromptText("Input here a description");
-        GridPane.setMargin(descriptorField, leftRightMargin);
+        //left column: description
+        TextField descriptionField = new TextField();
+        descriptionField.setPromptText("Input here a description");
+        GridPane.setMargin(descriptionField, leftRightMargin);
         addRowConstrain(root, ROW_PRE_SPINNER_HEIGHT);
-        root.add(descriptorField, 0, 1);
+        root.add(descriptionField, 0, 1);
         height = height + ROW_PRE_SPINNER_HEIGHT + GRID_VGAP;
 
         //left column: radioButton
@@ -100,8 +111,17 @@ public class OtherTrackerCreationWindow {
 
         confirmButton.setOnAction(actionEvent -> {
             confirmPressed = true;
+            description = descriptionField.getText();
             stage.close();
         });
+
+
+        //Bind confirmButton
+        confirmButton.disableProperty().bind(Bindings.createBooleanBinding(()->
+            descriptionField.getText().isEmpty(),
+            descriptionField.textProperty()
+        ));
+
 
         //////////////////
         //WINDOW SECTION//
@@ -144,9 +164,12 @@ public class OtherTrackerCreationWindow {
             button.setOnAction(actionEvent -> changeNode(root, option));
             GridPane.setMargin(button, margin);
             root.add(button, 0, row);
-            row++;
             height = height + ROW_SPINNER_HEIGHT + GRID_VGAP;
-
+            if (row == 2){ //set first node as default
+                button.setSelected(true);
+                changeNode(root, option);
+            }
+            row++;
         }
     }
 
@@ -154,32 +177,14 @@ public class OtherTrackerCreationWindow {
      * Called when a RadioButton is selected:
      * create a correct node to represent the option associated to the selected RadioButton, and add it to the right column.
      * @param grid GridPane where the Node will be added.
-     * @param option option of OtherTrackerOption associated to a RadioButton.
+     * @param toAdd Option associated to a RadioButton.
      */
-    private static void changeNode(GridPane grid, OtherTrackerOption option) {
-        Node toAdd;
-        switch (option) {
-            case SPINNER:
-                toAdd = new Spinner<>(-100, 100, 0);
-                break;
-            case TOGGLEBUTTON:
-                ToggleGroup toggleGroup = new ToggleGroup();
-                ToggleButton toggleOn = new ToggleButton("ON");
-                ToggleButton toggleOff = new ToggleButton("OFF");
-                toggleGroup.getToggles().addAll(toggleOn, toggleOff);
-                toggleOn.setSelected(true);
-                HBox toggleBox = new HBox();
-                toggleBox.getChildren().addAll(toggleOn, toggleOff);
-                toggleBox.setAlignment(Pos.CENTER);
-                toAdd = toggleBox;
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + option);
-        }
-        if (currExampleNode != null) grid.getChildren().remove(currExampleNode);
-        currExampleNode = toAdd;
-        GridPane.setHalignment(toAdd, HPos.CENTER);
-        GridPane.setValignment(toAdd, VPos.CENTER);
-        grid.add(toAdd, 1, 2, 1, options.length);
+    private static void changeNode(GridPane grid, OtherTrackerOption toAdd) {
+        if (currOption != null) grid.getChildren().remove(currOption.getNode());
+        currOption = toAdd;
+        Node node = toAdd.getNode();
+        GridPane.setHalignment(node, HPos.CENTER);
+        GridPane.setValignment(node, VPos.CENTER);
+        grid.add(node, 1, 2, 1, options.length);
     }
 }

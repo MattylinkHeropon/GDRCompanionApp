@@ -38,3 +38,8 @@
     -fx-background-radius: 10;
     -fx-opacity: 0.75;
 }
+
+.otherTrackerBackground {
+    -fx-background-color: derive(-fx-base, -10%);
+    -fx-background-radius: 10;
+}

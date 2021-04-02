@@ -14,10 +14,12 @@ import hero.Unit;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -88,6 +90,12 @@ public class MainWindowGUI extends Application {
 
         MenuBar menuBar = buildMenuBar();
         root.setTop(menuBar);
+        VBox leftBox = new VBox();
+        root.setLeft(leftBox);
+        TabPane tabPane = buildCentralPane();
+        root.setCenter(tabPane);
+
+
         scene = new Scene(root, STD_WIDTH, STD_HEIGHT);
         scene.getStylesheets().add(getCurrentTheme());
         stage.setScene(scene);
@@ -97,9 +105,22 @@ public class MainWindowGUI extends Application {
 
 
         //TODO:Debug line
-        loadCharacter_load(new File("data/Charles.json"));
+        //loadCharacter_load(new File("data/Charles.json"));
+        printDimension("Root", root);
+        printDimension("Root.Top",  root.getTop());
+        printDimension("Root.Left",  root.getLeft());
+        printDimension("Root.Center",  root.getCenter());
+        /*
+        printDimension("Root.Right", (Region) root.getRight());
+        printDimension("Root.Bottom", (Region) root.getBottom());
 
-    }
+         */
+        }
+
+
+    private static void printDimension( String text, Node node){
+        System.out.println(text + ": " + (int) node.getBoundsInParent().getWidth() + " X " + (int) node.getBoundsInParent().getHeight() + " (" + node.getClass() + ")");
+        }
 
     private void loadGUI(){
         //clear root
@@ -118,6 +139,9 @@ public class MainWindowGUI extends Application {
             //TOP//
             ///////
 
+
+
+
             /////////
             //RIGHT//
             /////////
@@ -134,6 +158,8 @@ public class MainWindowGUI extends Application {
 
             TabPane centralPane = buildCentralPane();
             root.setCenter(centralPane);
+
+
 
             ////////
             //LEFT//
@@ -162,14 +188,14 @@ public class MainWindowGUI extends Application {
      * @return the created TabPane
      */
     private TabPane buildCentralPane() {
-
+        int tabWidth = STD_WIDTH - StatPane.GRID_WIDTH - CENTRALPANE_ADJUST_TO_FIT;
         ///////////
         //1: BUFF//
         ///////////
 
         Tab buffTab = new Tab("(De)Buff");
         //TODO: Right now created based on the un-resizable property of the Scene
-        buffPane = new BuffPane(STD_WIDTH - StatPane.GRID_WIDTH - CENTRALPANE_ADJUST_TO_FIT, unit);
+        buffPane = new BuffPane(tabWidth, unit);
         GridPane buffGridPane = buffPane.getBuffPane();
 
         //scrollPane setup
@@ -186,18 +212,25 @@ public class MainWindowGUI extends Application {
 
         Tab otherTab = new Tab("Other");
         GridPane otherPane = OtherTrackerPane.getGridPane();
-        Button testButton = new Button("test");
-        testButton.setOnAction(actionEvent -> {
+        Button createTrackerButton = new Button("Create Tracker");
+        createTrackerButton.setOnAction(actionEvent -> {
             OtherTrackerCreationWindow.createWindow();
-            System.out.println(OtherTrackerCreationWindow.isConfirmPressed());
+            if (OtherTrackerCreationWindow.isConfirmPressed()){
+                OtherTrackerPane.createTracker(OtherTrackerCreationWindow.getDescription(), OtherTrackerCreationWindow.getCurrOption(), tabWidth);
+            }
         });
+
+        Button testButton = new Button("Create-a-ton");
+        testButton.setOnAction(actionEvent -> OtherTrackerPane.create_a_ton(tabWidth));
+
+
+
         otherTab.setClosable(false);
         otherTab.setDisable(false);
-        testButton.setAlignment(Pos.BASELINE_RIGHT);
-        VBox testBox = new VBox(10);
-        testBox.getChildren().addAll(otherPane, testButton);
+        VBox box = new VBox(10);
+        box.getChildren().addAll(otherPane, createTrackerButton,testButton);
 
-        otherTab.setContent(testBox);
+        otherTab.setContent(box);
         /*
         Sarà da sistemare, comunque qui permetto all'utente di salvare counter vari ed eventuali, come ad esempio buff attivi/disattivati
         Contatori di turni per creature ed evocazioni, e simili.
@@ -223,7 +256,7 @@ public class MainWindowGUI extends Application {
         //X: OPTION//
         /////////////
 
-        //TODO: keep it alwais at last position
+        //TODO: keep it always at last position
         Tab optionTab = new Tab("Option");
         GridPane optionPane = OptionPane.buildOptionPane();
         optionTab.setContent(optionPane);
