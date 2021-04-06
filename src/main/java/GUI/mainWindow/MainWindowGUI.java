@@ -1,7 +1,8 @@
 package GUI.mainWindow;
 
 import GUI.mainWindow.mainWindowComponent.StatPane;
-import GUI.mainWindow.mainWindowComponent.centralPane.BuffPane;
+import GUI.mainWindow.mainWindowComponent.centralPane.Tab_1_BuffPane;
+import GUI.mainWindow.mainWindowComponent.centralPane.Tab_99_OptionPane;
 import GUI.smallWindows.creationWindows.BuffCreationWindow;
 import GUI.smallWindows.creationWindows.unitCreation.UnitCreationWindow;
 import com.google.gson.Gson;
@@ -13,10 +14,9 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -26,10 +26,13 @@ import java.lang.reflect.Type;
 
 public class MainWindowGUI extends Application {
     private static Unit unit;
-    private BorderPane root;
-    private static BuffPane buffPane;
     private Stage stage;
     private static Scene scene;
+
+    //Tab Reference
+    //TODO value a more effective method to call them
+    private static Tab_1_BuffPane buffPane;
+
 
     /*
     isLocked is checked every time a MenuItem is called.
@@ -46,8 +49,6 @@ public class MainWindowGUI extends Application {
     private static final String DARK_THEME = "dark_theme.css";
     private static final int STD_WIDTH = 800;
     private static final int STD_HEIGHT = 600;
-    private static final int CENTRALPANE_ADJUST_TO_FIT = 35;
-
 
 
     //Used to serialize an Unit.
@@ -83,7 +84,7 @@ public class MainWindowGUI extends Application {
     @Override
     public void start(Stage stageLocal) {
         stage = stageLocal;
-        root = new BorderPane();
+        BorderPane root = new BorderPane();
 
         //////////////
         //BUILD ROOT//
@@ -94,17 +95,18 @@ public class MainWindowGUI extends Application {
         root.setTop(menuBar);
 
         //Left
-        VBox leftBox = StatPane.buildBox();
+        Double maxSize = 150.0;
+        VBox leftBox = StatPane.buildBox(maxSize);
         BorderPane.setMargin(leftBox, new Insets(10));
         BorderPane.setAlignment(leftBox, Pos.CENTER);
         root.setLeft(leftBox);
 
         //Center
-        /*
         TabPane tabPane = buildCentralPane();
         root.setCenter(tabPane);
-        */
 
+
+        //scene setup
         scene = new Scene(root, STD_WIDTH, STD_HEIGHT);
         scene.getStylesheets().add(getCurrentTheme());
         stage.setScene(scene);
@@ -118,7 +120,7 @@ public class MainWindowGUI extends Application {
         printDimension("Root", root);
         printDimension("Root.Top",  root.getTop());
         printDimension("Root.Left",  root.getLeft());
-       //printDimension("Root.Center",  root.getCenter());
+        printDimension("Root.Center",  root.getCenter());
        //printDimension("Root.Right",  root.getRight());
         //printDimension("Root.Bottom",  root.getBottom());
 
@@ -144,7 +146,58 @@ public class MainWindowGUI extends Application {
     //TABPANE//
     ///////////
 
+    private static TabPane buildCentralPane(){
 
+        TabPane tabPane = new TabPane();
+        GridPane temp = new GridPane();
+
+        ///////////
+        //1: BUFF//
+        ///////////
+
+        buffPane = new Tab_1_BuffPane();
+
+        ScrollPane buffScroll = new ScrollPane();
+        buffScroll.setContent(buffPane.getBuffPane());
+        buffScroll.setFitToWidth(true);
+        tabPane.getTabs().add(buildTab("(De)Buff", buffScroll));
+
+        ////////////////////
+        //2: OTHER COUNTER//
+        ////////////////////
+        //TODO Costruire nodo other Counter, ricordarsi lo scrollpane
+        tabPane.getTabs().add(buildTab("Other Counter", temp));
+
+        ////////////
+        //3: MAGIC//
+        ////////////
+        //TODO costruire nodo Magic
+        Tab magicTab = buildTab("Magic", temp);
+        magicTab.setDisable(true);
+        tabPane.getTabs().add(magicTab);
+
+        ////////////////
+        //4: SPELLLIST//
+        ////////////////
+        Tab spellListTab = buildTab("Spell list", temp);
+        spellListTab.setDisable(true);
+        tabPane.getTabs().add(spellListTab);
+
+
+        ////////////////
+        //LAST: OPTION//
+        ////////////////
+        tabPane.getTabs().add(buildTab("Option", Tab_99_OptionPane.buildOptionPane()));
+
+        return tabPane;
+    }
+
+    private static Tab buildTab(String name, Node node){
+        Tab tab = new Tab(name);
+        tab.setContent(node);
+        tab.setClosable(false);
+        return tab;
+    }
 
     ///////////
     //MENUBAR//
@@ -303,7 +356,8 @@ public class MainWindowGUI extends Application {
         StatPane.populateBox(unit);
         loadGUI();
         //Draw all the buff associated with the unit
-       // redrawBuff();
+        buffPane.setPg(unit);
+        redrawBuff();
     }
 
     /**

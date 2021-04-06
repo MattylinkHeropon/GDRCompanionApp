@@ -29,7 +29,7 @@ public class OtherTrackerCreationWindow {
     private static final int WIDTH = 400;
     private static double height = 0;
 
-    //The following constants are set after analyzing a screen of the Grid with GridLines Visible. The measurement unit are Pixel (px)
+    //The following constants are set after analyzing a screen of the Grid with GridLines Visible, with WIDTH = 400. The measurement unit are Pixel (px)
     private static final double ROW_INTRO_HEIGHT = 34;
     private static final double ROW_PRE_SPINNER_HEIGHT = 24; //it's 10 less then ROW_INTRO because doesn't have the Insects
     private static final double ROW_SPINNER_HEIGHT = 15;

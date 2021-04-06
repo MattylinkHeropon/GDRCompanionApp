@@ -10,7 +10,7 @@ import javafx.scene.shape.Rectangle;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class OtherTrackerPane {
+public class Tab_2_OtherTrackerPane {
     private static final int DESCRIPTION_COL = 0;
     private static final int TRACKER_COL = 1;
     private static final int DELETE_COL = 2;

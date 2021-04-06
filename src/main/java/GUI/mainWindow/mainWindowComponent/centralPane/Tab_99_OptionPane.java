@@ -7,7 +7,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 
-public class OptionPane {
+public class Tab_99_OptionPane {
 
     public static GridPane buildOptionPane(){
 

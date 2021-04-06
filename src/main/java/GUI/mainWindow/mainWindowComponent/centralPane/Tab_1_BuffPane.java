@@ -11,19 +11,22 @@ import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 
-public class BuffPane {
+public class Tab_1_BuffPane {
     private final GridPane buffPane;
-    private final Unit pg;
+    private Unit pg;
 
 
-    public BuffPane(int width, Unit pg){
-        this.pg = pg;
+    public GridPane createBuffPane(){
 
+
+        return buffPane;
+    }
+
+    public Tab_1_BuffPane(){
         //GridPane setup
         buffPane = new GridPane();
-        buffPane.setHgap(11);
+        buffPane.setHgap(10);
         buffPane.setVgap(5);
-        buffPane.setMaxWidth(width);
 
         //GridPane constrain
         ColumnConstraints buffColumnConstrain = new ColumnConstraints();
@@ -31,6 +34,11 @@ public class BuffPane {
         ColumnConstraints debuffColumnConstrain = new ColumnConstraints();
         debuffColumnConstrain.setPercentWidth(50);
         buffPane.getColumnConstraints().addAll(buffColumnConstrain, debuffColumnConstrain);
+    }
+
+
+    public void setPg(Unit pg) {
+        this.pg = pg;
     }
 
     public GridPane getBuffPane() {

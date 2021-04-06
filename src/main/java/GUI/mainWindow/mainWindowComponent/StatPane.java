@@ -24,11 +24,10 @@ import java.util.ArrayList;
  */
 public class StatPane {
 
-    public static final int GRID_WIDTH = 150;
     private static final int STAT_ROW_INDEX_START = 1;
     private static final int HP_ROW_INDEX = 9;
 
-
+    private static Double maxWidth;
 
     private static final ImageView profileView = new ImageView();
     private static final GridPane statGrid = new GridPane();
@@ -40,7 +39,9 @@ public class StatPane {
     private static final TextField currHPField = new TextField();
 
 
-    public static VBox buildBox(){
+    public static VBox buildBox(Double maxWidth){
+
+        StatPane.maxWidth = maxWidth;
 
         VBox mainBox = new VBox(25);
         mainBox.getChildren().addAll(profileView, statGrid);
@@ -55,7 +56,7 @@ public class StatPane {
         //CENTER: GRIDPANE//
         ////////////////////
 
-        //statGrid.setMaxWidth(GRID_WIDTH);
+        statGrid.setMaxWidth(StatPane.maxWidth);
 
         //gap setting
         statGrid.setHgap(10);
@@ -197,7 +198,7 @@ public class StatPane {
 
         //Set image
         File imageFile = new File(unit.getImage());
-        Image profileImage = new Image(imageFile.toURI().toString(), GRID_WIDTH, 0, true, true, true);
+        Image profileImage = new Image(imageFile.toURI().toString(), maxWidth, 0, true, true, true);
         profileView.setImage(profileImage);
 
         //Set AS
