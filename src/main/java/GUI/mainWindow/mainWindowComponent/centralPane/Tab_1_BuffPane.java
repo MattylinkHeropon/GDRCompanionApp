@@ -16,12 +16,6 @@ public class Tab_1_BuffPane {
     private Unit pg;
 
 
-    public GridPane createBuffPane(){
-
-
-        return buffPane;
-    }
-
     public Tab_1_BuffPane(){
         //GridPane setup
         buffPane = new GridPane();

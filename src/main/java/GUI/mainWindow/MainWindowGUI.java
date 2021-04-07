@@ -2,8 +2,11 @@ package GUI.mainWindow;
 
 import GUI.mainWindow.mainWindowComponent.StatPane;
 import GUI.mainWindow.mainWindowComponent.centralPane.Tab_1_BuffPane;
+import GUI.mainWindow.mainWindowComponent.centralPane.Tab_2_OtherTrackerPane;
 import GUI.mainWindow.mainWindowComponent.centralPane.Tab_99_OptionPane;
 import GUI.smallWindows.creationWindows.BuffCreationWindow;
+import GUI.smallWindows.creationWindows.otherCounter.OtherTrackerCreationWindow;
+import GUI.smallWindows.creationWindows.otherCounter.OtherTrackerOption;
 import GUI.smallWindows.creationWindows.unitCreation.UnitCreationWindow;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -32,6 +35,7 @@ public class MainWindowGUI extends Application {
     //Tab Reference
     //TODO value a more effective method to call them
     private static Tab_1_BuffPane buffPane;
+    private static Tab_2_OtherTrackerPane trackerPane;
 
 
     /*
@@ -165,8 +169,11 @@ public class MainWindowGUI extends Application {
         ////////////////////
         //2: OTHER COUNTER//
         ////////////////////
+        trackerPane = new Tab_2_OtherTrackerPane();
+
         //TODO Costruire nodo other Counter, ricordarsi lo scrollpane
-        tabPane.getTabs().add(buildTab("Other Counter", temp));
+        tabPane.getTabs().add(buildTab("Other Counter", trackerPane.getGridPane()));
+
 
         ////////////
         //3: MAGIC//
@@ -281,7 +288,23 @@ public class MainWindowGUI extends Application {
                 if (isLocked || unit == null) return;
                 buffPane.deleteBuff();
             });
-        buffMenu.getItems().addAll(addBuff, decreaseDuration, removeBuff);
+
+
+
+
+            //temp Item: create Tracker
+        MenuItem tracker = new MenuItem("create tracker");
+        tracker.setOnAction(actionEvent -> {
+            OtherTrackerCreationWindow.createWindow();
+            if(OtherTrackerCreationWindow.isConfirmPressed()) trackerPane.createTracker(OtherTrackerCreationWindow.getDescription(), OtherTrackerCreationWindow.getCurrOption());
+
+        });
+
+
+
+
+
+        buffMenu.getItems().addAll(addBuff, decreaseDuration, removeBuff, tracker);
 
  /*
     ------------------------------------------------------------------------------------------------------------------------
