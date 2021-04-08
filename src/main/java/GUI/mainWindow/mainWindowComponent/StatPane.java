@@ -32,8 +32,8 @@ public class StatPane {
     private static final ImageView profileView = new ImageView();
     private static final GridPane statGrid = new GridPane();
 
-    private static final ArrayList<TextField> asTextFieldList = new ArrayList<>();
-    private static final ArrayList<TextField> asModTextFieldList = new ArrayList<>();
+    private static final ArrayList<TextField> abilityScoreTextFields = new ArrayList<>();
+    private static final ArrayList<TextField> abilityModTextFields = new ArrayList<>();
 
     private static final TextField maxHPField = new TextField();
     private static final TextField currHPField = new TextField();
@@ -92,7 +92,7 @@ public class StatPane {
             for (int i = STAT_ROW_INDEX_START; i < AbilityScore.values().length + 1; i++) {
                 Label nameLabel = new Label(AbilityScore.values()[i-1].getAbbreviation() + ":");
                 TextField asField = new TextField();
-                asTextFieldList.add(asField);
+                abilityScoreTextFields.add(asField);
                 //Limit only number in asField
                 //https://stackoverflow.com/questions/31039449/java-8-u40-textformatter-javafx-to-restrict-user-input-only-for-decimal-number
                 {
@@ -115,7 +115,7 @@ public class StatPane {
                 }
 
                 TextField modField = new TextField();
-                asModTextFieldList.add(modField);
+                abilityModTextFields.add(modField);
                 modField.setEditable(false);
 
                 //Graphic setup
@@ -202,10 +202,10 @@ public class StatPane {
         profileView.setImage(profileImage);
 
         //Set AS
-        for (int i = 0; i < asModTextFieldList.size(); i++) {
+        for (int i = 0; i < abilityModTextFields.size(); i++) {
             int finalI = i;
-            TextField abilityScore = asModTextFieldList.get(i);
-            TextField modField = asTextFieldList.get(i);
+            TextField abilityScore = abilityScoreTextFields.get(i);
+            TextField modField = abilityModTextFields.get(i);
 
             abilityScore.setText(Integer.toString(unit.getAbility_score()[i]));
             modField.setText(Integer.toString(unit.getAbility_mod()[i]));

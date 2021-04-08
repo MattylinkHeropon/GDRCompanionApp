@@ -5,12 +5,12 @@ import GUI.mainWindow.mainWindowComponent.centralPane.Tab_1_BuffPane;
 import GUI.mainWindow.mainWindowComponent.centralPane.Tab_2_OtherTrackerPane;
 import GUI.mainWindow.mainWindowComponent.centralPane.Tab_99_OptionPane;
 import GUI.smallWindows.creationWindows.BuffCreationWindow;
-import GUI.smallWindows.creationWindows.otherCounter.OtherTrackerCreationWindow;
-import GUI.smallWindows.creationWindows.otherCounter.OtherTrackerOption;
+import GUI.smallWindows.creationWindows.OtherTrackerCreationWindow;
 import GUI.smallWindows.creationWindows.unitCreation.UnitCreationWindow;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import hero.OtherTracker;
 import hero.Unit;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -125,13 +125,14 @@ public class MainWindowGUI extends Application {
         printDimension("Root.Top",  root.getTop());
         printDimension("Root.Left",  root.getLeft());
         printDimension("Root.Center",  root.getCenter());
-       //printDimension("Root.Right",  root.getRight());
-        //printDimension("Root.Bottom",  root.getBottom());
+        printDimension("Root.Right",  root.getRight());
+        printDimension("Root.Bottom",  root.getBottom());
 
         }
 
 
     private static void printDimension( String text, Node node){
+        if (node == null) return;
         System.out.println(text + ": " + (int) node.getBoundsInParent().getWidth() + " X " + (int) node.getBoundsInParent().getHeight() + " (" + node.getClass() + ")");
         }
 
@@ -158,9 +159,7 @@ public class MainWindowGUI extends Application {
         ///////////
         //1: BUFF//
         ///////////
-
         buffPane = new Tab_1_BuffPane();
-
         ScrollPane buffScroll = new ScrollPane();
         buffScroll.setContent(buffPane.getBuffPane());
         buffScroll.setFitToWidth(true);
@@ -170,9 +169,10 @@ public class MainWindowGUI extends Application {
         //2: OTHER COUNTER//
         ////////////////////
         trackerPane = new Tab_2_OtherTrackerPane();
-
-        //TODO Costruire nodo other Counter, ricordarsi lo scrollpane
-        tabPane.getTabs().add(buildTab("Other Counter", trackerPane.getGridPane()));
+        ScrollPane trackerScroll = new ScrollPane();
+        trackerScroll.setContent(trackerPane.getGridPane());
+        trackerScroll.setFitToWidth(true);
+        tabPane.getTabs().add(buildTab("Other Counter", trackerScroll));
 
 
         ////////////
@@ -293,18 +293,21 @@ public class MainWindowGUI extends Application {
 
 
             //temp Item: create Tracker
-        MenuItem tracker = new MenuItem("create tracker");
-        tracker.setOnAction(actionEvent -> {
+        MenuItem trackerCreator = new MenuItem("create tracker");
+        trackerCreator.setOnAction(actionEvent -> {
+            if (isLocked || unit == null) return;
             OtherTrackerCreationWindow.createWindow();
-            if(OtherTrackerCreationWindow.isConfirmPressed()) trackerPane.createTracker(OtherTrackerCreationWindow.getDescription(), OtherTrackerCreationWindow.getCurrOption());
-
+            if (!OtherTrackerCreationWindow.isConfirmPressed()) return;
+            OtherTracker tracker = new OtherTracker(OtherTrackerCreationWindow.getDescription(), OtherTrackerCreationWindow.getCurrOption());
+            unit.getOtherTrackerArrayList().add(tracker);
+            if(OtherTrackerCreationWindow.isConfirmPressed()) trackerPane.createTrackerGUI(tracker);
         });
 
 
 
 
 
-        buffMenu.getItems().addAll(addBuff, decreaseDuration, removeBuff, tracker);
+        buffMenu.getItems().addAll(addBuff, decreaseDuration, removeBuff, trackerCreator);
 
  /*
     ------------------------------------------------------------------------------------------------------------------------
@@ -379,7 +382,8 @@ public class MainWindowGUI extends Application {
         StatPane.populateBox(unit);
         loadGUI();
         //Draw all the buff associated with the unit
-        buffPane.setPg(unit);
+        buffPane.setUnit(unit);
+        trackerPane.setUnit(unit);
         redrawBuff();
     }
 

@@ -1,11 +1,13 @@
 package GUI.mainWindow.mainWindowComponent.centralPane;
 
-import GUI.smallWindows.creationWindows.otherCounter.OtherTrackerOption;
+import hero.OtherTracker;
+import hero.Unit;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.*;
-
-import java.util.ArrayList;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 
 public class Tab_2_OtherTrackerPane {
     private static final int DESCRIPTION_COL = 0;
@@ -14,9 +16,8 @@ public class Tab_2_OtherTrackerPane {
 
     private final GridPane gridPane;
 
-    private final ArrayList<Label> labels = new ArrayList<>();
-    private final ArrayList<Node> nodes = new ArrayList<>();
-    private final ArrayList<Button> deleteButtons = new ArrayList<>();
+    private Unit unit;
+
 
     public Tab_2_OtherTrackerPane(){
         gridPane = new GridPane();
@@ -36,20 +37,20 @@ public class Tab_2_OtherTrackerPane {
         return gridPane;
     }
 
-    /**
-     * Create a tracker with the given specific
-     * @param description description of the tracker
-     * @param option selected option for the tracker selection
-     */
-    public void createTracker (String description, OtherTrackerOption option) {
-        Pane background = createBackground();
-        Label descriptionLabel = new Label(description);
-        Node node = createTracker(option);
-        Button deleteButton = createDeleteButton(descriptionLabel, node);
+    public void setUnit(Unit unit) {
+        this.unit = unit;
+        redrawGrid();
+    }
 
-        labels.add(descriptionLabel);
-        nodes.add(node);
-        deleteButtons.add(deleteButton);
+    /**
+     * Create a tracker GUI with the given specific
+     * @param tracker Tracker associated with the GUI
+     */
+    public void createTrackerGUI(OtherTracker tracker) {
+        Pane background = createBackground();
+        Label descriptionLabel = new Label(tracker.getDescription());
+        Node node = createTrackerNode(tracker);
+        Button deleteButton = createDeleteButton(tracker);
 
         drawRow(background, descriptionLabel, node, deleteButton);
     }
@@ -68,19 +69,25 @@ public class Tab_2_OtherTrackerPane {
     /**
      * NOTE: (Almost) copied from OtherTrackerOption, for now is the only way to create an exact copy of a Node, since node.clone() is not supported.
      * Create a Node (tracker) associated to the given Option
-     * @param option An Option with a Node associated
+     * @param tracker Tracker associated with the Node
      * @return the created Node
      */
-    private Node createTracker(OtherTrackerOption option){
-        switch (option) {
+    private Node createTrackerNode(OtherTracker tracker){
+        switch (tracker.getOption()) {
             case SPINNER:
-                return new Spinner<>(-100, 100, 0);
+                Spinner<Integer> spinner = new Spinner<>(-100, 100, tracker.getCurrSpinnerValue());
+                spinner.getEditor().textProperty().addListener((observableValue, oldValue, newValue) -> tracker.setCurrSpinnerValue(Integer.parseInt(newValue)));
+                return spinner;
             case TOGGLE_BUTTON:
-                ToggleGroup toggleGroup = new ToggleGroup();
                 ToggleButton toggleOn = new ToggleButton("ON");
+                toggleOn.setOnAction(actionEvent -> tracker.setCurrToggleBoxSelected(true));
                 ToggleButton toggleOff = new ToggleButton("OFF");
+                toggleOff.setOnAction(actionEvent -> tracker.setCurrToggleBoxSelected(false));
+                ToggleGroup toggleGroup = new ToggleGroup();
                 toggleGroup.getToggles().addAll(toggleOn, toggleOff);
-                toggleOn.setSelected(true);
+
+                if (tracker.isCurrToggleBoxSelected()) toggleOn.setSelected(true);
+                else toggleOff.setSelected(true);
                 HBox toggleBox = new HBox();
                 toggleBox.getChildren().addAll(toggleOn, toggleOff);
                 return toggleBox;
@@ -90,36 +97,25 @@ public class Tab_2_OtherTrackerPane {
 
     /**
      * Create and set up a DeleteButton for each row
-     * @param label Label of the same row of DeleteButton
-     * @param tracker Tracker of the same row of DeleteButton
+     * @param tracker Tracker that will be eliminated when the button will be set on action
      * @return created Button
      */
-    private Button createDeleteButton(Label label, Node tracker){
+    private Button createDeleteButton(OtherTracker tracker){
         Button button = new Button("X");
-        button.setOnAction(actionEvent -> redrawGrid(label, tracker, button));
+        button.setOnAction(actionEvent -> {
+            unit.getOtherTrackerArrayList().remove(tracker);
+            redrawGrid();
+        });
         return button;
     }
 
-    /**
-     * Called by a deleteButton. Empty the gridPane, delete the given node from the corresponding list, and redraw the remaining one
-     * @param label Label to be eliminated
-     * @param node Node to be eliminated
-     * @param deleteButton deleteButton to be eliminated
-     */
-    private void redrawGrid(Label label, Node node, Button deleteButton) {
+
+    private void redrawGrid() {
         gridPane.getChildren().clear();
-        labels.remove(label);
-        nodes.remove(node);
-        deleteButtons.remove(deleteButton);
 
-        if (labels.isEmpty()) return;
+        if (unit.getOtherTrackerArrayList().isEmpty()) return;
 
-        for (Label currLabel: labels
-             ) {
-            int index = labels.indexOf(currLabel);
-            Pane background = createBackground();
-            drawRow(background, currLabel, nodes.get(index), deleteButtons.get(index));
-        }
+        unit.getOtherTrackerArrayList().forEach(this::createTrackerGUI);
     }
 
 

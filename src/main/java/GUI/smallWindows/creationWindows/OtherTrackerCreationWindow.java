@@ -1,7 +1,8 @@
-package GUI.smallWindows.creationWindows.otherCounter;
+package GUI.smallWindows.creationWindows;
 
 
 import GUI.mainWindow.MainWindowGUI;
+import hero.Enum.OtherTrackerOption;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;

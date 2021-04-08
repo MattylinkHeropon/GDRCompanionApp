@@ -1,4 +1,4 @@
-package GUI.smallWindows.creationWindows.otherCounter;
+package hero.Enum;
 
 import javafx.geometry.Pos;
 import javafx.scene.Node;

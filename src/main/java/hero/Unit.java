@@ -23,6 +23,10 @@ public class Unit {
     private final ArrayList<Buff> buffArrayList = new ArrayList<>();
     private final ArrayList<Buff> debuffArrayList = new ArrayList<>();
 
+    //OtherTracker Array
+    private final ArrayList<OtherTracker> otherTrackerArrayList = new ArrayList<>();
+
+
     //Spell
     private boolean isSpontaneous  = false;
     private boolean isPrepared = false;
@@ -94,6 +98,11 @@ public class Unit {
     public void addBuff (Buff buff){
         if (buff.isBuff()) buffArrayList.add(buff);
         else debuffArrayList.add(buff);
+    }
+
+    //Tracker getter
+    public ArrayList<OtherTracker> getOtherTrackerArrayList() {
+        return otherTrackerArrayList;
     }
 
     //Spell getter and setter

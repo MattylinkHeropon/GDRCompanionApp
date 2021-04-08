@@ -1,32 +1,32 @@
 {
-  "image": "images/Charles.jpg",
+  "image": "images/Charles.png",
   "name": "Charles",
-  "game": "DND_5E",
-  "curr_hp": 17,
-  "max_hp": 17,
+  "game": "DND_35E",
+  "curr_hp": 10,
+  "max_hp": 10,
   "ability_score": [
-    16,
-    14,
-    16,
-    9,
     10,
-    12
+    10,
+    10,
+    10,
+    10,
+    10
   ],
   "ability_mod": [
-    3,
-    2,
-    3,
-    -1,
     0,
-    1
+    0,
+    0,
+    0,
+    0,
+    0
   ],
   "buffArrayList": [
     {
       "isBuff": true,
-      "caster": "Charles",
-      "duration": 2,
+      "caster": "Myself",
+      "duration": 11,
       "effect": "Test Buff",
-      "maskHash": 1254492754
+      "maskHash": 554587149
     }
   ],
   "debuffArrayList": [
@@ -35,7 +35,17 @@
       "caster": "Enemy",
       "duration": 1,
       "effect": "Test Debuff",
-      "maskHash": 822507481
+      "maskHash": 309342631
     }
-  ]
+  ],
+  "otherTrackerArrayList": [
+    {
+      "description": "Spinner",
+      "option": "SPINNER",
+      "currSpinnerValue": 0,
+      "currToggleBoxSelected": false
+    }
+  ],
+  "isSpontaneous": false,
+  "isPrepared": false
 }

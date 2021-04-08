@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public class Tab_1_BuffPane {
     private final GridPane buffPane;
-    private Unit pg;
+    private Unit unit;
 
 
     public Tab_1_BuffPane(){
@@ -31,8 +31,8 @@ public class Tab_1_BuffPane {
     }
 
 
-    public void setPg(Unit pg) {
-        this.pg = pg;
+    public void setUnit(Unit pg) {
+        this.unit = pg;
     }
 
     public GridPane getBuffPane() {
@@ -41,11 +41,11 @@ public class Tab_1_BuffPane {
 
 
     /**
-     * Add the given Buff to the pg, then add it to the GUI
-     * @param buff the buff instance that will be added to the pg and the GUI
+     * Add the given Buff to the unit, then add it to the GUI
+     * @param buff the buff instance that will be added to the unit and the GUI
      */
     public void addBuff(Buff buff){
-        pg.addBuff(buff);
+        unit.addBuff(buff);
         drawBuffMask(buff);
     }
 
@@ -80,8 +80,8 @@ public class Tab_1_BuffPane {
             button.setOnAction(actionEvent -> {
                 ArrayList<Buff> list;
                 //Select the correct list from where we remove the BuffMask
-                if (col == 0) list = pg.getBuffArrayList();
-                else list = pg.getDebuffArrayList();
+                if (col == 0) list = unit.getBuffArrayList();
+                else list = unit.getDebuffArrayList();
                 list.removeIf(buff -> buff.getMaskHash() == node.hashCode());
                 redrawColumn(col, list);
 
@@ -145,12 +145,12 @@ public class Tab_1_BuffPane {
 
         if (buff.isBuff()) {
             col = MainWindowGUI.BUFF_COL_INDEX;
-            row = pg.getBuffArrayList().indexOf(buff);
+            row = unit.getBuffArrayList().indexOf(buff);
             GridPane.setMargin(buffMask, buff_margin);
         }
         else {
             col = MainWindowGUI.DEBUFF_COL_INDEX;
-            row = pg.getDebuffArrayList().indexOf(buff);
+            row = unit.getDebuffArrayList().indexOf(buff);
             GridPane.setMargin(buffMask, debuff_margin);
         }
 
