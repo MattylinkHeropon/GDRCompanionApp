@@ -26,11 +26,15 @@ import javafx.stage.Stage;
 
 import java.io.*;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainWindowGUI extends Application {
     private static Unit unit;
     private Stage stage;
     private static Scene scene;
+    private static final VBox buttonBox = new VBox(5);
+
 
     //Tab Reference
     //TODO value a more effective method to call them
@@ -101,6 +105,7 @@ public class MainWindowGUI extends Application {
         //Left
         Double maxSize = 150.0;
         VBox leftBox = StatPane.buildBox(maxSize);
+        leftBox.getChildren().add(buttonBox);
         BorderPane.setMargin(leftBox, new Insets(10));
         BorderPane.setAlignment(leftBox, Pos.CENTER);
         root.setLeft(leftBox);
@@ -137,56 +142,98 @@ public class MainWindowGUI extends Application {
         }
 
     private void loadGUI(){
-        //clear root
-        //root.getChildren().removeAll(root.getLeft(), root.getRight());
-
-
         stage.setScene(scene);
 
         stage.setTitle(unit.getName());
         stage.show();
     }
 
-    ///////////
-    //TABPANE//
-    ///////////
+    ////////////
+    //TAB PANE//
+    ////////////
 
     private static TabPane buildCentralPane(){
 
         TabPane tabPane = new TabPane();
         GridPane temp = new GridPane();
 
+
         ///////////
         //1: BUFF//
         ///////////
+
         buffPane = new Tab_1_BuffPane();
         ScrollPane buffScroll = new ScrollPane();
         buffScroll.setContent(buffPane.getBuffPane());
         buffScroll.setFitToWidth(true);
-        tabPane.getTabs().add(buildTab("(De)Buff", buffScroll));
+        ArrayList<Button> tab_1_ButtonList = new ArrayList<>();
+
+        //Button 1
+        Button addBuff = new Button("Add buff");
+        tab_1_ButtonList.add(addBuff);
+        addBuff.setOnAction(actionEvent -> {
+            if (isLocked || unit == null) return;
+            BuffCreationWindow.createWindow();
+            if (BuffCreationWindow.isConfirmPressed()){
+                buffPane.addBuff(BuffCreationWindow.getBuff());
+            }
+        });
+        //Button 2
+        Button decreaseDuration = new Button("Decrease buff duration");
+        tab_1_ButtonList.add(decreaseDuration);
+        decreaseDuration.setOnAction(actionEvent -> {
+            if (isLocked || unit == null) return;
+            buffPane.decreaseBuffDuration(unit.getBuffArrayList(), BUFF_COL_INDEX);
+            buffPane.decreaseBuffDuration(unit.getDebuffArrayList(), DEBUFF_COL_INDEX);
+        });
+        //Button 3
+        Button removeBuff = new Button("Remove buff");
+        tab_1_ButtonList.add(removeBuff);
+        removeBuff.setOnAction(actionEvent -> {
+            if (isLocked || unit == null) return;
+            buffPane.deleteBuff();
+        });
+
+        tabPane.getTabs().add(buildTab("(De)Buff", buffScroll, tab_1_ButtonList));
+
 
         ////////////////////
         //2: OTHER COUNTER//
         ////////////////////
+
         trackerPane = new Tab_2_OtherTrackerPane();
         ScrollPane trackerScroll = new ScrollPane();
         trackerScroll.setContent(trackerPane.getGridPane());
         trackerScroll.setFitToWidth(true);
-        tabPane.getTabs().add(buildTab("Other Counter", trackerScroll));
+        ArrayList<Button> tab_2_ButtonList = new ArrayList<>();
 
+        //Button 1
+        Button trackerCreator = new Button("Create tracker");
+        tab_2_ButtonList.add(trackerCreator);
+        trackerCreator.setOnAction(actionEvent -> {
+            if (isLocked || unit == null) return;
+            OtherTrackerCreationWindow.createWindow();
+            if (OtherTrackerCreationWindow.isConfirmPressed()){
+                OtherTracker tracker = new OtherTracker(OtherTrackerCreationWindow.getDescription(), OtherTrackerCreationWindow.getCurrOption());
+                unit.getOtherTrackerArrayList().add(tracker);
+                trackerPane.createTrackerGUI(tracker);
+            }
+        });
+
+        tabPane.getTabs().add(buildTab("Other Counter", trackerScroll, tab_2_ButtonList));
 
         ////////////
         //3: MAGIC//
         ////////////
         //TODO costruire nodo Magic
-        Tab magicTab = buildTab("Magic", temp);
+        Tab magicTab = buildTab("Magic", temp, new ArrayList<>());
         magicTab.setDisable(true);
         tabPane.getTabs().add(magicTab);
 
-        ////////////////
-        //4: SPELLLIST//
-        ////////////////
-        Tab spellListTab = buildTab("Spell list", temp);
+        /////////////////
+        //4: SPELL LIST//
+        /////////////////
+        Tab spellListTab = buildTab("Spell list", temp, new ArrayList<>());
         spellListTab.setDisable(true);
         tabPane.getTabs().add(spellListTab);
 
@@ -194,15 +241,20 @@ public class MainWindowGUI extends Application {
         ////////////////
         //LAST: OPTION//
         ////////////////
-        tabPane.getTabs().add(buildTab("Option", Tab_99_OptionPane.buildOptionPane()));
+        tabPane.getTabs().add(buildTab("Option", Tab_99_OptionPane.buildOptionPane(), new ArrayList<>()));
 
         return tabPane;
     }
 
-    private static Tab buildTab(String name, Node node){
+    private static Tab buildTab(String name, Node node, List<Button> buttonList){
         Tab tab = new Tab(name);
         tab.setContent(node);
         tab.setClosable(false);
+        tab.setOnSelectionChanged(event -> {
+            buttonBox.getChildren().removeAll(buttonBox.getChildren());
+            buttonList.forEach(button -> buttonBox.getChildren().add(button));
+        });
+
         return tab;
     }
 
@@ -258,60 +310,7 @@ public class MainWindowGUI extends Application {
     /*
     ------------------------------------------------------------------------------------------------------------------------
      */
-        ///////////
-        //2: BUFF//
-        ///////////
-        Menu buffMenu = new Menu("Buff");
 
-            //Item 1: Add Buff
-            MenuItem addBuff = new MenuItem("Add Buff");
-            addBuff.setOnAction(actionEvent -> {
-                if (isLocked || unit == null) return;
-                BuffCreationWindow.createWindow();
-                if (BuffCreationWindow.isConfirmPressed()){
-                    buffPane.addBuff(BuffCreationWindow.getBuff());
-            }
-            });
-
-            //Item 2: Decrease Duration
-            MenuItem decreaseDuration = new MenuItem("Decrease Duration");
-
-                decreaseDuration.setOnAction(actionEvent -> {
-                    if (isLocked || unit == null) return;
-                    buffPane.decreaseBuffDuration(unit.getBuffArrayList(), BUFF_COL_INDEX);
-                    buffPane.decreaseBuffDuration(unit.getDebuffArrayList(), DEBUFF_COL_INDEX);
-                });
-
-            //Item 3: Remove Buff
-            MenuItem removeBuff = new MenuItem("Remove Buff");
-            removeBuff.setOnAction(actionEvent -> {
-                if (isLocked || unit == null) return;
-                buffPane.deleteBuff();
-            });
-
-
-
-
-            //temp Item: create Tracker
-        MenuItem trackerCreator = new MenuItem("create tracker");
-        trackerCreator.setOnAction(actionEvent -> {
-            if (isLocked || unit == null) return;
-            OtherTrackerCreationWindow.createWindow();
-            if (!OtherTrackerCreationWindow.isConfirmPressed()) return;
-            OtherTracker tracker = new OtherTracker(OtherTrackerCreationWindow.getDescription(), OtherTrackerCreationWindow.getCurrOption());
-            unit.getOtherTrackerArrayList().add(tracker);
-            if(OtherTrackerCreationWindow.isConfirmPressed()) trackerPane.createTrackerGUI(tracker);
-        });
-
-
-
-
-
-        buffMenu.getItems().addAll(addBuff, decreaseDuration, removeBuff, trackerCreator);
-
- /*
-    ------------------------------------------------------------------------------------------------------------------------
-     */
         ///////////////////
         //3: SPELLCASTING//
         ///////////////////
@@ -339,16 +338,12 @@ public class MainWindowGUI extends Application {
      */
 
         //END
-        return new MenuBar(fileMenu, buffMenu);
+        return new MenuBar(fileMenu);
     }
 
-    //////////////////
-    //MENUBAR METHOD//
-    //////////////////
-
-    ////////
-    //FILE//
-    ////////
+    ///////////////////////
+    //FILE MENUBAR METHOD//
+    ///////////////////////
 
     /**
      * Let the user select a Unit to load
@@ -402,11 +397,8 @@ public class MainWindowGUI extends Application {
      * @throws IOException error with the file
      */
     public static void saveCharacter(Unit unit, File file) throws IOException {
-
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
         FileWriter fileWriter = new FileWriter(file);
-
         fileWriter.write(gson.toJson(unit, UNIT_TYPE));
         fileWriter.flush();
         fileWriter.close();
@@ -439,6 +431,7 @@ public class MainWindowGUI extends Application {
         colorBlind = !colorBlind;
         redrawBuff();
     }
+
     public static void main(String[] args) {
         launch();
     }

@@ -1,0 +1,57 @@
+{
+  "image": "images/Test.png",
+  "name": "Test",
+  "game": "DND_35E",
+  "curr_hp": 50,
+  "max_hp": 50,
+  "ability_score": [
+    8,
+    9,
+    14,
+    14,
+    14,
+    17
+  ],
+  "ability_mod": [
+    -1,
+    -1,
+    2,
+    2,
+    2,
+    3
+  ],
+  "buffArrayList": [
+    {
+      "isBuff": true,
+      "caster": "Smile",
+      "duration": 12,
+      "effect": "SmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmileSmile",
+      "maskHash": 1882071554
+    }
+  ],
+  "debuffArrayList": [
+    {
+      "isBuff": false,
+      "caster": ":-(",
+      "duration": 12,
+      "effect": ":-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-( :-(",
+      "maskHash": 847701670
+    }
+  ],
+  "otherTrackerArrayList": [
+    {
+      "description": ":)",
+      "option": "SPINNER",
+      "currSpinnerValue": 0,
+      "currToggleBoxSelected": false
+    },
+    {
+      "description": ":(",
+      "option": "TOGGLE_BUTTON",
+      "currSpinnerValue": 0,
+      "currToggleBoxSelected": false
+    }
+  ],
+  "isSpontaneous": false,
+  "isPrepared": false
+}
