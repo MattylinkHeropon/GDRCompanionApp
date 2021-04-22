@@ -47,8 +47,6 @@ public class MainWindowGUI extends Application {
 
 
     //Tab Reference
-    //TODO value a more effective method to call them
-    private static Tab_1_BuffPane buffPane;
     private static Tab_2_OtherTrackerPane trackerPane;
 
 
@@ -61,8 +59,6 @@ public class MainWindowGUI extends Application {
 
 
     //Constant Value
-    public static final int BUFF_COL_INDEX = 0;
-    public static final int DEBUFF_COL_INDEX = 1;
     private static final String LIGHT_THEME = "light_theme.css";
     private static final String DARK_THEME = "dark_theme.css";
     private static final int STD_WIDTH = 800;
@@ -174,9 +170,8 @@ public class MainWindowGUI extends Application {
         //1: BUFF//
         ///////////
 
-        buffPane = new Tab_1_BuffPane();
         ScrollPane buffScroll = new ScrollPane();
-        buffScroll.setContent(buffPane.getBuffPane());
+        buffScroll.setContent(Tab_1_BuffPane.getGrid());
         buffScroll.setFitToWidth(true);
         ArrayList<Button> tab_1_ButtonList = new ArrayList<>();
 
@@ -187,7 +182,7 @@ public class MainWindowGUI extends Application {
             if (isLocked || unit == null) return;
             BuffCreationWindow.createWindow();
             if (BuffCreationWindow.isConfirmPressed()){
-                buffPane.addBuff(BuffCreationWindow.getBuff());
+                Tab_1_BuffPane.addBuff(BuffCreationWindow.getBuff());
             }
         });
         //Button 2
@@ -195,15 +190,14 @@ public class MainWindowGUI extends Application {
         tab_1_ButtonList.add(decreaseDuration);
         decreaseDuration.setOnAction(actionEvent -> {
             if (isLocked || unit == null) return;
-            buffPane.decreaseBuffDuration(unit.getBuffArrayList(), BUFF_COL_INDEX);
-            buffPane.decreaseBuffDuration(unit.getDebuffArrayList(), DEBUFF_COL_INDEX);
+            Tab_1_BuffPane.decreaseBuffDuration_Start();
         });
         //Button 3
         Button removeBuff = new Button("Remove buff");
         tab_1_ButtonList.add(removeBuff);
         removeBuff.setOnAction(actionEvent -> {
             if (isLocked || unit == null) return;
-            buffPane.deleteBuff();
+            Tab_1_BuffPane.deleteBuff();
         });
 
         //DEBUG Button 4
@@ -212,7 +206,7 @@ public class MainWindowGUI extends Application {
             tab_1_ButtonList.add(buffBomb);
             buffBomb.setOnAction(actionEvent -> {
                 for (int i = 1; i < 11; i++) {
-                    buffPane.addBuff(new Buff(i%2 == 0, Integer.toString(i), i, Integer.toString(i)));
+                    Tab_1_BuffPane.addBuff(new Buff(i%2 == 0, Integer.toString(i), i, Integer.toString(i)));
                 }
             });
         }
@@ -406,18 +400,11 @@ public class MainWindowGUI extends Application {
         StatPane.populateBox(unit);
         loadGUI();
         //Draw all the buff associated with the unit
-        buffPane.setUnit(unit);
+        Tab_1_BuffPane.setUnit(unit);
         trackerPane.setUnit(unit);
-        redrawBuff();
     }
 
-    /**
-     * Redraw buff and debuff Column after a change
-     */
-    private static void redrawBuff(){
-        buffPane.redrawColumn(BUFF_COL_INDEX, unit.getBuffArrayList());
-        buffPane.redrawColumn(DEBUFF_COL_INDEX, unit.getDebuffArrayList());
-    }
+
 
     /**
      * Override the given File with the a set of data  of the unit in json format
@@ -458,7 +445,7 @@ public class MainWindowGUI extends Application {
     public static void changeColorBlind (boolean setColorBlind){
         if (colorBlind == setColorBlind) return;
         colorBlind = !colorBlind;
-        if (unit != null) redrawBuff();
+        if (unit != null) Tab_1_BuffPane.redrawBuff();
     }
 
     public static void main(String[] args) {

@@ -12,31 +12,35 @@ import javafx.scene.paint.Color;
 import java.util.ArrayList;
 
 public class Tab_1_BuffPane {
-    private final GridPane buffPane;
-    private Unit unit;
+    private static final GridPane BUFF_GRID = buildGrid();
+    private static Unit unit;
 
+    private static final int BUFF_COL_INDEX = 0;
+    private static final int DEBUFF_COL_INDEX = 1;
 
-    public Tab_1_BuffPane(){
+    private static GridPane buildGrid(){
         //GridPane setup
-        buffPane = new GridPane();
-        buffPane.setHgap(10);
-        buffPane.setVgap(5);
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(5);
 
         //GridPane constrain
         ColumnConstraints buffColumnConstrain = new ColumnConstraints();
         buffColumnConstrain.setPercentWidth(50);
         ColumnConstraints debuffColumnConstrain = new ColumnConstraints();
         debuffColumnConstrain.setPercentWidth(50);
-        buffPane.getColumnConstraints().addAll(buffColumnConstrain, debuffColumnConstrain);
+        grid.getColumnConstraints().addAll(buffColumnConstrain, debuffColumnConstrain);
+        return grid;
     }
 
 
-    public void setUnit(Unit pg) {
-        this.unit = pg;
+    public static void setUnit(Unit pg) {
+        unit = pg;
+        redrawBuff();
     }
 
-    public GridPane getBuffPane() {
-        return buffPane;
+    public static GridPane getGrid() {
+        return BUFF_GRID;
     }
 
 
@@ -44,7 +48,7 @@ public class Tab_1_BuffPane {
      * Add the given Buff to the unit, then add it to the GUI
      * @param buff the buff instance that will be added to the unit and the GUI
      */
-    public void addBuff(Buff buff){
+    public static void addBuff(Buff buff){
         unit.addBuff(buff);
         drawBuffMask(buff);
     }
@@ -52,14 +56,14 @@ public class Tab_1_BuffPane {
     /**
      * Delete a buff
      */
-    public void deleteBuff(){
-        if (buffPane.getChildren().isEmpty()) return;
+    public static void deleteBuff(){
+        if (BUFF_GRID.getChildren().isEmpty()) return;
 
         MainWindowGUI.lock();
 
         ArrayList<Button> closeButtonList = new ArrayList<>();
 
-        for (Node node: buffPane.getChildren()
+        for (Node node: BUFF_GRID.getChildren()
         ) {
             //Create the button
             Button button = new Button("click to delete");
@@ -83,10 +87,10 @@ public class Tab_1_BuffPane {
                 if (col == 0) list = unit.getBuffArrayList();
                 else list = unit.getDebuffArrayList();
                 list.removeIf(buff -> buff.getMaskHash() == node.hashCode());
-                redrawColumn(col, list);
+                redrawColumn(list, col);
 
                 //Remove all button from the GridPane to "close" the function
-                buffPane.getChildren().removeAll(closeButtonList);
+                BUFF_GRID.getChildren().removeAll(closeButtonList);
                 MainWindowGUI.unlock();
             });
 
@@ -95,9 +99,19 @@ public class Tab_1_BuffPane {
         //set every button on the grid, using the list to prevent ConcurrentModificationError
         for (Button button: closeButtonList
         ) {
-            buffPane.getChildren().add(button);
+            BUFF_GRID.getChildren().add(button);
         }
     }
+
+    /**
+     * Called when we need to decrease the duration of every buff.
+     * Call in order the sub-method to start the process
+     */
+    public static void decreaseBuffDuration_Start(){
+        decreaseBuffDuration_Action(unit.getBuffArrayList(), BUFF_COL_INDEX);
+        decreaseBuffDuration_Action(unit.getDebuffArrayList(), DEBUFF_COL_INDEX);
+    }
+
 
     /**
      * If the list is not empty, decrease by one the duration of every buff of the list, and if a buff duration became
@@ -108,7 +122,7 @@ public class Tab_1_BuffPane {
      * @param colIndex Index to represent the column of the buff in the GUI (0 Buff, 1 Debuff)
      */
     //Note: this method could be better, ideally shouldn't redraw the entire buff list every time it's modified
-    public void decreaseBuffDuration(ArrayList<Buff> buffList, int colIndex){
+    private static void decreaseBuffDuration_Action(ArrayList<Buff> buffList, int colIndex){
         if (buffList.isEmpty()) return; //empty array, close
 
         //Analysis and removal
@@ -116,18 +130,26 @@ public class Tab_1_BuffPane {
         buffList.removeIf(Buff -> Buff.getDuration() == 0);
 
         //ArrayList modified, update GridPane
-        redrawColumn(colIndex, buffList);
+        redrawColumn(buffList, colIndex);
     }
+
+
+    public static void redrawBuff(){
+        Tab_1_BuffPane.redrawColumn(unit.getBuffArrayList(), BUFF_COL_INDEX);
+        Tab_1_BuffPane.redrawColumn(unit.getDebuffArrayList(), DEBUFF_COL_INDEX);
+    }
+
+
 
     /**
      * First, clear or Node in the GridPane from the selected column, then redraw the entire column using the given list
      * @param colIndex Index of the column to remove
      * @param list List used to repopulate the column
      */
-    public void redrawColumn(int colIndex, ArrayList<Buff> list){
-        buffPane.getChildren().removeIf(node -> GridPane.getColumnIndex(node) == colIndex);
+    public static void redrawColumn(ArrayList<Buff> list, int colIndex){
+        BUFF_GRID.getChildren().removeIf(node -> GridPane.getColumnIndex(node) == colIndex);
         if (!list.isEmpty()) {
-            list.forEach(this::drawBuffMask);
+            list.forEach(Tab_1_BuffPane::drawBuffMask);
         }
     }
 
@@ -136,7 +158,7 @@ public class Tab_1_BuffPane {
      * Create a mask from the given Buff and put it to the buffGridPane, while setting the correct constrain and margin
      * @param buff Buff instance to be added
      */
-    public void drawBuffMask (Buff buff) {
+    public static void drawBuffMask (Buff buff) {
         Insets buff_margin = new Insets(0,0,0,20);
         Insets debuff_margin = new Insets(0,20,0,0);
         int col, row;
@@ -144,20 +166,17 @@ public class Tab_1_BuffPane {
         GridPane buffMask = buff.createBuffMask();
 
         if (buff.isBuff()) {
-            col = MainWindowGUI.BUFF_COL_INDEX;
+            col = BUFF_COL_INDEX;
             row = unit.getBuffArrayList().indexOf(buff);
             GridPane.setMargin(buffMask, buff_margin);
         }
         else {
-            col = MainWindowGUI.DEBUFF_COL_INDEX;
+            col = DEBUFF_COL_INDEX;
             row = unit.getDebuffArrayList().indexOf(buff);
             GridPane.setMargin(buffMask, debuff_margin);
         }
 
         GridPane.setConstraints(buffMask, col, row);
-        buffPane.getChildren().add(buffMask);
+        BUFF_GRID.getChildren().add(buffMask);
     }
-
-
-
 }
