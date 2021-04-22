@@ -14,13 +14,13 @@ public class Tab_2_OtherTrackerPane {
     private static final int TRACKER_COL = 1;
     private static final int DELETE_COL = 2;
 
-    private final GridPane gridPane;
+    private static final GridPane TRACKER_GRID = buildGrid();
 
-    private Unit unit;
+    private static Unit unit;
 
 
-    public Tab_2_OtherTrackerPane(){
-        gridPane = new GridPane();
+    private static GridPane buildGrid(){
+        GridPane gridPane = new GridPane();
         gridPane.setVgap(5);
 
         //GridPane constrain
@@ -31,22 +31,32 @@ public class Tab_2_OtherTrackerPane {
         ColumnConstraints deleteColumnConstrain = new ColumnConstraints();
         deleteColumnConstrain.setPercentWidth(5);
         gridPane.getColumnConstraints().addAll(descriptionColumnConstrain, trackerColumnConstrain, deleteColumnConstrain);
-    }
-
-    public GridPane getGridPane() {
         return gridPane;
     }
 
-    public void setUnit(Unit unit) {
-        this.unit = unit;
+    public static GridPane getGridPane() {
+        return TRACKER_GRID;
+    }
+
+    public static void setUnit(Unit pg) {
+        unit = pg;
         redrawGrid();
+    }
+
+    /**
+     * Add a tracker to the Unit, then create the GUI
+     * @param tracker tracker to be added
+     */
+    public static void createTracker(OtherTracker tracker){
+        unit.getOtherTrackerArrayList().add(tracker);
+        createTrackerGUI(tracker);
     }
 
     /**
      * Create a tracker GUI with the given specific
      * @param tracker Tracker associated with the GUI
      */
-    public void createTrackerGUI(OtherTracker tracker) {
+    private static void createTrackerGUI(OtherTracker tracker) {
         Pane background = createBackground();
         Label descriptionLabel = new Label(tracker.getDescription());
         Node node = createTrackerNode(tracker);
@@ -59,8 +69,8 @@ public class Tab_2_OtherTrackerPane {
      * If we are creating an odd row, create a background as specified in the CSS
      * @return null, if a row is even, a background otherwise
      */
-    private Pane createBackground(){
-        if (gridPane.getRowCount()%2 == 0) return null;
+    private static Pane createBackground(){
+        if (TRACKER_GRID.getRowCount()%2 == 0) return null;
         Pane pane = new Pane();
         pane.getStyleClass().add("otherTrackerBackground");
         return pane;
@@ -72,7 +82,7 @@ public class Tab_2_OtherTrackerPane {
      * @param tracker Tracker associated with the Node
      * @return the created Node
      */
-    private Node createTrackerNode(OtherTracker tracker){
+    private static Node createTrackerNode(OtherTracker tracker){
         switch (tracker.getOption()) {
             case SPINNER:
                 Spinner<Integer> spinner = new Spinner<>(-100, 100, tracker.getCurrSpinnerValue());
@@ -100,7 +110,7 @@ public class Tab_2_OtherTrackerPane {
      * @param tracker Tracker that will be eliminated when the button will be set on action
      * @return created Button
      */
-    private Button createDeleteButton(OtherTracker tracker){
+    private static Button createDeleteButton(OtherTracker tracker){
         Button button = new Button("X");
         button.setOnAction(actionEvent -> {
             unit.getOtherTrackerArrayList().remove(tracker);
@@ -109,15 +119,14 @@ public class Tab_2_OtherTrackerPane {
         return button;
     }
 
-
-    private void redrawGrid() {
-        gridPane.getChildren().clear();
-
+    /**
+     * Draw from the start the tracker grid
+     */
+    private static void redrawGrid() {
+        TRACKER_GRID.getChildren().clear();
         if (unit.getOtherTrackerArrayList().isEmpty()) return;
-
-        unit.getOtherTrackerArrayList().forEach(this::createTrackerGUI);
+        unit.getOtherTrackerArrayList().forEach(Tab_2_OtherTrackerPane::createTrackerGUI);
     }
-
 
     /**
      *  Draw a row with the given element
@@ -126,12 +135,12 @@ public class Tab_2_OtherTrackerPane {
      * @param node Node of the row
      * @param deleteButton DeleteButton of the row
      */
-    private void drawRow(Pane background, Label label, Node node, Button deleteButton){
-        int row = gridPane.getRowCount();
-        if (background != null) gridPane.add(background, DESCRIPTION_COL, row, 3, 1);
-        gridPane.add(label, DESCRIPTION_COL, row);
-        gridPane.add(node, TRACKER_COL, row);
-        gridPane.add(deleteButton, DELETE_COL, row);
+    private static void drawRow(Pane background, Label label, Node node, Button deleteButton){
+        int row = TRACKER_GRID.getRowCount();
+        if (background != null) TRACKER_GRID.add(background, DESCRIPTION_COL, row, 3, 1);
+        TRACKER_GRID.add(label, DESCRIPTION_COL, row);
+        TRACKER_GRID.add(node, TRACKER_COL, row);
+        TRACKER_GRID.add(deleteButton, DELETE_COL, row);
     }
 
 }

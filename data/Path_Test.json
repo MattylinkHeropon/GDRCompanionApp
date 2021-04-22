@@ -26,14 +26,14 @@
       "caster": "2",
       "duration": 2,
       "effect": "2",
-      "maskHash": 468169000
+      "maskHash": 1248117337
     },
     {
       "isBuff": true,
-      "caster": "4",
-      "duration": 4,
-      "effect": "4",
-      "maskHash": 813901533
+      "caster": "BUFF",
+      "duration": 2,
+      "effect": "BUFF_TEST",
+      "maskHash": 1738423614
     }
   ],
   "debuffArrayList": [
@@ -42,14 +42,14 @@
       "caster": "1",
       "duration": 1,
       "effect": "1",
-      "maskHash": 1194683883
+      "maskHash": 1794887590
     },
     {
       "isBuff": false,
-      "caster": "3",
-      "duration": 3,
-      "effect": "3",
-      "maskHash": 1572376238
+      "caster": "DEBUFF",
+      "duration": 4,
+      "effect": "DEBUFF_TEST",
+      "maskHash": 10041806
     }
   ],
   "otherTrackerArrayList": [
@@ -66,16 +66,16 @@
       "currToggleBoxSelected": false
     },
     {
-      "description": "TEST @ 2021.04.20.14.52.22",
+      "description": "SPINNER_TEST",
       "option": "SPINNER",
-      "currSpinnerValue": 0,
+      "currSpinnerValue": 5,
       "currToggleBoxSelected": false
     },
     {
-      "description": "TEST @ 2021.04.20.14.52.22",
+      "description": "TOGGLE_TEST",
       "option": "TOGGLE_BUTTON",
       "currSpinnerValue": 0,
-      "currToggleBoxSelected": false
+      "currToggleBoxSelected": true
     }
   ],
   "casterClassList": []

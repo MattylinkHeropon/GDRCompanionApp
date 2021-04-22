@@ -45,25 +45,17 @@ public class MainWindowGUI extends Application {
     private static Scene scene;
     private static final VBox buttonBox = new VBox(5);
 
-
-    //Tab Reference
-    private static Tab_2_OtherTrackerPane trackerPane;
-
-
     /*
     isLocked is checked every time a MenuItem is called.
     If true, prevent the execution of every other method in the MenuItem.setOnAction.
     Implemented because deleteBuff() doesn't create a new windows (no showAndWait() method), nor resolve instantly, but need an action from the user to resolve
      */
 
-
-
     //Constant Value
     private static final String LIGHT_THEME = "light_theme.css";
     private static final String DARK_THEME = "dark_theme.css";
     private static final int STD_WIDTH = 800;
     private static final int STD_HEIGHT = 600;
-
 
     //Used to serialize an Unit.
     private static final Type UNIT_TYPE = new TypeToken<Unit>() {}.getType();
@@ -73,7 +65,7 @@ public class MainWindowGUI extends Application {
     private static boolean isLocked = false;
     private static boolean darkThemeSelected = true;
 
-
+    //Getter and Setter
     public static void lock(){
         isLocked = true;
     }
@@ -218,10 +210,8 @@ public class MainWindowGUI extends Application {
         ////////////////////
         //2: OTHER COUNTER//
         ////////////////////
-
-        trackerPane = new Tab_2_OtherTrackerPane();
         ScrollPane trackerScroll = new ScrollPane();
-        trackerScroll.setContent(trackerPane.getGridPane());
+        trackerScroll.setContent(Tab_2_OtherTrackerPane.getGridPane());
         trackerScroll.setFitToWidth(true);
         ArrayList<Button> tab_2_ButtonList = new ArrayList<>();
 
@@ -233,8 +223,7 @@ public class MainWindowGUI extends Application {
             OtherTrackerCreationWindow.createWindow();
             if (OtherTrackerCreationWindow.isConfirmPressed()){
                 OtherTracker tracker = new OtherTracker(OtherTrackerCreationWindow.getDescription(), OtherTrackerCreationWindow.getCurrOption());
-                unit.getOtherTrackerArrayList().add(tracker);
-                trackerPane.createTrackerGUI(tracker);
+                Tab_2_OtherTrackerPane.createTracker(tracker);
             }
         });
         //DEBUG Button 2
@@ -245,8 +234,8 @@ public class MainWindowGUI extends Application {
                 for (OtherTrackerOption option: OtherTrackerOption.values()
                      ) {
                     OtherTracker tracker = new OtherTracker("TEST @ " + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()), option);
-                    unit.getOtherTrackerArrayList().add(tracker);
-                    trackerPane.createTrackerGUI(tracker);
+
+                    Tab_2_OtherTrackerPane.createTracker(tracker);
                 }
             });
         }
@@ -268,7 +257,7 @@ public class MainWindowGUI extends Application {
             if (SpellClassCreationWindow.isConfirmPressed()){
                 Caster_Class casterClass = SpellClassCreationWindow.getCaster_Class();
 
-
+                //TODO DELEGARE
                 unit.getCasterClassList().add(casterClass);
                 //TODO Visualizzatore
                 System.out.println(casterClass);
@@ -401,10 +390,8 @@ public class MainWindowGUI extends Application {
         loadGUI();
         //Draw all the buff associated with the unit
         Tab_1_BuffPane.setUnit(unit);
-        trackerPane.setUnit(unit);
+        Tab_2_OtherTrackerPane.setUnit(unit);
     }
-
-
 
     /**
      * Override the given File with the a set of data  of the unit in json format
