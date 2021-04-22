@@ -6,12 +6,16 @@ import GUI.mainWindow.mainWindowComponent.centralPane.Tab_2_OtherTrackerPane;
 import GUI.mainWindow.mainWindowComponent.centralPane.Tab_99_OptionPane;
 import GUI.smallWindows.creationWindows.BuffCreationWindow;
 import GUI.smallWindows.creationWindows.OtherTrackerCreationWindow;
+import GUI.smallWindows.creationWindows.SpellClassCreationWindow;
 import GUI.smallWindows.creationWindows.unitCreation.UnitCreationWindow;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import hero.Buff;
+import hero.Enum.OtherTrackerOption;
 import hero.OtherTracker;
 import hero.Unit;
+import hero.magic.casterClass.Caster_Class;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -26,10 +30,16 @@ import javafx.stage.Stage;
 
 import java.io.*;
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class MainWindowGUI extends Application {
+
+    private static final boolean DEBUG_ON  = true;
+
+
     private static Unit unit;
     private Stage stage;
     private static Scene scene;
@@ -120,21 +130,23 @@ public class MainWindowGUI extends Application {
         scene.getStylesheets().add(getCurrentTheme());
         stage.setScene(scene);
         stage.setTitle("GDR Companion App");
-        stage.setResizable(false);
+        //stage.setResizable(false);
         stage.show();
 
 
         //TODO:Debug line
-        loadCharacter_load(new File("data/Charles.json"));
-        printDimension("Root", root);
-        printDimension("Root.Top",  root.getTop());
-        printDimension("Root.Left",  root.getLeft());
-        printDimension("Root.Center",  root.getCenter());
-        printDimension("Root.Right",  root.getRight());
-        printDimension("Root.Bottom",  root.getBottom());
-
+        if (DEBUG_ON){
+            loadCharacter_load(new File("data/Path_Test.json"));
+            printDimension("Root", root);
+            printDimension("Root.Top",  root.getTop());
+            printDimension("Root.Left",  root.getLeft());
+            printDimension("Root.Center",  root.getCenter());
+            printDimension("Root.Right",  root.getRight());
+            printDimension("Root.Bottom",  root.getBottom());
         }
 
+
+        }
 
     private static void printDimension( String text, Node node){
         if (node == null) return;
@@ -194,6 +206,18 @@ public class MainWindowGUI extends Application {
             buffPane.deleteBuff();
         });
 
+        //DEBUG Button 4
+        if (DEBUG_ON){
+            Button buffBomb = new Button("BUFF BOMB");
+            tab_1_ButtonList.add(buffBomb);
+            buffBomb.setOnAction(actionEvent -> {
+                for (int i = 1; i < 11; i++) {
+                    buffPane.addBuff(new Buff(i%2 == 0, Integer.toString(i), i, Integer.toString(i)));
+                }
+            });
+        }
+
+
         tabPane.getTabs().add(buildTab("(De)Buff", buffScroll, tab_1_ButtonList));
 
 
@@ -219,15 +243,45 @@ public class MainWindowGUI extends Application {
                 trackerPane.createTrackerGUI(tracker);
             }
         });
+        //DEBUG Button 2
+        if (DEBUG_ON){
+            Button oneOfEach = new Button("One of each counter");
+            tab_2_ButtonList.add(oneOfEach);
+            oneOfEach.setOnAction(actionEvent -> {
+                for (OtherTrackerOption option: OtherTrackerOption.values()
+                     ) {
+                    OtherTracker tracker = new OtherTracker("TEST @ " + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()), option);
+                    unit.getOtherTrackerArrayList().add(tracker);
+                    trackerPane.createTrackerGUI(tracker);
+                }
+            });
+        }
 
         tabPane.getTabs().add(buildTab("Other Counter", trackerScroll, tab_2_ButtonList));
 
         ////////////
         //3: MAGIC//
         ////////////
-        //TODO costruire nodo Magic
-        Tab magicTab = buildTab("Magic", temp, new ArrayList<>());
-        magicTab.setDisable(true);
+
+        ArrayList<Button> tab_3_ButtonList = new ArrayList<>();
+
+        //Button 1
+        Button addClass = new Button("Add spellcasting class");
+        tab_3_ButtonList.add(addClass);
+        addClass.setOnAction(actionEvent -> {
+            if (isLocked || unit == null) return;
+            SpellClassCreationWindow.createWindow();
+            if (SpellClassCreationWindow.isConfirmPressed()){
+                Caster_Class casterClass = SpellClassCreationWindow.getCaster_Class();
+
+
+                unit.getCasterClassList().add(casterClass);
+                //TODO Visualizzatore
+                System.out.println(casterClass);
+            }
+        });
+
+        Tab magicTab = buildTab("Magic", temp, tab_3_ButtonList);
         tabPane.getTabs().add(magicTab);
 
         /////////////////
@@ -311,31 +365,6 @@ public class MainWindowGUI extends Application {
     ------------------------------------------------------------------------------------------------------------------------
      */
 
-        ///////////////////
-        //3: SPELLCASTING//
-        ///////////////////
-
-        Menu spellMenu = new Menu("Spell");
-
-            //item 1: Set prepared Spellcasting
-            MenuItem setPrepared = new MenuItem("Set Prepared Spellcasting");
-            setPrepared.setOnAction(actionEvent -> {
-                if (isLocked) return;
-                unit.setSpontaneous(true);
-                //TODO: Redraw/aggiungere tab preparata e Handler Spell se assente
-            });
-
-            //item 2: Set spontaneous Spellcasting
-            MenuItem setSpontaneous = new MenuItem("Set Prepared Spellcasting");
-            setSpontaneous.setOnAction(actionEvent -> {
-                if (isLocked) return;
-                unit.setPrepared(true);
-                //TODO: Redraw/aggiungere tab Spontenea e Handler Spell se assente
-            });
-
-    /*
-    ------------------------------------------------------------------------------------------------------------------------
-     */
 
         //END
         return new MenuBar(fileMenu);
@@ -429,7 +458,7 @@ public class MainWindowGUI extends Application {
     public static void changeColorBlind (boolean setColorBlind){
         if (colorBlind == setColorBlind) return;
         colorBlind = !colorBlind;
-        redrawBuff();
+        if (unit != null) redrawBuff();
     }
 
     public static void main(String[] args) {

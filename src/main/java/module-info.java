@@ -7,5 +7,7 @@ open module GDRCompanionApp {
     exports GUI;
     exports hero;
     exports hero.Enum;
+    exports hero.magic.spell;
+    exports hero.magic.casterClass;
 
 }

@@ -1,4 +1,4 @@
-package hero.magic;
+package hero.magic.spell;
 
 public class Spell_Base {
 

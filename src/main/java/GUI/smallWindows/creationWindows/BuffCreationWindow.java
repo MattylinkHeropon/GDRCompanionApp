@@ -144,7 +144,7 @@ public class BuffCreationWindow  {
         /*
         A borderPane will be the Root, with:
         a GridPane as a central element, with Radiobuttons and TextArea/field (s)
-        a Hbox with Close and Confirm button as botton element
+        an Hbox with Close and Confirm button as bottom element
          */
 
 

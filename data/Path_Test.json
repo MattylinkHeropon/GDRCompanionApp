@@ -1,0 +1,82 @@
+{
+  "image": "images/Path_Test.png",
+  "name": "Path_Test",
+  "game": "PATHFINDER_1E",
+  "curr_hp": 15,
+  "max_hp": 15,
+  "ability_score": [
+    9,
+    10,
+    10,
+    11,
+    12,
+    14
+  ],
+  "ability_mod": [
+    -1,
+    0,
+    0,
+    0,
+    1,
+    2
+  ],
+  "buffArrayList": [
+    {
+      "isBuff": true,
+      "caster": "2",
+      "duration": 2,
+      "effect": "2",
+      "maskHash": 468169000
+    },
+    {
+      "isBuff": true,
+      "caster": "4",
+      "duration": 4,
+      "effect": "4",
+      "maskHash": 813901533
+    }
+  ],
+  "debuffArrayList": [
+    {
+      "isBuff": false,
+      "caster": "1",
+      "duration": 1,
+      "effect": "1",
+      "maskHash": 1194683883
+    },
+    {
+      "isBuff": false,
+      "caster": "3",
+      "duration": 3,
+      "effect": "3",
+      "maskHash": 1572376238
+    }
+  ],
+  "otherTrackerArrayList": [
+    {
+      "description": "TEST @ 2021.04.20.14.52.21",
+      "option": "SPINNER",
+      "currSpinnerValue": 0,
+      "currToggleBoxSelected": false
+    },
+    {
+      "description": "TEST @ 2021.04.20.14.52.21",
+      "option": "TOGGLE_BUTTON",
+      "currSpinnerValue": 0,
+      "currToggleBoxSelected": false
+    },
+    {
+      "description": "TEST @ 2021.04.20.14.52.22",
+      "option": "SPINNER",
+      "currSpinnerValue": 0,
+      "currToggleBoxSelected": false
+    },
+    {
+      "description": "TEST @ 2021.04.20.14.52.22",
+      "option": "TOGGLE_BUTTON",
+      "currSpinnerValue": 0,
+      "currToggleBoxSelected": false
+    }
+  ],
+  "casterClassList": []
+}

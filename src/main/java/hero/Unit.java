@@ -1,7 +1,7 @@
 package hero;
 
 import hero.Enum.Edition;
-import hero.magic.Spell_Base;
+import hero.magic.casterClass.Caster_Class;
 
 import java.util.ArrayList;
 
@@ -28,9 +28,7 @@ public class Unit {
 
 
     //Spell
-    private boolean isSpontaneous  = false;
-    private boolean isPrepared = false;
-    private ArrayList<Spell_Base> spellList = null;
+    private ArrayList<Caster_Class> casterClassList = new ArrayList<>();
 
 
     public Unit (String image, String name, Edition game, int[] ability_score, int max_hp) {
@@ -105,27 +103,13 @@ public class Unit {
         return otherTrackerArrayList;
     }
 
-    //Spell getter and setter
-    public boolean isPrepared() {
-        return isPrepared;
-    }
-    public boolean isSpontaneous() {
-        return isSpontaneous;
+    //Caster getter and adder
+    public ArrayList<Caster_Class> getCasterClassList() {
+        return casterClassList;
     }
 
-    public void setPrepared(boolean value) {
-        isPrepared = value;
-        createSpellList();
-    }
-    public void setSpontaneous(boolean value) {
-        isSpontaneous = value;
-        createSpellList();
-    }
 
-    private void createSpellList(){
-        if (spellList != null)  spellList = new ArrayList<>();
 
-    }
     ////////////////
     //OTHER METHOD//
     ////////////////
