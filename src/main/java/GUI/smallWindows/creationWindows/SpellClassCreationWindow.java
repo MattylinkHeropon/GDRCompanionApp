@@ -1,7 +1,9 @@
 package GUI.smallWindows.creationWindows;
 
 import GUI.mainWindow.MainWindowGUI;
-import hero.magic.casterClass.Caster_Class;
+import hero.magic.casterClass.Caster_Class_Base;
+import hero.magic.casterClass.Caster_Class_Prepared;
+import hero.magic.casterClass.Caster_Class_Spontaneous;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.geometry.HPos;
@@ -19,6 +21,7 @@ import java.text.ParsePosition;
 
 //Mostly copied from BuffCreationWindow
 public class SpellClassCreationWindow {
+
     //Variable to read from outside
     private static Stage stage;
     private static boolean confirmPressed;
@@ -84,18 +87,16 @@ public class SpellClassCreationWindow {
         return pane;
     }
 
-
-
     public static boolean isConfirmPressed() {
         return confirmPressed;
     }
 
     /**
-     * Use the data to create a new Caster_Class
+     * Use the data to create a new Caster_Class_Base
      * @return the created Buff
      */
 
-    public static Caster_Class getCaster_Class(){
+    public static Caster_Class_Base getCaster_Class(){
         int[] array = new int[10];
 
         for (Node node: numberOfSpellGrid.getChildren()
@@ -106,12 +107,20 @@ public class SpellClassCreationWindow {
             array[numberOfSpellGrid.getChildren().indexOf(node)] = value;
         }
 
-        return new Caster_Class(
-                classNameTextField.getText(),
-                Integer.parseInt(levelTextField.getText()),
-                (boolean) radioGroup.getSelectedToggle().getUserData(),
-                array
-        );
+        //Spontaneous == true
+        if ((boolean) radioGroup.getSelectedToggle().getUserData())
+            return new Caster_Class_Spontaneous(
+                    classNameTextField.getText(),
+                    Integer.parseInt(levelTextField.getText()),
+                    array
+            );
+        else //Spontaneous == false
+            return new Caster_Class_Prepared(
+                    classNameTextField.getText(),
+                    Integer.parseInt(levelTextField.getText()),
+                    array
+            );
+
     }
 
     public static void createWindow() {
@@ -280,6 +289,4 @@ public class SpellClassCreationWindow {
             stage.showAndWait();
 
         }
-
-
 }

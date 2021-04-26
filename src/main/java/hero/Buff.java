@@ -17,7 +17,6 @@ public class Buff {
     private final String caster;
     private int duration;
     private final String effect;
-    private int maskHash;
 
     public Buff(boolean type, String caster, int duration, String effect) {
         this.isBuff = type;
@@ -33,10 +32,6 @@ public class Buff {
 
     public int getDuration() {
         return duration;
-    }
-
-    public int getMaskHash() {
-        return maskHash;
     }
 
     public void decreaseDuration() {
@@ -104,7 +99,6 @@ public class Buff {
 
         //Final setting and return
         gridPane.getChildren().addAll(casterField, durationField, effectArea);
-        maskHash = gridPane.hashCode();
         return gridPane;
     }
 

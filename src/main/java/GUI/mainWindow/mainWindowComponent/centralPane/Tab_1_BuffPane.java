@@ -20,17 +20,17 @@ public class Tab_1_BuffPane {
 
     private static GridPane buildGrid(){
         //GridPane setup
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(5);
+        GridPane gridPane = new GridPane();
+        gridPane.setHgap(10);
+        gridPane.setVgap(5);
 
         //GridPane constrain
         ColumnConstraints buffColumnConstrain = new ColumnConstraints();
         buffColumnConstrain.setPercentWidth(50);
         ColumnConstraints debuffColumnConstrain = new ColumnConstraints();
         debuffColumnConstrain.setPercentWidth(50);
-        grid.getColumnConstraints().addAll(buffColumnConstrain, debuffColumnConstrain);
-        return grid;
+        gridPane.getColumnConstraints().addAll(buffColumnConstrain, debuffColumnConstrain);
+        return gridPane;
     }
 
 
@@ -65,7 +65,7 @@ public class Tab_1_BuffPane {
 
         for (Node node: BUFF_GRID.getChildren()
         ) {
-            //Create the button
+            //Create button
             Button button = new Button("click to delete");
             button.setTextFill(Color.WHITE);
             closeButtonList.add(button);
@@ -86,7 +86,8 @@ public class Tab_1_BuffPane {
                 //Select the correct list from where we remove the BuffMask
                 if (col == 0) list = unit.getBuffArrayList();
                 else list = unit.getDebuffArrayList();
-                list.removeIf(buff -> buff.getMaskHash() == node.hashCode());
+                list.remove((int) GridPane.getRowIndex(button));
+
                 redrawColumn(list, col);
 
                 //Remove all button from the GridPane to "close" the function

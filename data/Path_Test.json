@@ -23,33 +23,17 @@
   "buffArrayList": [
     {
       "isBuff": true,
-      "caster": "2",
+      "caster": "Myself",
       "duration": 2,
-      "effect": "2",
-      "maskHash": 1248117337
-    },
-    {
-      "isBuff": true,
-      "caster": "BUFF",
-      "duration": 2,
-      "effect": "BUFF_TEST",
-      "maskHash": 1738423614
+      "effect": "BUFF_TEST\n"
     }
   ],
   "debuffArrayList": [
     {
       "isBuff": false,
-      "caster": "1",
-      "duration": 1,
-      "effect": "1",
-      "maskHash": 1794887590
-    },
-    {
-      "isBuff": false,
-      "caster": "DEBUFF",
-      "duration": 4,
-      "effect": "DEBUFF_TEST",
-      "maskHash": 10041806
+      "caster": "Enemy",
+      "duration": 2,
+      "effect": "DEBUFF_TEST"
     }
   ],
   "otherTrackerArrayList": [
@@ -78,5 +62,48 @@
       "currToggleBoxSelected": true
     }
   ],
-  "casterClassList": []
+  "casterClassList": [
+    {
+      "type": "Caster_Class_Spontaneous",
+      "properties": {
+        "className": "21",
+        "level": 21,
+        "spontaneousCaster": true,
+        "spellList": [],
+        "numberOfSpell": [
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Caster_Class_Prepared",
+      "properties": {
+        "className": "test",
+        "level": 21,
+        "spontaneousCaster": false,
+        "spellList": [],
+        "numberOfSpell": [
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    }
+  ]
 }

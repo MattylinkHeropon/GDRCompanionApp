@@ -3,6 +3,7 @@ package GUI.mainWindow;
 import GUI.mainWindow.mainWindowComponent.StatPane;
 import GUI.mainWindow.mainWindowComponent.centralPane.Tab_1_BuffPane;
 import GUI.mainWindow.mainWindowComponent.centralPane.Tab_2_OtherTrackerPane;
+import GUI.mainWindow.mainWindowComponent.centralPane.Tab_3_MagicPane;
 import GUI.mainWindow.mainWindowComponent.centralPane.Tab_99_OptionPane;
 import GUI.smallWindows.creationWindows.BuffCreationWindow;
 import GUI.smallWindows.creationWindows.OtherTrackerCreationWindow;
@@ -11,17 +12,20 @@ import GUI.smallWindows.creationWindows.unitCreation.UnitCreationWindow;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import customGsonClass.CasterClassAdapter;
 import hero.Buff;
 import hero.Enum.OtherTrackerOption;
 import hero.OtherTracker;
 import hero.Unit;
-import hero.magic.casterClass.Caster_Class;
+import hero.magic.casterClass.Caster_Class_Base;
+import hero.magic.casterClass.Caster_Class_Spontaneous;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
@@ -37,7 +41,7 @@ import java.util.List;
 
 public class MainWindowGUI extends Application {
 
-    private static final boolean DEBUG_ON  = true;
+    public static final boolean DEBUG_ON  = true;
 
 
     private static Unit unit;
@@ -119,9 +123,19 @@ public class MainWindowGUI extends Application {
         stage.setScene(scene);
         stage.setTitle("GDR Companion App");
         //stage.setResizable(false);
+
+        //Icon section
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        for (int i = 16; i < 513; i = i*2) {
+            String pathName = "icon/icon_" + i + ".png";
+            InputStream inputStream = classLoader.getResourceAsStream(pathName);
+            if (inputStream != null)
+            stage.getIcons().add(new Image(inputStream));
+            else System.out.println("failed to load " + pathName);
+        }
+
+
         stage.show();
-
-
         //TODO:Debug line
         if (DEBUG_ON){
             loadCharacter_load(new File("data/Path_Test.json"));
@@ -246,6 +260,9 @@ public class MainWindowGUI extends Application {
         //3: MAGIC//
         ////////////
 
+        ScrollPane casterClassScroll = new ScrollPane();
+        casterClassScroll.setContent(Tab_3_MagicPane.getGridPane());
+        casterClassScroll.setFitToWidth(true);
         ArrayList<Button> tab_3_ButtonList = new ArrayList<>();
 
         //Button 1
@@ -255,16 +272,46 @@ public class MainWindowGUI extends Application {
             if (isLocked || unit == null) return;
             SpellClassCreationWindow.createWindow();
             if (SpellClassCreationWindow.isConfirmPressed()){
-                Caster_Class casterClass = SpellClassCreationWindow.getCaster_Class();
-
-                //TODO DELEGARE
-                unit.getCasterClassList().add(casterClass);
-                //TODO Visualizzatore
-                System.out.println(casterClass);
+                Tab_3_MagicPane.addClass(SpellClassCreationWindow.getCaster_Class());
             }
         });
 
-        Tab magicTab = buildTab("Magic", temp, tab_3_ButtonList);
+        //Button 2
+        Button updateClass = new Button("Update spellcasting class");
+        tab_3_ButtonList.add(updateClass);
+        updateClass.setOnAction(actionEvent -> {
+            Tab_3_MagicPane.updateClass();
+        });
+
+        //Button 3
+        Button removeClass = new Button("Remove spellcasting class");
+        tab_3_ButtonList.add(removeClass);
+        removeClass.setOnAction(actionEvent -> {
+            if (isLocked || unit == null) return;
+            Tab_3_MagicPane.deleteClass();
+        });
+
+        //DEBUG
+        if(DEBUG_ON){
+            int[] shortArray = {1,1,1,0,0,0,0,0,0,0};
+            int[] midArray = {4,4,4,4,4,0,0,0,0,0};
+            int[] longArray = {9,9,9,9,9,9,9,9,9,9};
+
+            Button classBomb = new Button("Bomb");
+            tab_3_ButtonList.add(classBomb);
+            classBomb.setOnAction(actionEvent -> {
+                Tab_3_MagicPane.addClass(new Caster_Class_Spontaneous("short 1", 1, shortArray));
+                Tab_3_MagicPane.addClass(new Caster_Class_Spontaneous("mid 1", 2, midArray));
+                Tab_3_MagicPane.addClass(new Caster_Class_Spontaneous("long 1", 3, longArray));
+                Tab_3_MagicPane.addClass(new Caster_Class_Spontaneous("short 2", 4, shortArray));
+                Tab_3_MagicPane.addClass(new Caster_Class_Spontaneous("mid 2", 5, midArray));
+                Tab_3_MagicPane.addClass(new Caster_Class_Spontaneous("long 2", 6, longArray));
+
+            });
+
+
+        }
+        Tab magicTab = buildTab("Magic", casterClassScroll, tab_3_ButtonList);
         tabPane.getTabs().add(magicTab);
 
         /////////////////
@@ -376,7 +423,11 @@ public class MainWindowGUI extends Application {
      * @param file File to be deserialized
      */
     private void loadCharacter_load(File file){
-        Gson gson = new Gson();
+
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Caster_Class_Base.class, new CasterClassAdapter());
+        Gson gson = gsonBuilder.create();
+
         FileReader fileReader = null;
         try {
             fileReader = new FileReader(file);
@@ -388,9 +439,11 @@ public class MainWindowGUI extends Application {
         unit = gson.fromJson(fileReader, UNIT_TYPE);
         StatPane.populateBox(unit);
         loadGUI();
-        //Draw all the buff associated with the unit
+        //Load the character in every Tab
         Tab_1_BuffPane.setUnit(unit);
         Tab_2_OtherTrackerPane.setUnit(unit);
+        Tab_3_MagicPane.setUnit(unit);
+
     }
 
     /**
@@ -400,7 +453,11 @@ public class MainWindowGUI extends Application {
      * @throws IOException error with the file
      */
     public static void saveCharacter(Unit unit, File file) throws IOException {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(Caster_Class_Base.class, new CasterClassAdapter());
+
+        Gson gson = gsonBuilder.setPrettyPrinting().create();
         FileWriter fileWriter = new FileWriter(file);
         fileWriter.write(gson.toJson(unit, UNIT_TYPE));
         fileWriter.flush();

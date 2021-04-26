@@ -1,7 +1,7 @@
 package hero;
 
 import hero.Enum.Edition;
-import hero.magic.casterClass.Caster_Class;
+import hero.magic.casterClass.Caster_Class_Base;
 
 import java.util.ArrayList;
 
@@ -28,7 +28,7 @@ public class Unit {
 
 
     //Spell
-    private ArrayList<Caster_Class> casterClassList = new ArrayList<>();
+    private ArrayList<Caster_Class_Base> casterClassList = new ArrayList<>();
 
 
     public Unit (String image, String name, Edition game, int[] ability_score, int max_hp) {
@@ -104,7 +104,7 @@ public class Unit {
     }
 
     //Caster getter and adder
-    public ArrayList<Caster_Class> getCasterClassList() {
+    public ArrayList<Caster_Class_Base> getCasterClassList() {
         return casterClassList;
     }
 

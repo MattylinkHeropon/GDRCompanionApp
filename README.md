@@ -1,5 +1,5 @@
 # GDRCompanionApp
-A simple tool designed to help player to keep track of numerous thing during a GDR session.
+A simple tool designed to help player to keep track of numerous things during a GDR session.
 This tool is designed for DnD and Pathfinder game, but it will probably work fine for other similar game.
 
 # Version and Features
@@ -29,7 +29,9 @@ This program uses [JavaFX](https://github.com/openjdk/jfx) and [Gson](https://gi
 
 [Dark mode](https://github.com/joffrey-bion/javafx-themes)  by joffrey-bion.
 
-For individual license, see other_license folder.
+<div>Dice Icon made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> and modified by Mattylink_Heropon</div> 
+
+For individual license, see [other_license](other_license) folder.
 
 
 
