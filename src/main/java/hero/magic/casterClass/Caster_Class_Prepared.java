@@ -1,19 +1,20 @@
 package hero.magic.casterClass;
 
+import hero.magic.spell.Spell_Base;
 import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-public class Caster_Class_Prepared extends Caster_Class_Base{
+import java.util.ArrayList;
 
+public class Caster_Class_Prepared extends Caster_Class_Base{
 
     public Caster_Class_Prepared(String className, int level, int[] spell) {
         super(className, level, spell);
     }
 
     @Override
-    boolean setSpontaneousCaster() {
-        return false;
+    public ArrayList<Spell_Base> getSpellList() {
+        return super.getSpellList();
     }
 
     @Override
@@ -23,4 +24,10 @@ public class Caster_Class_Prepared extends Caster_Class_Base{
         box.getChildren().add(label);
         return box;
     }
+
+    @Override
+    public void resetSlot() {
+
+    }
+
 }

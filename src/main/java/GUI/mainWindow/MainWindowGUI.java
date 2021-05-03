@@ -7,7 +7,7 @@ import GUI.mainWindow.mainWindowComponent.centralPane.Tab_3_MagicPane;
 import GUI.mainWindow.mainWindowComponent.centralPane.Tab_99_OptionPane;
 import GUI.smallWindows.creationWindows.BuffCreationWindow;
 import GUI.smallWindows.creationWindows.OtherTrackerCreationWindow;
-import GUI.smallWindows.creationWindows.SpellClassCreationWindow;
+import GUI.smallWindows.creationWindows.CasterClassCreationWindow;
 import GUI.smallWindows.creationWindows.unitCreation.UnitCreationWindow;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -270,9 +270,9 @@ public class MainWindowGUI extends Application {
         tab_3_ButtonList.add(addClass);
         addClass.setOnAction(actionEvent -> {
             if (isLocked || unit == null) return;
-            SpellClassCreationWindow.createWindow();
-            if (SpellClassCreationWindow.isConfirmPressed()){
-                Tab_3_MagicPane.addClass(SpellClassCreationWindow.getCaster_Class());
+            CasterClassCreationWindow.createWindow();
+            if (CasterClassCreationWindow.isConfirmPressed()){
+                Tab_3_MagicPane.addClass(CasterClassCreationWindow.getCaster_Class());
             }
         });
 
@@ -280,7 +280,8 @@ public class MainWindowGUI extends Application {
         Button updateClass = new Button("Update spellcasting class");
         tab_3_ButtonList.add(updateClass);
         updateClass.setOnAction(actionEvent -> {
-            Tab_3_MagicPane.updateClass();
+            if (isLocked || unit == null) return;
+            Tab_3_MagicPane.selectClass(false);
         });
 
         //Button 3
@@ -288,8 +289,17 @@ public class MainWindowGUI extends Application {
         tab_3_ButtonList.add(removeClass);
         removeClass.setOnAction(actionEvent -> {
             if (isLocked || unit == null) return;
-            Tab_3_MagicPane.deleteClass();
+            Tab_3_MagicPane.selectClass(true);
         });
+
+        //Button 4
+        Button resetSlot = new Button("Reset Slot");
+        tab_3_ButtonList.add(resetSlot);
+        resetSlot.setOnAction(actionEvent -> {
+            if (isLocked || unit == null) return;
+            Tab_3_MagicPane.reset();
+        });
+
 
         //DEBUG
         if(DEBUG_ON){

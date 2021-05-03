@@ -2,101 +2,52 @@
   "image": "images/Path_Test.png",
   "name": "Path_Test",
   "game": "PATHFINDER_1E",
-  "curr_hp": 15,
-  "max_hp": 15,
+  "curr_hp": 14,
+  "max_hp": 14,
   "ability_score": [
+    8,
     9,
-    10,
-    10,
+    11,
     11,
     12,
     14
   ],
   "ability_mod": [
     -1,
-    0,
+    -1,
     0,
     0,
     1,
     2
   ],
-  "buffArrayList": [
-    {
-      "isBuff": true,
-      "caster": "Myself",
-      "duration": 2,
-      "effect": "BUFF_TEST\n"
-    }
-  ],
-  "debuffArrayList": [
-    {
-      "isBuff": false,
-      "caster": "Enemy",
-      "duration": 2,
-      "effect": "DEBUFF_TEST"
-    }
-  ],
-  "otherTrackerArrayList": [
-    {
-      "description": "TEST @ 2021.04.20.14.52.21",
-      "option": "SPINNER",
-      "currSpinnerValue": 0,
-      "currToggleBoxSelected": false
-    },
-    {
-      "description": "TEST @ 2021.04.20.14.52.21",
-      "option": "TOGGLE_BUTTON",
-      "currSpinnerValue": 0,
-      "currToggleBoxSelected": false
-    },
-    {
-      "description": "SPINNER_TEST",
-      "option": "SPINNER",
-      "currSpinnerValue": 5,
-      "currToggleBoxSelected": false
-    },
-    {
-      "description": "TOGGLE_TEST",
-      "option": "TOGGLE_BUTTON",
-      "currSpinnerValue": 0,
-      "currToggleBoxSelected": true
-    }
-  ],
+  "buffArrayList": [],
+  "debuffArrayList": [],
+  "otherTrackerArrayList": [],
   "casterClassList": [
     {
       "type": "Caster_Class_Spontaneous",
       "properties": {
-        "className": "21",
-        "level": 21,
-        "spontaneousCaster": true,
-        "spellList": [],
-        "numberOfSpell": [
-          1,
-          1,
-          1,
+        "remainingNumberOfSpell": [
+          3,
+          4,
           0,
-          0,
+          2,
+          1,
           0,
           0,
           0,
           0,
           0
-        ]
-      }
-    },
-    {
-      "type": "Caster_Class_Prepared",
-      "properties": {
-        "className": "test",
-        "level": 21,
-        "spontaneousCaster": false,
+        ],
+        "className": "Stregone",
+        "level": 4,
         "spellList": [],
-        "numberOfSpell": [
+        "totalNumberOfSpell": [
+          5,
+          4,
+          3,
+          2,
           1,
-          1,
-          1,
-          1,
-          0,
           0,
           0,
           0,

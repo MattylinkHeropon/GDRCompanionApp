@@ -1,6 +1,7 @@
 package GUI.mainWindow.mainWindowComponent.centralPane;
 
 import GUI.mainWindow.MainWindowGUI;
+import GUI.smallWindows.UpdateCasterClassWindow;
 import hero.Unit;
 import hero.magic.casterClass.Caster_Class_Base;
 import javafx.scene.Node;
@@ -56,31 +57,24 @@ public class Tab_3_MagicPane {
             row++;
         }
     }
-    //todo
-    public static void updateClass(){
-        redrawGrid();
-    }
 
-
-    public static void deleteClass(){
+    public static void selectClass(boolean isDelete){
         if (CLASS_GRID.getChildren().isEmpty()) return;
 
-        //Ideally all this code should be a method itself that return the index of the node (since it's used elsewhere and it's duplicated code)
-        //Sadly you can't put a return method in a Button.setOnAction(), and I can't find a way to prevent the execution of the "return" until a button is pressed
-        //BUT I could make this the "main" method" and use "delete" and "update" as SUBMethod
         MainWindowGUI.lock();
+
         ArrayList<Button> closeButtonList = new ArrayList<>();
 
         for (Node node: CLASS_GRID.getChildren()
         ) {
             //Create button
-            Button button = new Button("click to delete");
+            Button button = new Button("click to select a class");
             button.setTextFill(Color.WHITE);
             closeButtonList.add(button);
 
             //set dimension and Background
             button.setMinSize(node.getLayoutBounds().getWidth(), node.getLayoutBounds().getHeight());
-            button.getStyleClass().add("remove-buff"); //TODO fare maschera
+            button.getStyleClass().add("remove-buff"); //TODO fare maschera personale
 
             //set constrain to add it to the grid:
             int col = GridPane.getColumnIndex(node);
@@ -88,9 +82,12 @@ public class Tab_3_MagicPane {
 
             //set behaviour
             button.setOnAction(actionEvent -> {
-                //Delete the selected Element
+                //get the index of the selected casterClass
                 int index = GridPane.getRowIndex(button)*2 + col;
-                unit.getCasterClassList().remove(index);
+
+                //If the function is called with the flag "isDelete" true, remove the element
+                if (isDelete) unit.getCasterClassList().remove(index);
+                else UpdateCasterClassWindow.createWindow(unit.getCasterClassList().get(index));
                 redrawGrid();
 
                 //Remove all button from the GridPane to "close" the function
@@ -108,12 +105,15 @@ public class Tab_3_MagicPane {
 
     private static void redrawGrid(){
         CLASS_GRID.getChildren().clear();
-        if (unit.getCasterClassList().isEmpty()) return;
         row = 0;
         column = 0;
+        if (unit.getCasterClassList().isEmpty()) return;
         unit.getCasterClassList().stream().map(Caster_Class_Base::buildClassMask).forEach(Tab_3_MagicPane::drawCasterClass);
     }
 
-    //TODO update
 
+    public static void reset() {
+        unit.getCasterClassList().forEach(Caster_Class_Base::resetSlot);
+        redrawGrid();
+    }
 }

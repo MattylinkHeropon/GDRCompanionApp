@@ -20,7 +20,7 @@ import java.text.DecimalFormat;
 import java.text.ParsePosition;
 
 //Mostly copied from BuffCreationWindow
-public class SpellClassCreationWindow {
+public class CasterClassCreationWindow {
 
     //Variable to read from outside
     private static Stage stage;
@@ -282,7 +282,7 @@ public class SpellClassCreationWindow {
             Scene scene = new Scene(root, SQUARE_DIMENSION, SQUARE_DIMENSION/2.0);
             stage = new Stage();
             scene.getStylesheets().add(MainWindowGUI.getCurrentTheme());
-            stage.setTitle("Buff Creation");
+            stage.setTitle("Caster Class Creation");
             stage.setScene(scene);
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setResizable(false);
