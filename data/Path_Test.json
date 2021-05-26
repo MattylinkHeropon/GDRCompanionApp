@@ -41,13 +41,54 @@
         ],
         "className": "Stregone",
         "level": 4,
-        "spellList": [],
         "totalNumberOfSpell": [
           5,
           4,
           3,
           2,
           1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "type": "Caster_Class_Prepared",
+      "properties": {
+        "spellNameArray": [
+          [
+            "Luce",
+            "Ombra",
+            "Mano Magica"
+          ],
+          [
+            "Dardo Incantato",
+            "Armatura del Mago"
+          ],
+          [
+            "Dardo incantato potenziato"
+          ],
+          [
+            "Palla di fuoco"
+          ],
+          [],
+          [],
+          [],
+          [],
+          [],
+          []
+        ],
+        "className": "Mago",
+        "level": 4,
+        "totalNumberOfSpell": [
+          3,
+          2,
+          1,
+          1,
+          0,
           0,
           0,
           0,

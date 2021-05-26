@@ -95,7 +95,6 @@ public class CasterClassCreationWindow {
      * Use the data to create a new Caster_Class_Base
      * @return the created Buff
      */
-
     public static Caster_Class_Base getCaster_Class(){
         int[] array = new int[10];
 

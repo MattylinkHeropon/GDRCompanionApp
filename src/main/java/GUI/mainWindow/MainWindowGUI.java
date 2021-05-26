@@ -6,19 +6,16 @@ import GUI.mainWindow.mainWindowComponent.centralPane.Tab_2_OtherTrackerPane;
 import GUI.mainWindow.mainWindowComponent.centralPane.Tab_3_MagicPane;
 import GUI.mainWindow.mainWindowComponent.centralPane.Tab_99_OptionPane;
 import GUI.smallWindows.creationWindows.BuffCreationWindow;
-import GUI.smallWindows.creationWindows.OtherTrackerCreationWindow;
 import GUI.smallWindows.creationWindows.CasterClassCreationWindow;
+import GUI.smallWindows.creationWindows.OtherTrackerCreationWindow;
 import GUI.smallWindows.creationWindows.unitCreation.UnitCreationWindow;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import customGsonClass.CasterClassAdapter;
-import hero.Buff;
-import hero.Enum.OtherTrackerOption;
 import hero.OtherTracker;
 import hero.Unit;
 import hero.magic.casterClass.Caster_Class_Base;
-import hero.magic.casterClass.Caster_Class_Spontaneous;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -27,25 +24,21 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.*;
 import java.lang.reflect.Type;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class MainWindowGUI extends Application {
 
     public static final boolean DEBUG_ON  = true;
 
-
-    private static Unit unit;
     private Stage stage;
+    private static Unit unit;
     private static Scene scene;
     private static final VBox buttonBox = new VBox(5);
 
@@ -168,9 +161,8 @@ public class MainWindowGUI extends Application {
 
     private static TabPane buildCentralPane(){
 
+        // FIXME: 25/05/2021 Known problem: if a button text is too long it won't wrap but extend the width of the left node, reducing the size of the central node
         TabPane tabPane = new TabPane();
-        GridPane temp = new GridPane();
-
 
         ///////////
         //1: BUFF//
@@ -192,7 +184,7 @@ public class MainWindowGUI extends Application {
             }
         });
         //Button 2
-        Button decreaseDuration = new Button("Decrease buff duration");
+        Button decreaseDuration = new Button("Decrease duration");
         tab_1_ButtonList.add(decreaseDuration);
         decreaseDuration.setOnAction(actionEvent -> {
             if (isLocked || unit == null) return;
@@ -205,18 +197,6 @@ public class MainWindowGUI extends Application {
             if (isLocked || unit == null) return;
             Tab_1_BuffPane.deleteBuff();
         });
-
-        //DEBUG Button 4
-        if (DEBUG_ON){
-            Button buffBomb = new Button("BUFF BOMB");
-            tab_1_ButtonList.add(buffBomb);
-            buffBomb.setOnAction(actionEvent -> {
-                for (int i = 1; i < 11; i++) {
-                    Tab_1_BuffPane.addBuff(new Buff(i%2 == 0, Integer.toString(i), i, Integer.toString(i)));
-                }
-            });
-        }
-
 
         tabPane.getTabs().add(buildTab("(De)Buff", buffScroll, tab_1_ButtonList));
 
@@ -240,19 +220,6 @@ public class MainWindowGUI extends Application {
                 Tab_2_OtherTrackerPane.createTracker(tracker);
             }
         });
-        //DEBUG Button 2
-        if (DEBUG_ON){
-            Button oneOfEach = new Button("One of each counter");
-            tab_2_ButtonList.add(oneOfEach);
-            oneOfEach.setOnAction(actionEvent -> {
-                for (OtherTrackerOption option: OtherTrackerOption.values()
-                     ) {
-                    OtherTracker tracker = new OtherTracker("TEST @ " + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()), option);
-
-                    Tab_2_OtherTrackerPane.createTracker(tracker);
-                }
-            });
-        }
 
         tabPane.getTabs().add(buildTab("Other Counter", trackerScroll, tab_2_ButtonList));
 
@@ -266,7 +233,7 @@ public class MainWindowGUI extends Application {
         ArrayList<Button> tab_3_ButtonList = new ArrayList<>();
 
         //Button 1
-        Button addClass = new Button("Add spellcasting class");
+        Button addClass = new Button("Add class");
         tab_3_ButtonList.add(addClass);
         addClass.setOnAction(actionEvent -> {
             if (isLocked || unit == null) return;
@@ -275,17 +242,15 @@ public class MainWindowGUI extends Application {
                 Tab_3_MagicPane.addClass(CasterClassCreationWindow.getCaster_Class());
             }
         });
-
         //Button 2
-        Button updateClass = new Button("Update spellcasting class");
+        Button updateClass = new Button("Update class");
         tab_3_ButtonList.add(updateClass);
         updateClass.setOnAction(actionEvent -> {
             if (isLocked || unit == null) return;
             Tab_3_MagicPane.selectClass(false);
         });
-
         //Button 3
-        Button removeClass = new Button("Remove spellcasting class");
+        Button removeClass = new Button("Remove class");
         tab_3_ButtonList.add(removeClass);
         removeClass.setOnAction(actionEvent -> {
             if (isLocked || unit == null) return;
@@ -300,37 +265,8 @@ public class MainWindowGUI extends Application {
             Tab_3_MagicPane.reset();
         });
 
-
-        //DEBUG
-        if(DEBUG_ON){
-            int[] shortArray = {1,1,1,0,0,0,0,0,0,0};
-            int[] midArray = {4,4,4,4,4,0,0,0,0,0};
-            int[] longArray = {9,9,9,9,9,9,9,9,9,9};
-
-            Button classBomb = new Button("Bomb");
-            tab_3_ButtonList.add(classBomb);
-            classBomb.setOnAction(actionEvent -> {
-                Tab_3_MagicPane.addClass(new Caster_Class_Spontaneous("short 1", 1, shortArray));
-                Tab_3_MagicPane.addClass(new Caster_Class_Spontaneous("mid 1", 2, midArray));
-                Tab_3_MagicPane.addClass(new Caster_Class_Spontaneous("long 1", 3, longArray));
-                Tab_3_MagicPane.addClass(new Caster_Class_Spontaneous("short 2", 4, shortArray));
-                Tab_3_MagicPane.addClass(new Caster_Class_Spontaneous("mid 2", 5, midArray));
-                Tab_3_MagicPane.addClass(new Caster_Class_Spontaneous("long 2", 6, longArray));
-
-            });
-
-
-        }
         Tab magicTab = buildTab("Magic", casterClassScroll, tab_3_ButtonList);
         tabPane.getTabs().add(magicTab);
-
-        /////////////////
-        //4: SPELL LIST//
-        /////////////////
-        Tab spellListTab = buildTab("Spell list", temp, new ArrayList<>());
-        spellListTab.setDisable(true);
-        tabPane.getTabs().add(spellListTab);
-
 
         ////////////////
         //LAST: OPTION//
@@ -505,5 +441,4 @@ public class MainWindowGUI extends Application {
     public static void main(String[] args) {
         launch();
     }
-
 }

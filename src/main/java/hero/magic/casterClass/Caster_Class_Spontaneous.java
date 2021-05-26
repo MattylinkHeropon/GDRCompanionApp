@@ -16,30 +16,33 @@ public class Caster_Class_Spontaneous extends Caster_Class_Base {
 
     @Override
     public VBox buildClassMask() {
-        VBox classMask = new VBox(5);
-        Label classNameLabel = new Label(className + "(Lv: " + level + ")");
-        classMask.getChildren().add(classNameLabel);
+            VBox classMask = new VBox(5);
+            Label classNameLabel = new Label(className + "(Lv: " + level + ")");
+            classMask.getChildren().add(classNameLabel);
 
-        for (int i = 0; i < totalNumberOfSpell.length; i++) {
-            if (totalNumberOfSpell[i] > 0) classMask.getChildren().add(lvRow(i, totalNumberOfSpell[i]));
+            //create rows
+            for (int i = 0; i < totalNumberOfSpell.length; i++) {
+                int numberOfSpell = totalNumberOfSpell[i];
+                if (numberOfSpell != 0) classMask.getChildren().add(lvRow(i, numberOfSpell));
+            }
+            return classMask;
         }
-        return classMask;
-    }
-    private HBox lvRow(int level, int NumberOfSpell){
+
+    HBox lvRow(int spellLevel, int numberOfSpell){
         HBox hBox = new HBox(2);
-        Label label = new Label("Lv." + level + ": ");
-        Label slashLabel = new Label("/");
+        Label label = new Label("Lv." + spellLevel + ": ");
         hBox.getChildren().add(label);
 
-        //remaining
-        Spinner<Integer> current = new Spinner<>(0, NumberOfSpell, remainingNumberOfSpell[level]);
-        current.getEditor().textProperty().addListener((observableValue, oldValue, newValue) -> remainingNumberOfSpell[level] = Integer.parseInt(newValue));
+        //remaining slot
+        Spinner<Integer> remainingSpell = new Spinner<>(0, numberOfSpell, remainingNumberOfSpell[spellLevel]);
+        remainingSpell.getEditor().textProperty().addListener((observableValue, oldValue, newValue) -> remainingNumberOfSpell[spellLevel] = Integer.parseInt(newValue));
 
-        //total
-        TextField maximum = new TextField(Integer.toString(totalNumberOfSpell[level]));
-        maximum.setEditable(false);
+        //total slot
+        TextField totalSpell = new TextField(Integer.toString(totalNumberOfSpell[spellLevel]));
+        totalSpell.setEditable(false);
 
-        hBox.getChildren().addAll(current, slashLabel, maximum);
+        Label slashLabel = new Label("/");
+        hBox.getChildren().addAll(remainingSpell, slashLabel, totalSpell);
         return hBox;
     }
 

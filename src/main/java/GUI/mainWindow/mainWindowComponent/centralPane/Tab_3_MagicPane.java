@@ -68,13 +68,13 @@ public class Tab_3_MagicPane {
         for (Node node: CLASS_GRID.getChildren()
         ) {
             //Create button
-            Button button = new Button("click to select a class");
+            Button button = new Button("click to select this class");
             button.setTextFill(Color.WHITE);
             closeButtonList.add(button);
 
             //set dimension and Background
             button.setMinSize(node.getLayoutBounds().getWidth(), node.getLayoutBounds().getHeight());
-            button.getStyleClass().add("remove-buff"); //TODO fare maschera personale
+            button.getStyleClass().add("remove-buff"); //Reused Mask
 
             //set constrain to add it to the grid:
             int col = GridPane.getColumnIndex(node);

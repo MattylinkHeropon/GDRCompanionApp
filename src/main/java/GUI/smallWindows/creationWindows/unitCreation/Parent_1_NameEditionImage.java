@@ -136,7 +136,6 @@ class Parent_1_NameEditionImage implements Parent_0_Base {
 
 
         grid.getChildren().addAll(introductionLabel, nameTextField, editionLabel, editionMenu, currEdSelectedLabel, currEdSelected, imageLabel, imageSearchButton, imageNode);
-
         return grid;
     }
 
