@@ -128,6 +128,7 @@ public class UpdateCasterClassWindow {
      */
     private static GridPane createNumberOfSpellGrid(int[] spellCounterArray){
         GridPane pane = new GridPane();
+        pane.setGridLinesVisible(true);
         //Gap
         pane.setHgap(5);
         pane.setVgap(10);
@@ -375,7 +376,7 @@ public class UpdateCasterClassWindow {
      */
     private static int getPrevGridIndex(GridPane[] arrayGrid, int currIndex){
         currIndex--;
-        for (; currIndex > 0; currIndex--) {
+        for (; currIndex >= 0; currIndex--) {
             if (arrayGrid[currIndex] != null) return currIndex;
         }
         return -1;
