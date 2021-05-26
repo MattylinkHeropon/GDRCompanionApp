@@ -260,7 +260,6 @@ public class CasterClassCreationWindow {
             buttonBox.setAlignment(Pos.CENTER_RIGHT);
             buttonBox.getChildren().addAll(closeButton, confirmButton);
 
-
             ////////////////
             //ROOT SECTION//
             ////////////////
@@ -272,7 +271,6 @@ public class CasterClassCreationWindow {
             BorderPane.setMargin(buttonBox, bottomMargin);
             root.setCenter(centralGrid);
             root.setBottom(buttonBox);
-
 
             //////////////////
             //WINDOW SECTION//

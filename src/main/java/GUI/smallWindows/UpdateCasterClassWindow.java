@@ -263,7 +263,18 @@ public class UpdateCasterClassWindow {
         //WINDOW SECTION//
         //////////////////
 
-        Scene scene = new Scene(root, SQUARE_DIMENSION, SQUARE_DIMENSION*2.0);
+        // FIXME: 26/05/2021 The value here are roughly calculated using a screen of the window and a graphic edit tool. For some reason I can't use debug line like OtherTrackerCreationWindow, since doesnt' work anymore
+        double heightWithOneElement = 130.0;
+        double elementHeight = 30.0;
+
+        int maxNumberOfLine = 0;
+        for (GridPane gridPane : gridArray) {
+            if (gridPane != null &&  maxNumberOfLine < gridPane.getRowCount())
+                maxNumberOfLine = gridPane.getRowCount();
+        }
+        maxNumberOfLine = maxNumberOfLine - 1;
+
+        Scene scene = new Scene(root, SQUARE_DIMENSION, heightWithOneElement + (maxNumberOfLine - 1)*elementHeight);
         scene.getStylesheets().add(MainWindowGUI.getCurrentTheme());
         stage.setTitle("Update " + casterClassToUpdate.getClassName());
         stage.setScene(scene);

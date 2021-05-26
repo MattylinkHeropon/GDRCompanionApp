@@ -1,6 +1,5 @@
 package GUI.mainWindow.mainWindowComponent.centralPane;
 
-import GUI.mainWindow.MainWindowGUI;
 import hero.OtherTracker;
 import hero.Unit;
 import javafx.scene.Node;
