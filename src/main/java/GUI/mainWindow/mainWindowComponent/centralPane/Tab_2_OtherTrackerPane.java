@@ -1,7 +1,8 @@
 package GUI.mainWindow.mainWindowComponent.centralPane;
 
-import hero.OtherTracker;
+
 import hero.Unit;
+import hero.otherTracker.OtherTracker_Base;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.ColumnConstraints;
@@ -47,7 +48,7 @@ public class Tab_2_OtherTrackerPane {
      * Add a tracker to the Unit, then create the GUI
      * @param tracker tracker to be added
      */
-    public static void createTracker(OtherTracker tracker){
+    public static void createTracker(OtherTracker_Base tracker){
         unit.getOtherTrackerArrayList().add(tracker);
         createTrackerGUI(tracker);
     }
@@ -56,10 +57,10 @@ public class Tab_2_OtherTrackerPane {
      * Create a tracker GUI with the given specific
      * @param tracker Tracker associated with the GUI
      */
-    private static void createTrackerGUI(OtherTracker tracker) {
+    private static void createTrackerGUI(OtherTracker_Base tracker) {
         Pane background = createBackground();
         Label descriptionLabel = new Label(tracker.getDescription());
-        Node node = createTrackerNode(tracker);
+        Node node = tracker.drawNode();
         Button deleteButton = createDeleteButton(tracker);
 
         drawRow(background, descriptionLabel, node, deleteButton);
@@ -77,40 +78,11 @@ public class Tab_2_OtherTrackerPane {
     }
 
     /**
-     * NOTE: (Almost) copied from OtherTrackerOption, for now is the only way to create an exact copy of a Node, since node.clone() is not supported.
-     * Create a Node (tracker) associated to the given Option
-     * @param tracker Tracker associated with the Node
-     * @return the created Node
-     */
-    private static Node createTrackerNode(OtherTracker tracker){
-        switch (tracker.getOption()) {
-            case SPINNER:
-                Spinner<Integer> spinner = new Spinner<>(-100, 100, tracker.getCurrSpinnerValue());
-                spinner.getEditor().textProperty().addListener((observableValue, oldValue, newValue) -> tracker.setCurrSpinnerValue(Integer.parseInt(newValue)));
-                return spinner;
-            case TOGGLE_BUTTON:
-                ToggleButton toggleOn = new ToggleButton("ON");
-                toggleOn.setOnAction(actionEvent -> tracker.setCurrToggleBoxSelected(true));
-                ToggleButton toggleOff = new ToggleButton("OFF");
-                toggleOff.setOnAction(actionEvent -> tracker.setCurrToggleBoxSelected(false));
-                ToggleGroup toggleGroup = new ToggleGroup();
-                toggleGroup.getToggles().addAll(toggleOn, toggleOff);
-
-                if (tracker.isCurrToggleBoxSelected()) toggleOn.setSelected(true);
-                else toggleOff.setSelected(true);
-                HBox toggleBox = new HBox();
-                toggleBox.getChildren().addAll(toggleOn, toggleOff);
-                return toggleBox;
-        }
-        return null;
-    }
-
-    /**
      * Create and set up a DeleteButton for each row
      * @param tracker Tracker that will be eliminated when the button will be set on action
      * @return created Button
      */
-    private static Button createDeleteButton(OtherTracker tracker){
+    private static Button createDeleteButton(OtherTracker_Base tracker){
         Button button = new Button("X");
         button.setOnAction(actionEvent -> {
             unit.getOtherTrackerArrayList().remove(tracker);

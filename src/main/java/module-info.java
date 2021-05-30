@@ -8,5 +8,6 @@ open module GDRCompanionApp {
     exports hero;
     exports hero.Enum;
     exports hero.magic.casterClass;
+    exports hero.otherTracker;
 
 }

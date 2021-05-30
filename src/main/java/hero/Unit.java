@@ -2,6 +2,7 @@ package hero;
 
 import hero.Enum.Edition;
 import hero.magic.casterClass.Caster_Class_Base;
+import hero.otherTracker.OtherTracker_Base;
 
 import java.util.ArrayList;
 
@@ -24,11 +25,11 @@ public class Unit {
     private final ArrayList<Buff> debuffArrayList = new ArrayList<>();
 
     //OtherTracker Array
-    private final ArrayList<OtherTracker> otherTrackerArrayList = new ArrayList<>();
+    private final ArrayList<OtherTracker_Base> otherTrackerArrayList = new ArrayList<>();
 
 
     //Spell
-    private ArrayList<Caster_Class_Base> casterClassList = new ArrayList<>();
+    private final ArrayList<Caster_Class_Base> casterClassList = new ArrayList<>();
 
 
     public Unit (String image, String name, Edition game, int[] ability_score, int max_hp) {
@@ -99,7 +100,7 @@ public class Unit {
     }
 
     //Tracker getter
-    public ArrayList<OtherTracker> getOtherTrackerArrayList() {
+    public ArrayList<OtherTracker_Base> getOtherTrackerArrayList() {
         return otherTrackerArrayList;
     }
 

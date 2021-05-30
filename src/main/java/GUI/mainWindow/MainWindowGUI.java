@@ -13,9 +13,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import customGsonClass.CasterClassAdapter;
-import hero.OtherTracker;
+import customGsonClass.OtherTrackerAdapter;
 import hero.Unit;
 import hero.magic.casterClass.Caster_Class_Base;
+import hero.otherTracker.OtherTracker_Base;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -34,8 +35,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainWindowGUI extends Application {
-
-    public static final boolean DEBUG_ON  = true;
 
     private Stage stage;
     private static Unit unit;
@@ -126,26 +125,7 @@ public class MainWindowGUI extends Application {
             stage.getIcons().add(new Image(inputStream));
             else System.out.println("failed to load " + pathName);
         }
-
-
         stage.show();
-        //TODO:Debug line
-        if (DEBUG_ON){
-            loadCharacter_load(new File("data/Path_Test.json"));
-            printDimension("Root", root);
-            printDimension("Root.Top",  root.getTop());
-            printDimension("Root.Left",  root.getLeft());
-            printDimension("Root.Center",  root.getCenter());
-            printDimension("Root.Right",  root.getRight());
-            printDimension("Root.Bottom",  root.getBottom());
-        }
-
-
-        }
-
-    private static void printDimension( String text, Node node){
-        if (node == null) return;
-        System.out.println(text + ": " + (int) node.getBoundsInParent().getWidth() + " X " + (int) node.getBoundsInParent().getHeight() + " (" + node.getClass() + ")");
         }
 
     private void loadGUI(){
@@ -216,7 +196,8 @@ public class MainWindowGUI extends Application {
             if (isLocked || unit == null) return;
             OtherTrackerCreationWindow.createWindow();
             if (OtherTrackerCreationWindow.isConfirmPressed()){
-                OtherTracker tracker = new OtherTracker(OtherTrackerCreationWindow.getDescription(), OtherTrackerCreationWindow.getCurrOption());
+                OtherTracker_Base tracker = OtherTrackerCreationWindow.createTracker();
+
                 Tab_2_OtherTrackerPane.createTracker(tracker);
             }
         });
@@ -239,6 +220,7 @@ public class MainWindowGUI extends Application {
             if (isLocked || unit == null) return;
             CasterClassCreationWindow.createWindow();
             if (CasterClassCreationWindow.isConfirmPressed()){
+                // FIXME: 27/05/2021 Throw IndexOutOfBoundException if we close the second window while creating a prepared spell caster. It doesn't break anything... but it's ugly
                 Tab_3_MagicPane.addClass(CasterClassCreationWindow.getCaster_Class());
             }
         });
@@ -341,7 +323,6 @@ public class MainWindowGUI extends Application {
     ------------------------------------------------------------------------------------------------------------------------
      */
 
-
         //END
         return new MenuBar(fileMenu);
     }
@@ -372,6 +353,7 @@ public class MainWindowGUI extends Application {
 
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(Caster_Class_Base.class, new CasterClassAdapter());
+        gsonBuilder.registerTypeAdapter(OtherTracker_Base.class, new OtherTrackerAdapter());
         Gson gson = gsonBuilder.create();
 
         FileReader fileReader = null;
@@ -402,6 +384,7 @@ public class MainWindowGUI extends Application {
 
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(Caster_Class_Base.class, new CasterClassAdapter());
+        gsonBuilder.registerTypeAdapter(OtherTracker_Base.class, new OtherTrackerAdapter());
 
         Gson gson = gsonBuilder.setPrettyPrinting().create();
         FileWriter fileWriter = new FileWriter(file);

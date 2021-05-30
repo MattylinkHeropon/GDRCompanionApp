@@ -3,6 +3,9 @@ package GUI.smallWindows.creationWindows;
 
 import GUI.mainWindow.MainWindowGUI;
 import hero.Enum.OtherTrackerOption;
+import hero.otherTracker.OtherTracker_Base;
+import hero.otherTracker.OtherTracker_Spinner;
+import hero.otherTracker.OtherTracker_ToggleBox;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -41,12 +44,13 @@ public class OtherTrackerCreationWindow {
         return confirmPressed;
     }
 
-    public static OtherTrackerOption getCurrOption() {
-        return currOption;
-    }
-
-    public static String getDescription() {
-        return description;
+    public static OtherTracker_Base createTracker(){
+        confirmPressed = false;
+        switch (currOption){
+            case SPINNER: return new OtherTracker_Spinner(description);
+            case TOGGLE_BUTTON: return new OtherTracker_ToggleBox(description);
+        }
+        return null;
     }
 
     public static void createWindow(){
