@@ -2,7 +2,17 @@
 A simple tool designed to help player to keep track of numerous things during a GDR session.
 This tool is designed for DnD and Pathfinder game, but it will probably work fine for other similar game.
 
+As version 3.0, the development of this tool is considered suspended until further notice.
+
 # Version and Features
+
+**V3.0**
+Features:
+* Added a set of customizable tracker to keep track of other things other than buff and debuff
+* Added support to spellcasting classes:
+   * For spontaneus caster, you can keep track of the number of spell slot remaing in that day
+   * For prepared caster, you can assing a spell to each slot
+* Added a logo!
 
 **V2.0**
 Features:
@@ -19,10 +29,8 @@ Features:
 * Attach buff and debuff to it, and keep track of their duration.
 
 Planned features:
-* Support to magic, with a spellbook to save every spell you know;
-* Interface to keep track of the prepared spell (for prepared caster) or spell slot (for spontaneous caster);
+* A database of Spell, to integrate the spellcasting support
 * Support to DnD 4 "power" system;
-* A logo?
 
 # Credits and Licensing
 This program uses [JavaFX](https://github.com/openjdk/jfx) and [Gson](https://github.com/google/gson).
