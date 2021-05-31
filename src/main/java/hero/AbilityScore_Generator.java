@@ -21,7 +21,7 @@ public  class AbilityScore_Generator {
     };
 
     private static final String[] methodDescription = new String[]{
-            "All value are picked via a random function from the machine, range 1 ~ 20",
+            "All value are picked via a random function by the machine, range 1 ~ 20",
             "Simulate the roll of 3D6 and sum the value of the rolls",
             "Simulate the roll of 4D6, remove the lower value, sum the remaining values",
             "Use the Point Buy method of your version. Only supported for D&D 3.x; 4; 5 and Pathfinder 1E",
